@@ -16,24 +16,28 @@ import FAQ from '../components/react/FAQ';
 import JoinUs from '../components/react/JoinUs';
 import Footer from '../components/react/Footer';
 import Sponsors from '../components/react/Sponsors';
-import { getSiteSettings, getHomeContent, getHeroBlock } from '../api/umbraco';
+import { getSiteSettings, getHomeContent, getMainContentBlocks, getHeroBlock } from '../api/umbraco';
+import { getComponentIdentifier } from '../lib/component-order';
 import { mapHeroProps } from '../lib/hero-mapper';
 
 // Fetch site settings from CMS server-side
 const layoutData = await getSiteSettings();
 
-// Fetch Hero content from Umbraco
+// Fetch all blocks from Umbraco and Hero props
+let blocks: ReturnType<typeof getMainContentBlocks> = [];
 let heroProps = null;
 try {
   const homeContent = await getHomeContent();
-  const heroBlock = getHeroBlock(homeContent);
+  blocks = getMainContentBlocks(homeContent);
   
+  // Get Hero props for dynamic Hero component
+  const heroBlock = getHeroBlock(homeContent);
   if (heroBlock) {
     heroProps = mapHeroProps(heroBlock);
   }
 } catch (error) {
-  console.error('Error fetching Hero content:', error);
-  // Continue without hero props - component will use defaults
+  console.error('Error fetching Home content blocks:', error);
+  // Continue with empty blocks array - components will be skipped
 }
 
 // Preload Spline 404 scene for faster loading when users hit 404 page
@@ -52,20 +56,65 @@ const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.spline
     navItems={layoutData.navItems}
     ctaItem={layoutData.ctaItem}
   >
-    {heroProps ? <Hero hero={heroProps} /> : <Hero />}
-    <Marquee />
-    <Countdown client:load />
-    <Features />
-    <LatestEvents />
-    <Speakers client:load />
-    <Showcase />
-    <Sponsors client:visible />
-    <Gallery client:load />
-    <MarqueeReverse />
-    <Appreciation client:load />
-    <FAQ client:load />
-    <Contact client:load />
-    <JoinUs client:load />
+    {/* Dynamically render components based on Umbraco block list order */}
+    {blocks.map((block) => {
+      const contentType = block.content?.contentType;
+      const componentId = getComponentIdentifier(contentType);
+      
+      // Skip unmapped component types
+      if (!componentId) {
+        if (import.meta.env.DEV) {
+          console.warn(`Unknown block content type: ${contentType}`);
+        }
+        return null;
+      }
+      
+      // Render component based on identifier
+      if (componentId === 'hero') {
+        // Always render Hero - it has fallback defaults if heroProps is null
+        return heroProps ? <Hero hero={heroProps} /> : <Hero />;
+      }
+      if (componentId === 'marquee') {
+        return <Marquee />;
+      }
+      if (componentId === 'marqueeReverse') {
+        return <MarqueeReverse />;
+      }
+      if (componentId === 'features') {
+        return <Features />;
+      }
+      if (componentId === 'countdown') {
+        return <Countdown client:load />;
+      }
+      if (componentId === 'latestEvents') {
+        return <LatestEvents />;
+      }
+      if (componentId === 'speakers') {
+        return <Speakers client:load />;
+      }
+      if (componentId === 'showcase') {
+        return <Showcase />;
+      }
+      if (componentId === 'sponsors') {
+        return <Sponsors client:visible />;
+      }
+      if (componentId === 'gallery') {
+        return <Gallery client:load />;
+      }
+      if (componentId === 'appreciation') {
+        return <Appreciation client:load />;
+      }
+      if (componentId === 'faq') {
+        return <FAQ client:load />;
+      }
+      if (componentId === 'contact') {
+        return <Contact client:load />;
+      }
+      
+      return null;
+    })}
+    
+    {/* Footer remains separate - uses siteSettings */}
     <Footer 
       client:load 
       footer={layoutData.footer}

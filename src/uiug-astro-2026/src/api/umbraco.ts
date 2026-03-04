@@ -217,4 +217,22 @@ export function getHeroBlock(
   return null;
 }
 
+/** Extract all blocks from Home page Block List in order */
+export function getMainContentBlocks(
+  homeContent: Awaited<ReturnType<typeof getContentItem>> | null
+): components['schemas']['ApiBlockItemModel'][] {
+  if (!homeContent) return [];
+  
+  const props = homeContent.properties as any;
+  const blockList = props?.mainContent as components['schemas']['ApiBlockListModel'] | undefined;
+  
+  if (!blockList?.items) return [];
+  
+  // Return all blocks in order, filtering out any invalid blocks
+  return blockList.items.filter(
+    (block): block is components['schemas']['ApiBlockItemModel'] =>
+      block !== null && block !== undefined && block.content !== null && block.content !== undefined
+  );
+}
+
 export type { components, paths };

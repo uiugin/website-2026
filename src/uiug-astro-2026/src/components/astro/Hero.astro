@@ -14,10 +14,33 @@ const { hero } = Astro.props;
 const status = hero?.status || 'INDIA_OPERATIONAL';
 const title = hero?.title || 'RAW\nUMBRACO\nPOWER.';
 const caption = hero?.caption || "We don't just build sites. We architect digital dominance. Join the elite Umbraco core in India.";
-const buttons = hero?.buttons || [
+
+// Use fallback buttons if buttons are undefined or empty array
+// Always ensure we have at least the default buttons
+const defaultButtons = [
   { text: 'Initiate Sequence', url: '#', variant: 'primary' as const },
   { text: 'View_Members', url: '#', variant: 'outline' as const }
 ];
+
+// Ensure buttons always has a value - use hero buttons if available, otherwise defaults
+let buttons = defaultButtons;
+if (hero?.buttons && Array.isArray(hero.buttons) && hero.buttons.length > 0) {
+  buttons = hero.buttons;
+  console.log('Hero - Using buttons from hero prop:', buttons);
+} else {
+  console.log('Hero - Using default buttons. hero?.buttons:', hero?.buttons);
+}
+
+// Safety check - ensure buttons is never empty
+if (!buttons || !Array.isArray(buttons) || buttons.length === 0) {
+  console.warn('Hero - Buttons array was empty, using defaults');
+  buttons = defaultButtons;
+}
+
+// Final verification
+console.log('Hero - Final buttons array before render:', buttons);
+console.log('Hero - Buttons count:', buttons.length);
+
 const slideImage = hero?.slideImage || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop';
 
 // Parse title - handle HTML content from Umbraco
@@ -67,21 +90,26 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
               <p class="text-lg md:text-2xl leading-tight font-bold mb-8 uppercase text-black dark:text-white">
               {caption}
               </p>
-              {buttons.length > 0 && (
-                <div class="flex flex-col sm:flex-row gap-4">
-                  {buttons.map((button, i) => (
-                    <a href={button.url} class="inline-block">
-                      <Button 
-                        icon={i === 0 ? Zap : undefined} 
-                        variant={button.variant || 'primary'}
-                        client:load
-                      >
-                        {button.text}
-                      </Button>
-                    </a>
-                  ))}
-                </div>
-              )}
+              <div class="flex flex-col sm:flex-row gap-4">
+                {buttons.length > 0 && buttons[0] ? (
+                  (() => {
+                    const button1 = buttons[0];
+                    console.log('Hero Button 1 from CMS:', {
+                      text: button1.text,
+                      url: button1.url,
+                      variant: button1.variant
+                    });
+                    return (
+                      <a href={button1.url || '#'} class="inline-block">
+                        <Button icon={Zap} client:load>{button1.text || 'Button'}</Button>
+                      </a>
+                    );
+                  })()
+                ) : (
+                  <Button icon={Zap} client:load>Initiate Sequence</Button>
+                )}
+                <Button variant="outline" client:load>View_Members</Button>
+              </div>
           </div>
         </Reveal>
       )}
