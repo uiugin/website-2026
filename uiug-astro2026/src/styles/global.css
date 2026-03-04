@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FF0000;
+  --color-accent-yellow: #FFFF00;
+  
+  --font-family-display: 'Archivo Black', sans-serif;
+  --font-family-mono: 'Space Mono', monospace;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes marquee-footer {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes float-up {
+  0% { transform: translate(-50%, -50%) scale(0.5) rotate(0deg); opacity: 1; }
+  50% { transform: translate(-50%, -100px) scale(1.5) rotate(10deg); opacity: 0.8; }
+  100% { transform: translate(-50%, -200px) scale(1) rotate(-10deg); opacity: 0; }
+}
+
+/* Root CSS Variables for Theming */
+:root {
+  --bg-color: #ffffff;
+  --grid-color: #E0E0E0;
+  --scrollbar-track: #ffffff;
+  --scrollbar-thumb: var(--color-primary);
+  --scrollbar-border: #000000;
+  --color-primary: #FF0000; /* Default UIUG Red */
+  --color-accent: #FFFF00; /* Default UIUG Yellow */
+  /* Sync with @theme for Tailwind */
+  --color-accent-yellow: var(--color-accent);
+}
+
+.dark {
+  --bg-color: #0a0a0a;
+  --grid-color: #262626;
+  --scrollbar-track: #0a0a0a;
+  --scrollbar-thumb: var(--color-primary);
+  --scrollbar-border: #ffffff;
+}
+
+/* Base Styles */
+html, body {
+  width: 100%;
+  overflow-x: hidden;
+  background-color: var(--bg-color);
+}
+
+body {
+  background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transition: background-color 0.2s ease, background-image 0.2s ease;
+}
+
+@layer base {
+  * {
+    @apply border-black dark:border-white;
+  }
+  
+  html {
+    font-size: 14px;
+    color-scheme: light dark;
+  }
+  
+  body {
+    @apply bg-white dark:bg-black;
+    font-family: 'Space Mono', monospace;
+    color: black;
+    transition: background-color 0.2s ease, color 0.2s ease, background-image 0.2s ease;
+  }
+  
+  .dark body {
+    color: white;
+  }
+  
+  /* Smooth transitions for theme switching - only on text elements for performance */
+  h1, h2, h3, h4, h5, h6, p, span, a, label {
+    transition: color 0.15s ease;
+  }
+  
+  button, input, textarea {
+    transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+  }
+  
+  /* Only transition backgrounds on containers that explicitly need it */
+  [class*="bg-white"], [class*="bg-black"], [class*="bg-gray"] {
+    transition: background-color 0.15s ease;
+  }
+  
+  ::selection {
+    @apply bg-accent-yellow text-black;
+  }
+}
+
+/* Ensure font-display class uses Archivo Black for headings */
+.font-display {
+  font-family: 'Archivo Black', sans-serif !important;
+}
+
+/* Ensure font-mono class uses Space Mono */
+.font-mono {
+  font-family: 'Space Mono', monospace !important;
+}
+
+@layer utilities {
+  /* Brutalist Shadow Utilities */
+  .shadow-brutal-red {
+    box-shadow: 8px 8px 0px 0px var(--color-primary);
+  }
+  
+  .shadow-brutal-yellow {
+    box-shadow: 8px 8px 0px 0px var(--color-accent);
+  }
+  
+  .shadow-brutal-black {
+    box-shadow: 8px 8px 0px 0px #000000;
+  }
+  
+  .dark .shadow-brutal-white {
+    box-shadow: 8px 8px 0px 0px #ffffff;
+  }
+  
+  .shadow-brutal-white {
+    box-shadow: 8px 8px 0px 0px #ffffff;
+  }
+  
+  /* Glitch Text Effect - Exact match from AI Studio */
+  .glitch-text {
+    text-shadow: 2px 0 var(--color-accent), -2px 0 var(--color-primary);
+  }
+  
+  /* Plastic Surface Effect - Exact match from AI Studio */
+  .plastic-surface {
+    position: relative;
+    overflow: hidden;
+  }
+  .plastic-surface::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(0,0,0,0.05) 100%);
+    pointer-events: none;
+  }
+  
+  /* Lego Studs Pattern - Exact match from AI Studio */
+  .lego-studs {
+    background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: rgba(0,0,0,0.1); /* Light studs for light mode */
+  }
+  .dark .lego-studs {
+    color: rgba(255,255,255,0.1); /* Dark studs for dark mode */
+  }
+  
+  /* Text Stroke Utility - Exact match from AI Studio */
+  .text-stroke-white {
+    -webkit-text-stroke: 2px white;
+    color: transparent;
+  }
+  
+  /* Animation utilities */
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+  }
+  
+  .animate-marquee-reverse {
+    animation: marquee-reverse 25s linear infinite;
+  }
+  
+  .animate-marquee-footer {
+    animation: marquee-footer 30s linear infinite;
+  }
+  
+  .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+  
+  .animate-float-up {
+    animation: float-up 0.8s ease-out forwards;
+  }
+}
+
+/* Custom Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-left: 2px solid var(--scrollbar-border);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border: 2px solid var(--scrollbar-border);
+}
+
+/* Selection Styling */
+::selection {
+  background-color: var(--color-accent);
+  color: black;
+}

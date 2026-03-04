@@ -1,0 +1,58 @@
+---
+import { Reveal } from '../react/Reveal';
+
+interface FeatureCardProps {
+  number: string;
+  title: string;
+  description: string;
+  variant?: 'red' | 'yellow' | 'black';
+}
+
+const shadows = {
+  red: 'shadow-brutal-red dark:shadow-brutal-red hover:bg-primary hover:text-black',
+  yellow: 'shadow-brutal-yellow dark:shadow-brutal-yellow hover:bg-accent-yellow hover:text-black',
+  black: 'shadow-brutal-black dark:shadow-brutal-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black',
+};
+---
+
+<section class="px-4 md:px-10 mb-20 w-full">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+    <Reveal delay={0.1} width="100%" className="h-full" client:visible>
+        <div class="bg-white dark:bg-black border-4 border-black dark:border-white p-8 md:p-10 transition-colors duration-200 group h-full flex flex-col justify-between text-black dark:text-white shadow-brutal-red dark:shadow-brutal-red hover:bg-primary hover:text-black">
+          <div>
+            <h3 class="text-3xl md:text-4xl font-display mb-6 group-hover:translate-x-2 transition-transform">
+              01_CODE
+            </h3>
+          </div>
+          <p class="font-bold text-sm md:text-base leading-relaxed uppercase">
+            Deep dive into the architecture. Push the CMS beyond its limits.
+          </p>
+        </div>
+    </Reveal>
+    <Reveal delay={0.3} width="100%" className="h-full" client:visible>
+        <div class="bg-white dark:bg-black border-4 border-black dark:border-white p-8 md:p-10 transition-colors duration-200 group h-full flex flex-col justify-between text-black dark:text-white shadow-brutal-yellow dark:shadow-brutal-yellow hover:bg-accent-yellow hover:text-black">
+          <div>
+            <h3 class="text-3xl md:text-4xl font-display mb-6 group-hover:translate-x-2 transition-transform">
+              02_SYNC
+            </h3>
+          </div>
+          <p class="font-bold text-sm md:text-base leading-relaxed uppercase">
+            Connect with the architects shaping the Indian ecosystem.
+          </p>
+        </div>
+    </Reveal>
+    <Reveal delay={0.5} width="100%" className="h-full" client:visible>
+        <div class="bg-white dark:bg-black border-4 border-black dark:border-white p-8 md:p-10 transition-colors duration-200 group h-full flex flex-col justify-between text-black dark:text-white shadow-brutal-black dark:shadow-brutal-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black">
+          <div>
+            <h3 class="text-3xl md:text-4xl font-display mb-6 group-hover:translate-x-2 transition-transform">
+              03_EVOLVE
+            </h3>
+          </div>
+          <p class="font-bold text-sm md:text-base leading-relaxed uppercase">
+            Not just a community. An evolutionary jump for your career.
+          </p>
+        </div>
+    </Reveal>
+  </div>
+</section>
+
