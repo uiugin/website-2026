@@ -1,0 +1,61 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppShell from '../components/react/AppShell';
+import Hero from '../components/astro/Hero.astro';
+import Marquee from '../components/astro/Marquee.astro';
+import Features from '../components/astro/Features.astro';
+import LatestEvents from '../components/astro/LatestEvents.astro';
+import Showcase from '../components/astro/Showcase.astro';
+import MarqueeReverse from '../components/astro/MarqueeReverse.astro';
+import Speakers from '../components/react/Speakers';
+import Countdown from '../components/react/Countdown';
+import Gallery from '../components/react/Gallery';
+import Appreciation from '../components/react/Appreciation';
+import Contact from '../components/react/Contact';
+import FAQ from '../components/react/FAQ';
+import JoinUs from '../components/react/JoinUs';
+import Footer from '../components/react/Footer';
+import Sponsors from '../components/react/Sponsors';
+import { getSiteSettings } from '../api/umbraco';
+
+// Fetch site settings from CMS server-side
+const layoutData = await getSiteSettings();
+
+// Preload Spline 404 scene for faster loading when users hit 404 page
+const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.splinecode';
+---
+
+<Layout title={layoutData.siteName ? `${layoutData.siteName} - Umbraco India User Group` : 'UIUG - Umbraco India User Group'}>
+  {/* Preload Spline 404 scene - cache it early for faster 404 page loads */}
+  <link rel="preload" href={splineSceneUrl} as="fetch" crossorigin="anonymous" />
+  <link rel="dns-prefetch" href="https://prod.spline.design" />
+  <link rel="preconnect" href="https://prod.spline.design" crossorigin />
+  
+  <AppShell 
+    client:only="react"
+    logo={layoutData.logo}
+    navItems={layoutData.navItems}
+    ctaItem={layoutData.ctaItem}
+  >
+    <Hero />
+    <Marquee />
+    <Countdown client:load />
+    <Features />
+    <LatestEvents />
+    <Speakers client:load />
+    <Showcase />
+    <Sponsors client:visible />
+    <Gallery client:load />
+    <MarqueeReverse />
+    <Appreciation client:load />
+    <FAQ client:load />
+    <Contact client:load />
+    <JoinUs client:load />
+    <Footer 
+      client:load 
+      footer={layoutData.footer}
+      social={layoutData.social}
+    />
+  </AppShell>
+</Layout>
+

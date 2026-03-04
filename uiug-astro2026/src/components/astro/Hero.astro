@@ -1,0 +1,91 @@
+---
+import Button from '../react/Button';
+import { Reveal, Slide } from '../react/Reveal';
+import { Zap, Calendar, Clock, ArrowRight } from 'lucide-react';
+---
+
+<section class="px-4 md:px-10 pb-20 w-full relative overflow-hidden">
+  <div class="flex flex-col lg:grid lg:grid-cols-12 gap-10 lg:gap-0 relative items-center">
+    {/* Left Content */}
+    <div class="lg:col-span-7 xl:col-span-8 z-20 relative pt-10 lg:pt-20">
+      <Reveal client:visible>
+        <div class="inline-block px-4 py-1 mb-6 font-bold bg-black text-white dark:bg-white dark:text-black shadow-brutal-red dark:shadow-brutal-white border-2 border-transparent">
+            STATUS: [INDIA_OPERATIONAL]
+        </div>
+      </Reveal>
+      
+      <Reveal delay={0.1} client:visible>
+        <h1 class="text-6xl sm:text-7xl md:text-8xl lg:text-[8rem] xl:text-[10rem] font-display leading-[0.85] tracking-tighter uppercase mb-10 glitch-text break-words text-black dark:text-white">
+            RAW<br/>
+            <span class="text-primary">UMBRACO</span><br/>
+            POWER.
+        </h1>
+      </Reveal>
+
+      <Reveal delay={0.3} width="100%" client:visible>
+        <div class="max-w-xl p-6 md:p-8 bg-white dark:bg-black border-4 border-black dark:border-white shadow-brutal-red dark:shadow-brutal-white relative z-30 transition-colors duration-300">
+            <p class="text-lg md:text-2xl leading-tight font-bold mb-8 uppercase text-black dark:text-white">
+            We don't just build sites. We architect digital dominance. Join the elite Umbraco core in India.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4">
+            <Button icon={Zap} client:load>Initiate Sequence</Button>
+            <Button variant="outline" client:load>View_Members</Button>
+            </div>
+        </div>
+      </Reveal>
+    </div>
+
+    {/* Right Content / Image Overlay */}
+    <div class="lg:col-span-5 xl:col-span-4 z-10 flex flex-col items-center justify-center lg:justify-end mt-10 lg:mt-0 w-full">
+      <Slide direction="right" delay={0.4} width="100%" client:visible>
+        <div class="relative w-full max-w-lg lg:max-w-full aspect-square border-4 border-black dark:border-white grayscale hover:grayscale-0 transition-all duration-500 shadow-brutal-yellow dark:shadow-brutal-white overflow-hidden bg-gray-900 group">
+            {/* Tech-ish Image Placeholder - Code Screen */}
+            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center mix-blend-screen opacity-90 group-hover:scale-110 transition-transform duration-700"></div>
+            
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
+            
+            {/* Floating Labels */}
+            <div class="absolute top-4 left-4 bg-primary text-black px-2 py-1 text-xs md:text-sm font-bold border-2 border-black dark:border-white">
+            RUNTIME: .NET_CORE
+            </div>
+            
+            <div class="absolute bottom-4 right-4 bg-accent-yellow text-black px-2 py-1 text-xs md:text-sm font-bold border-2 border-black dark:border-white">
+            CACHE: REFRESHED
+            </div>
+        </div>
+      </Slide>
+
+      {/* Next Session Box */}
+      <Slide direction="right" delay={0.6} width="100%" client:visible>
+        <div class="w-full max-w-lg lg:max-w-full mt-6 bg-white dark:bg-black border-4 border-black dark:border-white p-5 shadow-brutal-black dark:shadow-brutal-white transition-colors duration-300 relative group cursor-pointer hover:-translate-y-1 hover:shadow-brutal-yellow">
+            <div class="absolute top-0 right-0 bg-primary text-black px-3 py-1 font-bold text-xs border-l-4 border-b-4 border-black dark:border-white">
+                NEXT_EVENT
+            </div>
+            
+            <p class="font-mono text-xs font-bold text-gray-500 dark:text-gray-400 mb-2">
+                // SESSION_042
+            </p>
+            
+            <h3 class="text-2xl md:text-3xl font-display uppercase leading-none mb-4 text-black dark:text-white group-hover:text-primary transition-colors">
+                BUILDING SCALABLE APIS WITH UMBRACO 14
+            </h3>
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm font-bold font-mono text-black dark:text-white border-t-2 border-black dark:border-white pt-3">
+                <div class="flex gap-4">
+                <div class="flex items-center gap-2">
+                    <Calendar class="w-4 h-4" />
+                    <span>NOV 28</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <Clock class="w-4 h-4" />
+                    <span>19:00 IST</span>
+                </div>
+                </div>
+                <ArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+            </div>
+        </div>
+      </Slide>
+    </div>
+  </div>
+</section>
+

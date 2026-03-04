@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+}
+
+const { title = "UIUG - Umbraco India User Group" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Google+Sans+Text);
+      @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+    </style>
+    <script is:inline>
+      // Apply theme and palette immediately before React hydrates to prevent flash
+      (function() {
+        const root = document.documentElement;
+        
+        // Apply theme
+        const savedTheme = localStorage.getItem('theme');
+        const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDark) {
+          root.classList.add('dark');
+        } else {
+          root.classList.remove('dark');
+        }
+        
+        // Apply palette colors
+        const savedPaletteId = localStorage.getItem('paletteId') || 'default';
+        const savedCustomColors = localStorage.getItem('customColors');
+        
+        let colors;
+        if (savedPaletteId === 'custom' && savedCustomColors) {
+          colors = JSON.parse(savedCustomColors);
+        } else {
+          const presets = {
+            default: { primary: '#FF0000', accent: '#FFFF00' },
+            cyber: { primary: '#00FF41', accent: '#FF00FF' },
+            ocean: { primary: '#0044FF', accent: '#00FFFF' },
+            toxic: { primary: '#BD00FF', accent: '#CCFF00' }
+          };
+          colors = presets[savedPaletteId] || presets.default;
+        }
+        
+        if (colors) {
+          root.style.setProperty('--color-primary', colors.primary);
+          root.style.setProperty('--color-accent', colors.accent);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
