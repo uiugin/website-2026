@@ -16,10 +16,25 @@ import FAQ from '../components/react/FAQ';
 import JoinUs from '../components/react/JoinUs';
 import Footer from '../components/react/Footer';
 import Sponsors from '../components/react/Sponsors';
-import { getSiteSettings } from '../api/umbraco';
+import { getSiteSettings, getHomeContent, getHeroBlock } from '../api/umbraco';
+import { mapHeroProps } from '../lib/hero-mapper';
 
 // Fetch site settings from CMS server-side
 const layoutData = await getSiteSettings();
+
+// Fetch Hero content from Umbraco
+let heroProps = null;
+try {
+  const homeContent = await getHomeContent();
+  const heroBlock = getHeroBlock(homeContent);
+  
+  if (heroBlock) {
+    heroProps = mapHeroProps(heroBlock);
+  }
+} catch (error) {
+  console.error('Error fetching Hero content:', error);
+  // Continue without hero props - component will use defaults
+}
 
 // Preload Spline 404 scene for faster loading when users hit 404 page
 const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.splinecode';
@@ -37,7 +52,7 @@ const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.spline
     navItems={layoutData.navItems}
     ctaItem={layoutData.ctaItem}
   >
-    <Hero />
+    {heroProps ? <Hero hero={heroProps} /> : <Hero />}
     <Marquee />
     <Countdown client:load />
     <Features />

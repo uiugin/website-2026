@@ -6,6 +6,21 @@ import type { components, paths } from './types.js';
 import type { LayoutData, LayoutLink } from '../types/layout.js';
 import { UmbracoClient } from '@grace-studio/umbraco-client';
 
+// Configure Node.js to accept self-signed certificates in development
+// This is needed when connecting to localhost with self-signed SSL certificates
+if (import.meta.env.DEV) {
+  // Only disable certificate validation in development
+  try {
+    const nodeProcess = (globalThis as any).process || (globalThis as any).global?.process;
+    if (nodeProcess?.env) {
+      nodeProcess.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+      console.warn('⚠️  SSL certificate validation disabled for development (self-signed cert)');
+    }
+  } catch {
+    // Ignore if process is not available
+  }
+}
+
 const apiUrl = 'https://localhost:44392';
 const apiToken = '5df43bf5-46ca-4976-8087-f3972df5849b';
 
@@ -147,5 +162,59 @@ export const getMenu = (
     extraQueryParams: options?.extraQueryParams,
     headers: options?.headers,
   });
+
+/** Transform media URL from Umbraco API to frontend-usable URL */
+export function transformMediaUrl(url: string | null | undefined): string {
+  if (!url) return '';
+  
+  // If URL is already absolute and external, return as-is
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  
+  // If relative URL, prepend API URL
+  return `${apiUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+}
+
+/** Get media URL from Umbraco media model */
+export function getMediaUrl(
+  media: components['schemas']['IApiMediaWithCropsModel'] | null | undefined
+): string {
+  if (!media) return '';
+  return transformMediaUrl(media.url);
+}
+
+/** Fetch Home page content */
+export async function getHomeContent() {
+  try {
+    return await getContentItem('home');
+  } catch (error) {
+    if (import.meta.env.DEV) {
+      console.error('Failed to fetch Home content:', error);
+    }
+    return null;
+  }
+}
+
+/** Extract Hero block from Home page Block List */
+export function getHeroBlock(
+  homeContent: Awaited<ReturnType<typeof getContentItem>> | null
+): components['schemas']['HeroElementModel'] | null {
+  if (!homeContent) return null;
+  
+  const props = homeContent.properties as any;
+  const blockList = props?.mainContent as components['schemas']['ApiBlockListModel'] | undefined;
+  
+  if (!blockList?.items) return null;
+  
+  // Find the Hero block in the block list
+  for (const block of blockList.items) {
+    if (block.content?.contentType === 'hero') {
+      return block.content as components['schemas']['HeroElementModel'];
+    }
+  }
+  
+  return null;
+}
 
 export type { components, paths };
