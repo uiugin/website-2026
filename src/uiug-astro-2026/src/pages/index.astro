@@ -26,6 +26,10 @@ import { mapLatestEventsProps } from '../lib/latest-events-mapper';
 import { mapShowcaseProps } from '../lib/showcase-mapper';
 import { mapCountdownProps } from '../lib/countdown-mapper';
 import { mapSpeakersProps } from '../lib/speakers-mapper';
+import { mapFAQProps } from '../lib/faq-mapper';
+import { mapContactProps } from '../lib/contact-mapper';
+import { mapSponsorsProps } from '../lib/sponsors-mapper';
+import { mapGalleryProps } from '../lib/gallery-mapper';
 import type { components } from '../api/types';
 
 // Fetch site settings from CMS server-side
@@ -37,6 +41,9 @@ let heroProps = null;
 const latestEventsPropsMap = new Map<number, Awaited<ReturnType<typeof mapLatestEventsProps>>>();
 const showcasePropsMap = new Map<number, Awaited<ReturnType<typeof mapShowcaseProps>>>();
 const speakersPropsMap = new Map<number, Awaited<ReturnType<typeof mapSpeakersProps>>>();
+const faqPropsMap = new Map<number, Awaited<ReturnType<typeof mapFAQProps>>>();
+const sponsorsPropsMap = new Map<number, Awaited<ReturnType<typeof mapSponsorsProps>>>();
+const galleryPropsMap = new Map<number, Awaited<ReturnType<typeof mapGalleryProps>>>();
 try {
   const homeContent = await getHomeContent();
   blocks = getMainContentBlocks(homeContent);
@@ -47,7 +54,7 @@ try {
     heroProps = mapHeroProps(heroBlock);
   }
   
-  // Pre-fetch all async component props (LatestEvents, Showcase, and Speakers)
+  // Pre-fetch all async component props (LatestEvents, Showcase, Speakers, FAQ, and Sponsors)
   const asyncPropsPromises = blocks.map(async (block, index) => {
     const contentType = block.content?.contentType;
     const componentId = getComponentIdentifier(contentType);
@@ -80,6 +87,39 @@ try {
         return { index, type: 'speakers', props: {} };
       }
     }
+    if (componentId === 'faq') {
+      const faqBlock = block.content as components['schemas']['FaqElementModel'];
+      try {
+        const props = await mapFAQProps(faqBlock);
+        return { index, type: 'faq', props };
+      } catch (error) {
+        console.error(`Error mapping FAQ props at index ${index}:`, error);
+        return { index, type: 'faq', props: {} };
+      }
+    }
+    if (componentId === 'sponsors') {
+      const sponsorsBlock = block.content as components['schemas']['SponsorsElementModel'];
+      console.log(`\n🚀 CALLING mapSponsorsProps at index ${index}`);
+      console.log('Sponsors block:', sponsorsBlock);
+      try {
+        const props = await mapSponsorsProps(sponsorsBlock);
+        console.log('✅ Sponsors props returned:', props);
+        return { index, type: 'sponsors', props };
+      } catch (error) {
+        console.error(`❌ Error mapping Sponsors props at index ${index}:`, error);
+        return { index, type: 'sponsors', props: {} };
+      }
+    }
+    if (componentId === 'gallery') {
+      const galleryBlock = block.content as components['schemas']['GalleryElementModel'];
+      try {
+        const props = await mapGalleryProps(galleryBlock);
+        return { index, type: 'gallery', props };
+      } catch (error) {
+        console.error(`Error mapping Gallery props at index ${index}:`, error);
+        return { index, type: 'gallery', props: {} };
+      }
+    }
     return null;
   });
   
@@ -92,6 +132,12 @@ try {
         showcasePropsMap.set(result.index, result.props);
       } else if (result.type === 'speakers') {
         speakersPropsMap.set(result.index, result.props);
+      } else if (result.type === 'faq') {
+        faqPropsMap.set(result.index, result.props);
+      } else if (result.type === 'sponsors') {
+        sponsorsPropsMap.set(result.index, result.props);
+      } else if (result.type === 'gallery') {
+        galleryPropsMap.set(result.index, result.props);
       }
     }
   });
@@ -167,19 +213,24 @@ const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.spline
         return <Showcase showcase={showcaseProps} />;
       }
       if (componentId === 'sponsors') {
-        return <Sponsors client:visible />;
+        const sponsorsProps = sponsorsPropsMap.get(index);
+        return <Sponsors sponsors={sponsorsProps} client:visible />;
       }
       if (componentId === 'gallery') {
-        return <Gallery client:load />;
+        const galleryProps = galleryPropsMap.get(index);
+        return <Gallery gallery={galleryProps} client:load />;
       }
       if (componentId === 'appreciation') {
         return <Appreciation client:load />;
       }
       if (componentId === 'faq') {
-        return <FAQ client:load />;
+        const faqProps = faqPropsMap.get(index);
+        return <FAQ faq={faqProps} client:load />;
       }
       if (componentId === 'contact') {
-        return <Contact client:load />;
+        const contactBlock = block.content as components['schemas']['ContactUsElementModel'];
+        const contactProps = mapContactProps(contactBlock);
+        return <Contact contact={contactProps} client:load />;
       }
       
       return null;

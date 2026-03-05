@@ -1,68 +1,20 @@
 import React, { useState } from 'react';
 import { Image as ImageIcon, Play, Maximize2, X, Aperture } from 'lucide-react';
+import type { GalleryProps, MediaItem } from '../../lib/gallery-mapper';
 
-interface MediaItem {
-  id: string;
-  type: 'image' | 'video';
-  src: string;
-  caption: string;
-  location: string;
-  date: string;
+interface Props {
+  gallery?: GalleryProps;
 }
 
-const mediaItems: MediaItem[] = [
-  {
-    id: '1',
-    type: 'image',
-    src: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1000&auto=format&fit=crop',
-    caption: 'MAIN_STAGE_KEYNOTE',
-    location: 'BENGALURU_PRIME',
-    date: 'DEC_23'
-  },
-  {
-    id: '2',
-    type: 'video',
-    src: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1000&auto=format&fit=crop',
-    caption: 'LIVE_CODING_DEMO',
-    location: 'HYDERABAD_HUB',
-    date: 'NOV_23'
-  },
-  {
-    id: '3',
-    type: 'image',
-    src: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1000&auto=format&fit=crop',
-    caption: 'COMMUNITY_MIXER',
-    location: 'MUMBAI_NORTH',
-    date: 'OCT_23'
-  },
-  {
-    id: '4',
-    type: 'image',
-    src: 'https://images.unsplash.com/photo-1550063873-ab792950096b?q=80&w=1000&auto=format&fit=crop',
-    caption: 'HACKATHON_WINNERS',
-    location: 'DELHI_NCR',
-    date: 'SEP_23'
-  },
-  {
-    id: '5',
-    type: 'video',
-    src: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop',
-    caption: 'AFTER_PARTY_VIBES',
-    location: 'GOA_RETREAT',
-    date: 'AUG_23'
-  },
-  {
-    id: '6',
-    type: 'image',
-    src: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1000&auto=format&fit=crop',
-    caption: 'WORKSHOP_SESSIONS',
-    location: 'PUNE_CAMPUS',
-    date: 'JUL_23'
-  }
-];
-
-const Gallery: React.FC = () => {
+const Gallery: React.FC<Props> = ({ gallery }) => {
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
+  
+  // Default values
+  const defaultTitle = 'VISUAL_LOGS';
+  const defaultItems: MediaItem[] = [];
+  
+  const sectionTitle = gallery?.title || defaultTitle;
+  const mediaItems = gallery?.items || defaultItems;
 
   return (
     <section className="px-4 md:px-10 mb-20 w-full relative z-10" id="gallery">
@@ -72,7 +24,7 @@ const Gallery: React.FC = () => {
             <Aperture className="w-full h-full text-white dark:text-black p-0.5 animate-spin-slow" />
          </div>
          <h2 className="text-4xl md:text-6xl font-display font-black uppercase text-black dark:text-white tracking-tighter leading-none">
-            VISUAL_LOGS
+            {sectionTitle.toUpperCase()}
          </h2>
          <span className="font-mono text-xs font-bold text-gray-500 mb-2 ml-auto hidden md:block">
             // MEMORY_DUMP_COMPLETE
@@ -80,8 +32,9 @@ const Gallery: React.FC = () => {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mediaItems.map((item) => (
+      {mediaItems.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {mediaItems.map((item) => (
             <div 
                 key={item.id}
                 onClick={() => setSelectedItem(item)}
@@ -127,8 +80,15 @@ const Gallery: React.FC = () => {
                     </div>
                 </div>
             </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-20 border-4 border-dashed border-gray-400 dark:border-gray-600">
+          <p className="font-mono text-lg font-bold text-gray-500 uppercase">
+            NO_GALLERY_ITEMS_LOADED
+          </p>
+        </div>
+      )}
 
       {/* Modal Lightbox */}
       {selectedItem && (

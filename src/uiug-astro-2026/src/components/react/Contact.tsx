@@ -1,7 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { Mail, MapPin, Send, MessageSquare, ArrowRight, Terminal } from 'lucide-react';
+import type { ContactProps } from '../../lib/contact-mapper';
 
-const Contact: React.FC = () => {
+interface Props {
+  contact?: ContactProps;
+}
+
+const Contact: React.FC<Props> = ({ contact }) => {
+  // Use dynamic title from props, fallback to default
+  const title = contact?.title || 'INITIATE_UPLINK';
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
 
@@ -58,7 +65,7 @@ const Contact: React.FC = () => {
             <Terminal className="w-3 h-3 md:w-5 md:h-5 text-white dark:text-black" />
          </div>
          <h2 className="text-4xl md:text-6xl font-display font-black uppercase text-black dark:text-white tracking-tighter leading-none">
-            INITIATE_UPLINK
+            {title.toUpperCase()}
          </h2>
          <span className="font-mono text-xs font-bold text-gray-500 mb-2 ml-auto hidden md:block">
             // CONNECTION_SECURE
