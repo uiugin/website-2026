@@ -19,6 +19,8 @@ import Sponsors from '../components/react/Sponsors';
 import { getSiteSettings, getHomeContent, getMainContentBlocks, getHeroBlock } from '../api/umbraco';
 import { getComponentIdentifier } from '../lib/component-order';
 import { mapHeroProps } from '../lib/hero-mapper';
+import { mapFeaturesProps } from '../lib/features-mapper';
+import type { components } from '../api/types';
 
 // Fetch site settings from CMS server-side
 const layoutData = await getSiteSettings();
@@ -81,7 +83,9 @@ const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.spline
         return <MarqueeReverse />;
       }
       if (componentId === 'features') {
-        return <Features />;
+        const featuresBlock = block.content as components['schemas']['FeaturesElementModel'];
+        const featuresProps = mapFeaturesProps(featuresBlock);
+        return <Features features={featuresProps} />;
       }
       if (componentId === 'countdown') {
         return <Countdown client:load />;
