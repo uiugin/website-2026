@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import type { CountdownProps } from '../../lib/countdown-mapper';
 
 const TimeBox: React.FC<{ value: number; label: string }> = ({ value, label }) => (
   <div className="flex flex-col items-center justify-center border-4 border-black dark:border-white p-4 md:p-6 min-w-[90px] md:min-w-[140px] bg-white dark:bg-black shadow-brutal-black dark:shadow-brutal-white hover:-translate-y-1 hover:shadow-brutal-yellow transition-all duration-200">
@@ -11,19 +12,51 @@ const TimeBox: React.FC<{ value: number; label: string }> = ({ value, label }) =
   </div>
 );
 
-const Countdown: React.FC = () => {
+interface Props {
+  countdown?: CountdownProps;
+}
+
+const Countdown: React.FC<Props> = ({ countdown }) => {
+  // Default values
+  const subtitle = countdown?.subtitle || 'WARNING: KNOWLEDGE_DROP_IMMINENT';
+  const title = countdown?.title || 'BUILDING SCALABLE APIS WITH UMBRACO 14';
+  const timer = countdown?.timer;
+
+  // Parse title - split at "WITH" if present, otherwise use as-is
+  const titleParts = title.toUpperCase().split(/\s+WITH\s+/i);
+  const titleFirst = titleParts[0] || title;
+  const titleSecond = titleParts.length > 1 ? `WITH ${titleParts[1]}` : null;
+
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   function calculateTimeLeft() {
-    // Default to Nov 28 of current year. If passed, next year.
-    const now = new Date();
-    let year = now.getFullYear();
-    const targetDate = new Date(`${year}-11-28T19:00:00`);
+    let targetDate: Date;
 
-    if (now > targetDate) {
-      targetDate.setFullYear(year + 1);
+    if (timer) {
+      // Parse the timer string (ISO date-time format)
+      targetDate = new Date(timer);
+      
+      // Validate the date
+      if (isNaN(targetDate.getTime())) {
+        // Fallback to default if invalid
+        const now = new Date();
+        let year = now.getFullYear();
+        targetDate = new Date(`${year}-11-28T19:00:00`);
+        if (now > targetDate) {
+          targetDate.setFullYear(year + 1);
+        }
+      }
+    } else {
+      // Default to Nov 28 of current year. If passed, next year.
+      const now = new Date();
+      let year = now.getFullYear();
+      targetDate = new Date(`${year}-11-28T19:00:00`);
+      if (now > targetDate) {
+        targetDate.setFullYear(year + 1);
+      }
     }
 
+    const now = new Date();
     const difference = +targetDate - +now;
     
     let timeLeft = {
@@ -46,27 +79,32 @@ const Countdown: React.FC = () => {
   }
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const timerInterval = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+    return () => clearInterval(timerInterval);
+  }, [timer]);
 
   return (
     <section className="w-full px-4 md:px-10 mb-20 md:mb-32 flex flex-col items-center justify-center relative z-20">
       
       {/* Session Title Block */}
       <div className="text-center mb-10 max-w-5xl mx-auto flex flex-col items-center">
-         <div className="inline-block bg-black text-white dark:bg-white dark:text-black px-4 py-1 mb-6 font-mono font-bold text-xs md:text-sm uppercase transform -rotate-2 border-2 border-transparent shadow-brutal-red dark:shadow-brutal-white">
-            WARNING: KNOWLEDGE_DROP_IMMINENT
-         </div>
+         {subtitle && (
+           <div className="inline-block bg-black text-white dark:bg-white dark:text-black px-4 py-1 mb-6 font-mono font-bold text-xs md:text-sm uppercase transform -rotate-2 border-2 border-transparent shadow-brutal-red dark:shadow-brutal-white">
+              {subtitle}
+           </div>
+         )}
          <h2 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-black uppercase text-black dark:text-white leading-[0.9] tracking-tighter mb-4 text-center">
-            BUILDING SCALABLE APIS<br/>
-            <span className="text-primary">WITH UMBRACO 14</span>
+            {titleSecond ? (
+              <>
+                {titleFirst}<br/>
+                <span className="text-primary">{titleSecond}</span>
+              </>
+            ) : (
+              titleFirst
+            )}
          </h2>
-         <p className="font-mono text-sm md:text-base font-bold text-gray-500 max-w-2xl">
-            // JOIN THE ARCHITECTS OF THE DIGITAL FUTURE. DON'T MISS THE SIGNAL.
-         </p>
       </div>
 
       <div className="bg-primary px-6 py-2 border-4 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white mb-8 md:mb-12 transform rotate-1 hover:rotate-0 transition-transform duration-300">

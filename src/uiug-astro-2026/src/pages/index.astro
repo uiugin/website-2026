@@ -24,6 +24,7 @@ import { mapMarqueeProps } from '../lib/marquee-mapper';
 import { mapMarqueeReverseProps } from '../lib/marquee-reverse-mapper';
 import { mapLatestEventsProps } from '../lib/latest-events-mapper';
 import { mapShowcaseProps } from '../lib/showcase-mapper';
+import { mapCountdownProps } from '../lib/countdown-mapper';
 import type { components } from '../api/types';
 
 // Fetch site settings from CMS server-side
@@ -135,7 +136,9 @@ const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.spline
         return <Features features={featuresProps} />;
       }
       if (componentId === 'countdown') {
-        return <Countdown client:load />;
+        const countdownBlock = block.content as components['schemas']['CountdownElementModel'];
+        const countdownProps = mapCountdownProps(countdownBlock);
+        return <Countdown countdown={countdownProps} client:load />;
       }
       if (componentId === 'latestEvents') {
         const latestEventsProps = latestEventsPropsMap.get(index);
