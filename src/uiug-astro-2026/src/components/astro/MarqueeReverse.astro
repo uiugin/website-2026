@@ -1,5 +1,15 @@
 ---
-const text = "HIGH FIVE YOU ROCK // H5YR // OPEN SOURCE // COMMUNITY // FRIENDLY CMS // ";
+import type { MarqueeReverseProps } from '../../lib/marquee-reverse-mapper';
+
+interface Props {
+  marqueeReverse?: MarqueeReverseProps;
+}
+
+const { marqueeReverse } = Astro.props;
+
+// Default text as fallback
+const defaultText = "HIGH FIVE YOU ROCK // H5YR // OPEN SOURCE // COMMUNITY // FRIENDLY CMS // ";
+const text = marqueeReverse?.text || defaultText;
 ---
 
 <section class="relative w-full overflow-hidden py-3 bg-black dark:bg-white text-white dark:text-black border-y-4 border-white dark:border-black rotate-2 scale-110 z-30 -my-12 shadow-brutal-yellow dark:shadow-brutal-red mix-blend-normal pointer-events-none select-none">

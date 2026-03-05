@@ -1,46 +1,19 @@
 ---
 import { Reveal } from '../react/Reveal';
 import { Calendar, User, Tag, ArrowUpRight, Radio } from 'lucide-react';
+import type { LatestEventsProps } from '../../lib/latest-events-mapper';
 
-interface Event {
-  id: string;
-  title: string;
-  type: string;
-  speaker: string;
-  date: string;
-  status: 'INCOMING' | 'ARCHIVED';
-  colors: 'default' | 'yellow' | 'accent';
+interface Props {
+  latestEvents?: LatestEventsProps;
 }
 
-const events: Event[] = [
-  {
-    id: '042',
-    title: 'BUILDING SCALABLE APIS WITH UMBRACO 14',
-    type: 'TECHNICAL_BRIEFING',
-    speaker: 'RAVI_KUMAR',
-    date: 'NOV 28, 2024',
-    status: 'INCOMING',
-    colors: 'default'
-  },
-  {
-    id: '041',
-    title: 'ADVANCED BACKOFFICE CUSTOMIZATION',
-    type: 'WORKSHOP',
-    speaker: 'ANITA_SHARMA',
-    date: 'OCT 15, 2024',
-    status: 'ARCHIVED',
-    colors: 'yellow'
-  },
-  {
-    id: '040',
-    title: 'THE STATE OF UMBRACO IN INDIA',
-    type: 'KEYNOTE',
-    speaker: 'VIKRAM_SINGH',
-    date: 'SEP 02, 2024',
-    status: 'ARCHIVED',
-    colors: 'accent'
-  }
-];
+const { latestEvents } = Astro.props;
+
+// Use events from props - no fallback defaults, component should be fully dynamic
+const events = latestEvents?.events || [];
+
+// Use title from props if available, otherwise use default
+const sectionTitle = latestEvents?.title || 'EVENT_LOG';
 ---
 
 <section class="px-4 md:px-10 mb-20 w-full relative z-10" id="events_01">
@@ -49,7 +22,7 @@ const events: Event[] = [
     <div class="flex items-end gap-4 mb-10 md:mb-16 border-b-4 border-black dark:border-white pb-4">
         <div class="h-4 w-4 md:h-8 md:w-8 bg-primary animate-pulse"></div>
         <h2 class="text-4xl md:text-6xl font-display font-black uppercase text-black dark:text-white tracking-tighter leading-none">
-            EVENT_LOG
+            {sectionTitle.toUpperCase()}
         </h2>
         <span class="font-mono text-xs font-bold text-gray-500 mb-2 ml-auto hidden md:block">
             // DATABASE_ACCESS: GRANTED
@@ -103,18 +76,32 @@ const events: Event[] = [
                         <span>{event.speaker}</span>
                     </div>
                     
-                    <button class="hidden lg:flex items-center gap-2 font-bold uppercase hover:underline decoration-4 underline-offset-4 decoration-primary text-black dark:text-white">
+                    {event.url && event.url !== '#' ? (
+                      <a href={event.url} class="hidden lg:flex items-center gap-2 font-bold uppercase hover:underline decoration-4 underline-offset-4 decoration-primary text-black dark:text-white">
                         ACCESS_DATA <ArrowUpRight class="w-5 h-5" />
-                    </button>
+                      </a>
+                    ) : (
+                      <button class="hidden lg:flex items-center gap-2 font-bold uppercase hover:underline decoration-4 underline-offset-4 decoration-primary text-black dark:text-white">
+                        ACCESS_DATA <ArrowUpRight class="w-5 h-5" />
+                      </button>
+                    )}
                 </div>
             </div>
             
             {/* Mobile Action Button */}
-            <div class="mt-6 lg:hidden">
+            {event.url && event.url !== '#' ? (
+              <div class="mt-6 lg:hidden">
+                <a href={event.url} class="w-full bg-black text-white dark:bg-white dark:text-black p-3 font-bold uppercase flex items-center justify-center gap-2 border-2 border-transparent hover:bg-primary hover:text-black transition-colors">
+                  ACCESS_DATA <ArrowUpRight class="w-4 h-4" />
+                </a>
+              </div>
+            ) : (
+              <div class="mt-6 lg:hidden">
                 <button class="w-full bg-black text-white dark:bg-white dark:text-black p-3 font-bold uppercase flex items-center justify-center gap-2 border-2 border-transparent hover:bg-primary hover:text-black transition-colors">
-                    ACCESS_DATA <ArrowUpRight class="w-4 h-4" />
+                  ACCESS_DATA <ArrowUpRight class="w-4 h-4" />
                 </button>
-            </div>
+              </div>
+            )}
         </div>
       </Reveal>
     ))}

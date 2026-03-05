@@ -1,5 +1,15 @@
 ---
-const text = "DEVELOP // DESIGN // DEPLOY // REPEAT // UMBRACO INDIA // ";
+import type { MarqueeProps } from '../../lib/marquee-mapper';
+
+interface Props {
+  marquee?: MarqueeProps;
+}
+
+const { marquee } = Astro.props;
+
+// Default text as fallback
+const defaultText = "DEVELOP // DESIGN // DEPLOY // REPEAT // UMBRACO INDIA // ";
+const text = marquee?.text || defaultText;
 ---
 
 <section class="relative w-full overflow-hidden py-4 bg-primary text-black border-y-4 border-black dark:border-white -rotate-1 scale-105 z-40 mb-16 md:mb-24 shadow-brutal-black dark:shadow-brutal-white">
