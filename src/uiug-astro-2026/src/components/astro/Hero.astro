@@ -26,20 +26,12 @@ const defaultButtons = [
 let buttons = defaultButtons;
 if (hero?.buttons && Array.isArray(hero.buttons) && hero.buttons.length > 0) {
   buttons = hero.buttons;
-  console.log('Hero - Using buttons from hero prop:', buttons);
-} else {
-  console.log('Hero - Using default buttons. hero?.buttons:', hero?.buttons);
 }
 
 // Safety check - ensure buttons is never empty
 if (!buttons || !Array.isArray(buttons) || buttons.length === 0) {
-  console.warn('Hero - Buttons array was empty, using defaults');
   buttons = defaultButtons;
 }
-
-// Final verification
-console.log('Hero - Final buttons array before render:', buttons);
-console.log('Hero - Buttons count:', buttons.length);
 
 const slideImage = hero?.slideImage || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop';
 
@@ -92,23 +84,23 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
               </p>
               <div class="flex flex-col sm:flex-row gap-4">
                 {buttons.length > 0 && buttons[0] ? (
-                  (() => {
-                    const button1 = buttons[0];
-                    console.log('Hero Button 1 from CMS:', {
-                      text: button1.text,
-                      url: button1.url,
-                      variant: button1.variant
-                    });
-                    return (
-                      <a href={button1.url || '#'} class="inline-block">
-                        <Button icon={Zap} client:load>{button1.text || 'Button'}</Button>
-                      </a>
-                    );
-                  })()
+                  <a href={buttons[0].url || '#'} class="inline-block">
+                    <Button icon={Zap} variant={buttons[0].variant || 'primary'} client:load>{buttons[0].text || 'Button'}</Button>
+                  </a>
                 ) : (
                   <Button icon={Zap} client:load>Initiate Sequence</Button>
                 )}
-                <Button variant="outline" client:load>View_Members</Button>
+                {buttons.length > 1 && buttons[1] ? (
+                  <a href={buttons[1].url || '#'} class="inline-block">
+                    <Button variant={buttons[1].variant || 'outline'} client:load>{buttons[1].text || 'Button'}</Button>
+                  </a>
+                ) : buttons.length > 0 && buttons[0] ? (
+                  <a href={buttons[0].url || '#'} class="inline-block">
+                    <Button variant="outline" client:load>{buttons[0].text || 'Button'}</Button>
+                  </a>
+                ) : (
+                  <Button variant="outline" client:load>View_Members</Button>
+                )}
               </div>
           </div>
         </Reveal>

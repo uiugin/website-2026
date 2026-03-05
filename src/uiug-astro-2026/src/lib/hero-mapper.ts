@@ -61,15 +61,6 @@ export function mapHeroProps(
       buttonLinks = [props.heroCaptionButton];
     }
     
-    // Debug logging in development - log the raw link data
-    if (import.meta.env.DEV) {
-      console.log('Hero mapper - heroCaptionButton from Umbraco (raw):', props.heroCaptionButton);
-      console.log('Hero mapper - heroCaptionButton type:', typeof props.heroCaptionButton, Array.isArray(props.heroCaptionButton));
-      console.log('Hero mapper - heroCaptionButton (stringified):', JSON.stringify(props.heroCaptionButton, null, 2));
-      console.log('Hero mapper - buttonLinks array:', buttonLinks);
-      console.log('Hero mapper - buttonLinks length:', buttonLinks.length);
-    }
-    
     buttonLinks.forEach((link, index) => {
       if (link) {
         // Extract title - prioritize link.title, fallback to route path name
@@ -95,19 +86,6 @@ export function mapHeroProps(
         
         const linkUrl = linkHref(link);
         
-        // Debug each link
-        if (import.meta.env.DEV) {
-          console.log(`Hero mapper - Processing link ${index}:`, {
-            link,
-            title: link.title,
-            url: link.url,
-            route: link.route,
-            linkType: link.linkType,
-            extractedTitle: linkTitle,
-            finalUrl: linkUrl
-          });
-        }
-        
         // Always add button - even if URL is just "/" or "#", we'll use it
         // The button will still be clickable (even if it goes to "#")
         buttons.push({
@@ -115,40 +93,14 @@ export function mapHeroProps(
           url: linkUrl || '#',
           variant: (index === 0 ? 'primary' : 'outline') as 'primary' | 'outline', // First button is primary, rest are outline
         });
-        
-        if (import.meta.env.DEV) {
-          console.log(`Hero mapper - Added button ${index}:`, {
-            text: linkTitle.trim(),
-            url: linkUrl || '#',
-            variant: index === 0 ? 'primary' : 'outline'
-          });
-        }
       }
     });
-  }
-  
-  // Debug logging in development
-  if (import.meta.env.DEV) {
-    console.log('Hero mapper - Final mapped buttons array:', buttons);
-    console.log('Hero mapper - Buttons count:', buttons.length);
   }
 
   // Get slide image URL
   let slideImage: string | undefined;
   if (props.slideImage && Array.isArray(props.slideImage) && props.slideImage.length > 0) {
     slideImage = getMediaUrl(props.slideImage[0]);
-  }
-
-  // Debug final result
-  if (import.meta.env.DEV) {
-    console.log('Hero mapper - Final result:', {
-      status: props.heroSubtitle || undefined,
-      title: props.heroTitle || undefined,
-      caption: props.heroCaptionText || undefined,
-      buttonsCount: buttons.length,
-      buttons: buttons,
-      slideImage
-    });
   }
   
   return {
