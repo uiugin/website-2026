@@ -51,7 +51,12 @@ try {
   // Get Hero props for dynamic Hero component
   const heroBlock = getHeroBlock(homeContent);
   if (heroBlock) {
-    heroProps = mapHeroProps(heroBlock);
+    try {
+      heroProps = await mapHeroProps(heroBlock);
+    } catch (error) {
+      console.error('Error mapping Hero props:', error);
+      heroProps = null;
+    }
   }
   
   // Pre-fetch all async component props (LatestEvents, Showcase, Speakers, FAQ, and Sponsors)
@@ -99,14 +104,11 @@ try {
     }
     if (componentId === 'sponsors') {
       const sponsorsBlock = block.content as components['schemas']['SponsorsElementModel'];
-      console.log(`\n🚀 CALLING mapSponsorsProps at index ${index}`);
-      console.log('Sponsors block:', sponsorsBlock);
       try {
         const props = await mapSponsorsProps(sponsorsBlock);
-        console.log('✅ Sponsors props returned:', props);
         return { index, type: 'sponsors', props };
       } catch (error) {
-        console.error(`❌ Error mapping Sponsors props at index ${index}:`, error);
+        console.error(`Error mapping Sponsors props at index ${index}:`, error);
         return { index, type: 'sponsors', props: {} };
       }
     }

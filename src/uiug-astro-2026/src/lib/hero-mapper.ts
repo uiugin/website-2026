@@ -3,10 +3,12 @@
  * Maps Umbraco Hero block properties to Hero component props
  */
 import type { components } from '../api/types.js';
-import { getMediaUrl } from '../api/umbraco.js';
+import { getMediaUrl, getContentItem } from '../api/umbraco.js';
 
 type HeroElementModel = components['schemas']['HeroElementModel'];
 type ApiLinkModel = components['schemas']['ApiLinkModel'];
+type EventContentModel = components['schemas']['EventContentModel'];
+type IApiContentModel = components['schemas']['IApiContentModel'];
 
 export interface HeroProps {
   status?: string;
@@ -14,6 +16,11 @@ export interface HeroProps {
   caption?: string;
   buttons?: Array<{ text: string; url: string; variant?: 'primary' | 'outline' }>;
   slideImage?: string;
+  slideLabel?: string;
+  slideLabelTwo?: string;
+  upcomingSessionTitle?: string;
+  upcomingSessionDate?: string;
+  upcomingSessionTime?: string;
 }
 
 function linkHref(link: ApiLinkModel | null | undefined): string {
@@ -36,11 +43,120 @@ function linkHref(link: ApiLinkModel | null | undefined): string {
 }
 
 /**
+ * Format date and time from Umbraco date format
+ */
+function formatDate(dateString: string | null | undefined): { date: string; time: string } {
+  if (!dateString) return { date: '', time: '' };
+  
+  try {
+    const date = new Date(dateString);
+    const month = date.toLocaleString('default', { month: 'short' }).toUpperCase();
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    
+    return {
+      date: `${month} ${day}`,
+      time: `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} IST`
+    };
+  } catch {
+    // If parsing fails, return original string split if possible
+    return { date: dateString, time: '' };
+  }
+}
+
+/**
+ * Fetch event content from upcomingSession
+ */
+async function fetchUpcomingSession(
+  upcomingSession: IApiContentModel | IApiContentModel[] | null | undefined
+): Promise<{ title?: string; date?: string; time?: string }> {
+  if (!upcomingSession) {
+    return {};
+  }
+
+  // Handle case where upcomingSession is an array (should extract first element)
+  let sessionContent: IApiContentModel | null = null;
+  if (Array.isArray(upcomingSession)) {
+    sessionContent = upcomingSession.length > 0 ? upcomingSession[0] : null;
+  } else {
+    sessionContent = upcomingSession;
+  }
+
+  if (!sessionContent) {
+    return {};
+  }
+
+  try {
+    // Check if properties are already expanded
+    if ('properties' in sessionContent) {
+      const eventProps = (sessionContent as any).properties;
+      
+      if (eventProps) {
+        // Try different possible property names
+        const eventTitle = eventProps.eventTitle || eventProps.title || '';
+        const dateAndTime = eventProps.dateAndTime || eventProps.date || eventProps.dateTime || '';
+        
+        if (eventTitle || dateAndTime) {
+          const { date, time } = formatDate(dateAndTime);
+          
+          return {
+            title: eventTitle,
+            date,
+            time
+          };
+        }
+      }
+    }
+    
+    // If not expanded, fetch by route path
+    if (sessionContent.route?.path) {
+      let cleanPath = sessionContent.route.path.startsWith('/') 
+        ? sessionContent.route.path.substring(1) 
+        : sessionContent.route.path;
+      cleanPath = cleanPath.endsWith('/') ? cleanPath.slice(0, -1) : cleanPath;
+      
+      if (cleanPath && cleanPath !== '#' && cleanPath !== '') {
+        try {
+          const eventContent = await getContentItem(cleanPath);
+          
+          if (eventContent && 'properties' in eventContent) {
+            const eventProps = (eventContent as any).properties;
+            
+            if (eventProps) {
+              // Try different possible property names
+              const eventTitle = eventProps.eventTitle || eventProps.title || '';
+              const dateAndTime = eventProps.dateAndTime || eventProps.date || eventProps.dateTime || '';
+              
+              if (eventTitle || dateAndTime) {
+                const { date, time } = formatDate(dateAndTime);
+                
+                return {
+                  title: eventTitle,
+                  date,
+                  time
+                };
+              }
+            }
+          }
+        } catch (fetchError) {
+          // Silently handle fetch errors
+        }
+      }
+    }
+    
+    return {};
+  } catch (error) {
+    return {};
+  }
+}
+
+/**
  * Map Umbraco Hero element to Hero component props
  */
-export function mapHeroProps(
+export async function mapHeroProps(
   heroElement: HeroElementModel | null | undefined
-): HeroProps {
+): Promise<HeroProps> {
   if (!heroElement?.properties) {
     return {};
   }
@@ -103,11 +219,19 @@ export function mapHeroProps(
     slideImage = getMediaUrl(props.slideImage[0]);
   }
   
+  // Fetch upcoming session event
+  const upcomingSession = await fetchUpcomingSession(props.upcomingSession);
+  
   return {
     status: props.heroSubtitle || undefined,
     title: props.heroTitle || undefined, // May contain HTML
     caption: props.heroCaptionText || undefined,
     buttons: buttons.length > 0 ? buttons : undefined,
     slideImage,
+    slideLabel: props.slideLabel || undefined,
+    slideLabelTwo: props.slideLabelTwo || undefined,
+    upcomingSessionTitle: upcomingSession.title || undefined,
+    upcomingSessionDate: upcomingSession.date || undefined,
+    upcomingSessionTime: upcomingSession.time || undefined,
   };
 }

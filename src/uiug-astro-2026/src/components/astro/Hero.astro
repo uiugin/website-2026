@@ -34,6 +34,13 @@ if (!buttons || !Array.isArray(buttons) || buttons.length === 0) {
 }
 
 const slideImage = hero?.slideImage || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop';
+const slideLabel = hero?.slideLabel || 'RUNTIME: .NET_CORE';
+const slideLabelTwo = hero?.slideLabelTwo || 'CACHE: REFRESHED';
+
+// Use dynamic values if available, otherwise use fallbacks
+const upcomingSessionTitle = hero?.upcomingSessionTitle || 'BUILDING SCALABLE APIS WITH UMBRACO 14';
+const upcomingSessionDate = hero?.upcomingSessionDate || 'NOV 28';
+const upcomingSessionTime = hero?.upcomingSessionTime || '19:00 IST';
 
 // Parse title - handle HTML content from Umbraco
 // If title contains HTML, we'll render it with set:html, otherwise split by newlines
@@ -121,11 +128,11 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
             
             {/* Floating Labels */}
             <div class="absolute top-4 left-4 bg-primary text-black px-2 py-1 text-xs md:text-sm font-bold border-2 border-black dark:border-white">
-            RUNTIME: .NET_CORE
+            {slideLabel}
             </div>
             
             <div class="absolute bottom-4 right-4 bg-accent-yellow text-black px-2 py-1 text-xs md:text-sm font-bold border-2 border-black dark:border-white">
-            CACHE: REFRESHED
+            {slideLabelTwo}
             </div>
         </div>
       </Slide>
@@ -142,19 +149,23 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
             </p>
             
             <h3 class="text-2xl md:text-3xl font-display uppercase leading-none mb-4 text-black dark:text-white group-hover:text-primary transition-colors">
-                BUILDING SCALABLE APIS WITH UMBRACO 14
+                {upcomingSessionTitle}
             </h3>
             
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm font-bold font-mono text-black dark:text-white border-t-2 border-black dark:border-white pt-3">
                 <div class="flex gap-4">
+                {upcomingSessionDate && (
                 <div class="flex items-center gap-2">
                     <Calendar class="w-4 h-4" />
-                    <span>NOV 28</span>
+                    <span>{upcomingSessionDate}</span>
                 </div>
+                )}
+                {upcomingSessionTime && (
                 <div class="flex items-center gap-2">
                     <Clock class="w-4 h-4" />
-                    <span>19:00 IST</span>
+                    <span>{upcomingSessionTime}</span>
                 </div>
+                )}
                 </div>
                 <ArrowRight class="w-5 h-5 group-hover:translate-x-2 transition-transform" />
             </div>

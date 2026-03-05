@@ -70,41 +70,19 @@ function formatDate(dateString: string | null | undefined): string {
 
 async function fetchSpeakerName(speaker: components['schemas']['IApiContentModel'] | null | undefined): Promise<string> {
   if (!speaker) {
-    if (import.meta.env.DEV) {
-      console.warn('Speaker is null or undefined');
-    }
     return 'SPEAKER';
-  }
-  
-  if (import.meta.env.DEV) {
-    console.log('Fetching speaker name:', {
-      contentType: speaker.contentType,
-      name: speaker.name,
-      hasProperties: 'properties' in speaker,
-      routePath: speaker.route?.path,
-      id: speaker.id
-    });
   }
   
   // Check if speaker properties are already expanded
   if (speaker.contentType === 'speaker' && 'properties' in speaker) {
     const speakerProps = (speaker as SpeakerContentModel).properties;
-    if (import.meta.env.DEV) {
-      console.log('Speaker properties:', speakerProps);
-    }
     if (speakerProps?.speakerName) {
       const name = speakerProps.speakerName.toUpperCase().replace(/\s+/g, '_');
-      if (import.meta.env.DEV) {
-        console.log('Found speakerName in expanded properties:', name);
-      }
       return name;
     }
     // Fallback to name if speakerName is not available
     if (speaker.name) {
       const name = speaker.name.toUpperCase().replace(/\s+/g, '_');
-      if (import.meta.env.DEV) {
-        console.log('Using speaker name property:', name);
-      }
       return name;
     }
   }
@@ -114,76 +92,33 @@ async function fetchSpeakerName(speaker: components['schemas']['IApiContentModel
     try {
       const cleanPath = speaker.route.path.startsWith('/') ? speaker.route.path.substring(1) : speaker.route.path;
       if (cleanPath && cleanPath !== '#' && cleanPath !== '') {
-        if (import.meta.env.DEV) {
-          console.log('Fetching speaker content from path:', cleanPath);
-        }
         const speakerContent = await getContentItem(cleanPath);
         if (speakerContent) {
-          if (import.meta.env.DEV) {
-            console.log('Fetched speaker content:', {
-              contentType: speakerContent.contentType,
-              name: speakerContent.name,
-              hasProperties: 'properties' in speakerContent
-            });
-          }
           if (speakerContent.contentType === 'speaker') {
             const speakerProps = (speakerContent as SpeakerContentModel).properties;
-            if (import.meta.env.DEV) {
-              console.log('Speaker properties from fetched content:', speakerProps);
-            }
             if (speakerProps?.speakerName) {
               const name = speakerProps.speakerName.toUpperCase().replace(/\s+/g, '_');
-              if (import.meta.env.DEV) {
-                console.log('Found speakerName in fetched content:', name);
-              }
               return name;
             }
             // Fallback to name
             if (speakerContent.name) {
               const name = speakerContent.name.toUpperCase().replace(/\s+/g, '_');
-              if (import.meta.env.DEV) {
-                console.log('Using fetched speaker name property:', name);
-              }
               return name;
             }
-          } else {
-            if (import.meta.env.DEV) {
-              console.warn('Fetched content is not a speaker, contentType:', speakerContent.contentType);
-            }
           }
-        } else {
-          if (import.meta.env.DEV) {
-            console.warn('Failed to fetch speaker content, got null');
-          }
-        }
-      } else {
-        if (import.meta.env.DEV) {
-          console.warn('Invalid speaker path:', cleanPath);
         }
       }
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.warn('Failed to fetch speaker content:', error);
-      }
-    }
-  } else {
-    if (import.meta.env.DEV) {
-      console.warn('Speaker has no route path. Speaker object:', JSON.stringify(speaker, null, 2));
+      // Silently handle fetch errors
     }
   }
   
   // Fallback to name property if available
   if (speaker.name) {
     const name = speaker.name.toUpperCase().replace(/\s+/g, '_');
-    if (import.meta.env.DEV) {
-      console.log('Using speaker name fallback:', name);
-    }
     return name;
   }
   
-  if (import.meta.env.DEV) {
-    console.warn('Could not determine speaker name, using default. Speaker object:', JSON.stringify(speaker, null, 2));
-  }
   return 'SPEAKER';
 }
 
@@ -242,17 +177,6 @@ export async function mapLatestEventsProps(
       
       if (eventContent && eventContent.properties) {
         const eventProps = eventContent.properties;
-        
-        if (import.meta.env.DEV) {
-          console.log('Event properties:', {
-            eventTitle: eventProps.eventTitle,
-            speaker: eventProps.speaker,
-            speakerType: typeof eventProps.speaker,
-            speakerContentType: eventProps.speaker?.contentType,
-            speakerRoute: eventProps.speaker?.route?.path,
-            speakerName: eventProps.speaker?.name
-          });
-        }
         
         // Extract event properties
         const eventTitle = eventProps.eventTitle || link.title || 'Event';

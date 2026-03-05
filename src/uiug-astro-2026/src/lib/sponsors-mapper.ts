@@ -51,11 +51,7 @@ function linkHref(link: ApiLinkModel | null | undefined): string {
 export async function mapSponsorsProps(
   sponsorsElement: SponsorsElementModel | null | undefined
 ): Promise<SponsorsProps> {
-  console.log('=== SPONSORS MAPPER START ===');
-  console.log('Sponsors element:', sponsorsElement);
-  
   if (!sponsorsElement?.properties) {
-    console.log('❌ Sponsors element has no properties');
     return {};
   }
 
@@ -64,47 +60,19 @@ export async function mapSponsorsProps(
   const gold: Sponsor[] = [];
   const silver: Sponsor[] = [];
 
-  console.log('✅ Sponsors Element properties:', {
-    title: props.title,
-    sponsorsBlock: props.sponsorsBlock,
-    titleCta: props.titleCta,
-    textCta: props.textCta,
-    buttonCta: props.buttonCta
-  });
-  console.log('SponsorsBlock type:', typeof props.sponsorsBlock);
-  console.log('SponsorsBlock has items?:', props.sponsorsBlock && 'items' in props.sponsorsBlock);
-
   // Handle sponsors block list - ApiBlockListModel contains items array
-  console.log('🔍 Checking sponsorsBlock...');
   if (props.sponsorsBlock && 'items' in props.sponsorsBlock && Array.isArray(props.sponsorsBlock.items)) {
-    console.log(`✅ Sponsors blocks items found: ${props.sponsorsBlock.items.length}`);
-    console.log('📦 Sponsors blocks items:', JSON.stringify(props.sponsorsBlock.items, null, 2));
-    
     props.sponsorsBlock.items.forEach((blockItem, index) => {
-      console.log(`\n=== Processing sponsor block ${index + 1}/${props.sponsorsBlock.items.length} ===`);
-      console.log('Block item:', {
-        hasContent: !!blockItem?.content,
-        contentType: blockItem?.content?.contentType,
-        contentId: blockItem?.content?.id,
-        contentName: blockItem?.content?.name,
-        fullBlockItem: JSON.stringify(blockItem, null, 2)
-      });
-      
       if (!blockItem?.content) {
-        console.warn(`❌ Block ${index + 1} has no content`);
         return;
       }
 
       const contentType = blockItem.content.contentType;
-      console.log(`📋 Block ${index + 1} contentType:`, contentType);
       
       // Handle Platinum
       if (contentType === 'platinum') {
         const platinumBlock = blockItem.content as PlatinumElementModel;
         const platinumProps = platinumBlock.properties;
-        
-        console.log(`💎 Platinum block ${index + 1} properties:`, platinumProps);
-        console.log(`💎 Platinum block ${index + 1} properties keys:`, platinumProps ? Object.keys(platinumProps) : 'null');
         
         if (platinumProps) {
           const mappedPlatinum = {
@@ -113,19 +81,13 @@ export async function mapSponsorsProps(
             description: platinumProps.description || ''
           };
           
-          console.log(`✅ Mapped Platinum sponsor ${index + 1}:`, mappedPlatinum);
           platinum.push(mappedPlatinum);
-        } else {
-          console.warn(`❌ Platinum block ${index + 1} has no properties`);
         }
       }
       // Handle Gold
       else if (contentType === 'gold') {
         const goldBlock = blockItem.content as GoldElementModel;
         const goldProps = goldBlock.properties;
-        
-        console.log(`🥇 Gold block ${index + 1} properties:`, goldProps);
-        console.log(`🥇 Gold block ${index + 1} properties keys:`, goldProps ? Object.keys(goldProps) : 'null');
         
         if (goldProps) {
           const mappedGold = {
@@ -134,19 +96,13 @@ export async function mapSponsorsProps(
             description: goldProps.description || ''
           };
           
-          console.log(`✅ Mapped Gold sponsor ${index + 1}:`, mappedGold);
           gold.push(mappedGold);
-        } else {
-          console.warn(`❌ Gold block ${index + 1} has no properties`);
         }
       }
       // Handle Silver (check if it exists)
       else if (contentType === 'silver') {
         const silverBlock = blockItem.content as any; // Silver might not be in types yet
         const silverProps = silverBlock?.properties;
-        
-        console.log(`🥈 Silver block ${index + 1} properties:`, silverProps);
-        console.log(`🥈 Silver block ${index + 1} properties keys:`, silverProps ? Object.keys(silverProps) : 'null');
         
         if (silverProps) {
           const mappedSilver = {
@@ -155,22 +111,10 @@ export async function mapSponsorsProps(
             description: silverProps.description || ''
           };
           
-          console.log(`✅ Mapped Silver sponsor ${index + 1}:`, mappedSilver);
           silver.push(mappedSilver);
-        } else {
-          console.warn(`❌ Silver block ${index + 1} has no properties`);
         }
       }
-      else {
-        console.warn(`⚠️ Block ${index + 1} is not a recognized sponsor tier, contentType:`, contentType);
-        console.warn(`📄 Full block content:`, JSON.stringify(blockItem.content, null, 2));
-      }
     });
-  } else {
-    console.warn('❌ Sponsors blocks is not in expected format');
-    console.warn('Sponsors blocks value:', props.sponsorsBlock);
-    console.warn('Sponsors blocks type:', typeof props.sponsorsBlock);
-    console.warn('Sponsors blocks has items?:', props.sponsorsBlock && 'items' in props.sponsorsBlock);
   }
 
   // Get CTA button URL
@@ -178,17 +122,6 @@ export async function mapSponsorsProps(
   if (props.buttonCta && Array.isArray(props.buttonCta) && props.buttonCta.length > 0) {
     ctaButtonUrl = linkHref(props.buttonCta[0]);
   }
-
-  console.log('\n=== FINAL SPONSORS SUMMARY ===');
-  console.log('Final sponsors:', {
-    platinum: platinum.length,
-    gold: gold.length,
-    silver: silver.length,
-    platinumItems: platinum,
-    goldItems: gold,
-    silverItems: silver
-  });
-  console.log('=== SPONSORS MAPPER END ===\n');
 
   return {
     title: props.title || undefined,
