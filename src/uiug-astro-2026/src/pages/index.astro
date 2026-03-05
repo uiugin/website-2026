@@ -25,6 +25,7 @@ import { mapMarqueeReverseProps } from '../lib/marquee-reverse-mapper';
 import { mapLatestEventsProps } from '../lib/latest-events-mapper';
 import { mapShowcaseProps } from '../lib/showcase-mapper';
 import { mapCountdownProps } from '../lib/countdown-mapper';
+import { mapSpeakersProps } from '../lib/speakers-mapper';
 import type { components } from '../api/types';
 
 // Fetch site settings from CMS server-side
@@ -35,6 +36,7 @@ let blocks: ReturnType<typeof getMainContentBlocks> = [];
 let heroProps = null;
 const latestEventsPropsMap = new Map<number, Awaited<ReturnType<typeof mapLatestEventsProps>>>();
 const showcasePropsMap = new Map<number, Awaited<ReturnType<typeof mapShowcaseProps>>>();
+const speakersPropsMap = new Map<number, Awaited<ReturnType<typeof mapSpeakersProps>>>();
 try {
   const homeContent = await getHomeContent();
   blocks = getMainContentBlocks(homeContent);
@@ -45,7 +47,7 @@ try {
     heroProps = mapHeroProps(heroBlock);
   }
   
-  // Pre-fetch all async component props (LatestEvents and Showcase)
+  // Pre-fetch all async component props (LatestEvents, Showcase, and Speakers)
   const asyncPropsPromises = blocks.map(async (block, index) => {
     const contentType = block.content?.contentType;
     const componentId = getComponentIdentifier(contentType);
@@ -68,6 +70,16 @@ try {
         return { index, type: 'showcase', props: {} };
       }
     }
+    if (componentId === 'speakers') {
+      const speakersBlock = block.content as components['schemas']['SpeakersElementElementModel'];
+      try {
+        const props = await mapSpeakersProps(speakersBlock);
+        return { index, type: 'speakers', props };
+      } catch (error) {
+        console.error(`Error mapping Speakers props at index ${index}:`, error);
+        return { index, type: 'speakers', props: {} };
+      }
+    }
     return null;
   });
   
@@ -78,6 +90,8 @@ try {
         latestEventsPropsMap.set(result.index, result.props);
       } else if (result.type === 'showcase') {
         showcasePropsMap.set(result.index, result.props);
+      } else if (result.type === 'speakers') {
+        speakersPropsMap.set(result.index, result.props);
       }
     }
   });
@@ -145,7 +159,8 @@ const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.spline
         return <LatestEvents latestEvents={latestEventsProps} />;
       }
       if (componentId === 'speakers') {
-        return <Speakers client:load />;
+        const speakersProps = speakersPropsMap.get(index);
+        return <Speakers speakers={speakersProps} client:load />;
       }
       if (componentId === 'showcase') {
         const showcaseProps = showcasePropsMap.get(index);

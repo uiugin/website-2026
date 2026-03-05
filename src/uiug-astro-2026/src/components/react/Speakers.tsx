@@ -1,59 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { ArrowLeft, ArrowRight, Linkedin, Twitter, Globe, ScanLine, Pause, Play } from 'lucide-react';
-
-interface Speaker {
-  id: string;
-  name: string;
-  role: string;
-  company: string;
-  image: string;
-}
-
-const speakers: Speaker[] = [
-  {
-    id: '1',
-    name: 'RAVI KUMAR',
-    role: 'MVP / ARCHITECT',
-    company: 'UMBRACO HQ',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop'
-  },
-  {
-    id: '2',
-    name: 'ANITA SHARMA',
-    role: 'TECH LEAD',
-    company: 'DIGITAL AGENCY',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop'
-  },
-  {
-    id: '3',
-    name: 'VIKRAM SINGH',
-    role: 'CORE CONTRIBUTOR',
-    company: 'OPEN SOURCE CO',
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format&fit=crop'
-  },
-  {
-    id: '4',
-    name: 'PRIYA PATEL',
-    role: 'DEV REL',
-    company: 'CLOUD CORP',
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=1000&auto=format&fit=crop'
-  },
-  {
-    id: '5',
-    name: 'ARJUN REDDY',
-    role: 'FULL STACK',
-    company: 'STARTUP INC',
-    image: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=1000&auto=format&fit=crop'
-  }
-];
-
+import type { SpeakersProps as MappedSpeakersProps } from '../../lib/speakers-mapper';
 import { useAppShell } from './AppShell';
 
 interface SpeakersProps {
+  speakers?: MappedSpeakersProps;
   onOpenFullList?: () => void;
 }
 
-const Speakers: React.FC<SpeakersProps> = ({ onOpenFullList: propOnOpenFullList }) => {
+const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullList: propOnOpenFullList }) => {
   // Use context if prop is not provided (for Astro usage)
   let contextOnOpenFullList: (() => void) | undefined;
   try {
@@ -67,6 +22,14 @@ const Speakers: React.FC<SpeakersProps> = ({ onOpenFullList: propOnOpenFullList 
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
   const [activeSlide, setActiveSlide] = useState(0);
+
+  // Use dynamic speakers from props, fallback to empty array
+  const speakers = speakersData?.speakers || [];
+  const title = speakersData?.title || 'ELITE_SQUAD';
+  const moreButtonUrl = speakersData?.moreButtonUrl;
+  const ctaHeading = speakersData?.ctaHeading || 'WANT TO SPEAK?';
+  const ctaDescription = speakersData?.ctaDescription || 'WE ARE ALWAYS LOOKING FOR NEW VOICES.';
+  const ctaButtonUrl = speakersData?.ctaButtonUrl;
 
   // Constants
   const SLIDE_DURATION = 3000;
@@ -139,7 +102,7 @@ const Speakers: React.FC<SpeakersProps> = ({ onOpenFullList: propOnOpenFullList 
          <div className="flex items-end gap-4">
             <div className="h-4 w-4 md:h-8 md:w-8 bg-accent-yellow animate-pulse"></div>
             <h2 className="text-4xl md:text-6xl font-display font-black uppercase text-black dark:text-white tracking-tighter leading-none">
-                ELITE_SQUAD
+                {title.toUpperCase()}
             </h2>
          </div>
          
@@ -251,14 +214,20 @@ const Speakers: React.FC<SpeakersProps> = ({ onOpenFullList: propOnOpenFullList 
              <div className="min-w-[300px] md:min-w-[350px] snap-start bg-accent-yellow border-4 border-black dark:border-white p-8 shadow-brutal-black dark:shadow-brutal-white flex flex-col items-center justify-center text-center gap-6 group hover:-translate-y-2 transition-transform duration-300 plastic-surface lego-studs">
                  <div className="relative z-10">
                     <h3 className="text-4xl font-display font-black uppercase leading-none text-black mb-4">
-                        WANT TO SPEAK?
+                        {ctaHeading.toUpperCase()}
                     </h3>
                     <p className="font-mono font-bold text-sm text-black mb-6">
-                        WE ARE ALWAYS LOOKING FOR NEW VOICES.
+                        {ctaDescription.toUpperCase()}
                     </p>
-                    <button className="px-6 py-3 bg-black text-white font-bold uppercase border-4 border-transparent hover:bg-white hover:text-black hover:border-black transition-colors w-full flex items-center justify-center gap-2">
+                    {ctaButtonUrl && ctaButtonUrl !== '#' ? (
+                      <a href={ctaButtonUrl} className="px-6 py-3 bg-black text-white font-bold uppercase border-4 border-transparent hover:bg-white hover:text-black hover:border-black transition-colors w-full flex items-center justify-center gap-2">
                         SUBMIT_TALK <ArrowRight className="w-4 h-4" />
-                    </button>
+                      </a>
+                    ) : (
+                      <button className="px-6 py-3 bg-black text-white font-bold uppercase border-4 border-transparent hover:bg-white hover:text-black hover:border-black transition-colors w-full flex items-center justify-center gap-2">
+                        SUBMIT_TALK <ArrowRight className="w-4 h-4" />
+                      </button>
+                    )}
                  </div>
              </div>
 
@@ -267,12 +236,21 @@ const Speakers: React.FC<SpeakersProps> = ({ onOpenFullList: propOnOpenFullList 
       
       {/* Full Roster CTA */}
       <div className="mt-12 flex justify-center">
-         <button 
-            onClick={onOpenFullList}
-            className="group bg-transparent border-4 border-black dark:border-white text-black dark:text-white px-8 py-3 font-display text-xl uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors shadow-brutal-black dark:shadow-brutal-white active:translate-x-1 active:translate-y-1 active:shadow-none plastic-surface"
-         >
-            VIEW_FULL_ROSTER
-         </button>
+         {moreButtonUrl && moreButtonUrl !== '#' ? (
+           <a 
+              href={moreButtonUrl}
+              className="group bg-transparent border-4 border-black dark:border-white text-black dark:text-white px-8 py-3 font-display text-xl uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors shadow-brutal-black dark:shadow-brutal-white active:translate-x-1 active:translate-y-1 active:shadow-none plastic-surface"
+           >
+              VIEW_FULL_ROSTER
+           </a>
+         ) : (
+           <button 
+              onClick={onOpenFullList}
+              className="group bg-transparent border-4 border-black dark:border-white text-black dark:text-white px-8 py-3 font-display text-xl uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors shadow-brutal-black dark:shadow-brutal-white active:translate-x-1 active:translate-y-1 active:shadow-none plastic-surface"
+           >
+              VIEW_FULL_ROSTER
+           </button>
+         )}
       </div>
     </section>
   );
