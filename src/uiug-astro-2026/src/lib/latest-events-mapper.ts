@@ -141,10 +141,7 @@ async function fetchEventContent(destinationId: string | null | undefined, route
     // Fallback: try to fetch by ID if we have destinationId
     // Note: This might require a different API endpoint
     return null;
-  } catch (error) {
-    if (import.meta.env.DEV) {
-      console.warn('Failed to fetch event content:', error);
-    }
+  } catch {
     return null;
   }
 }

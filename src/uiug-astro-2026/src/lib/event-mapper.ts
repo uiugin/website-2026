@@ -147,41 +147,11 @@ export async function mapEventFromContent(
   eventContent: EventContentModel | null | undefined,
   path?: string
 ): Promise<Event | null> {
-  console.log('[Event Mapper] mapEventFromContent() called with:', {
-    hasContent: !!eventContent,
-    hasProperties: !!eventContent?.properties,
-    path: path,
-    contentType: eventContent?.contentType,
-    name: eventContent?.name
-  });
-  
   if (!eventContent || !eventContent.properties) {
-    console.warn('[Event Mapper] ⚠️ mapEventFromContent: Missing content or properties');
     return null;
   }
 
   const props = eventContent.properties;
-  
-  // Log ALL properties to see what we're getting
-  console.log('[Event Mapper] ===== ALL EVENT PROPERTIES =====');
-  console.log('[Event Mapper] Raw properties object:', JSON.stringify(props, null, 2));
-  console.log('[Event Mapper] Property keys:', Object.keys(props || {}));
-  console.log('[Event Mapper] =================================');
-  
-  console.log('[Event Mapper] Event properties found:', {
-    hasEventTitle: !!props.eventTitle,
-    hasEventType: !!props.eventType,
-    hasDateAndTime: !!props.dateAndTime,
-    hasStatus: !!props.status,
-    hasSpeaker: !!props.speaker,
-    eventTitle: props.eventTitle,
-    eventType: props.eventType,
-    eventTypeType: typeof props.eventType,
-    eventTypeValue: props.eventType,
-    status: props.status,
-    statusType: typeof props.status,
-    statusValue: props.status
-  });
   
   // Extract event properties
   // Handle dropdown values - they might be arrays, objects, or strings
@@ -190,12 +160,10 @@ export async function mapEventFromContent(
   // Handle array format (e.g., ["TECHNICAL_BRIEFING"])
   if (Array.isArray(eventTypeValue)) {
     eventTypeValue = eventTypeValue.length > 0 ? eventTypeValue[0] : null;
-    console.log('[Event Mapper] EventType is an array, extracted first value:', eventTypeValue);
   }
   // Handle object format (e.g., { value: "TECHNICAL_BRIEFING" })
   else if (eventTypeValue && typeof eventTypeValue === 'object' && 'value' in eventTypeValue) {
     eventTypeValue = (eventTypeValue as any).value;
-    console.log('[Event Mapper] EventType is an object, extracted value:', eventTypeValue);
   }
   
   let statusValue: string | null | undefined = props.status;
@@ -203,25 +171,16 @@ export async function mapEventFromContent(
   // Handle array format
   if (Array.isArray(statusValue)) {
     statusValue = statusValue.length > 0 ? statusValue[0] : null;
-    console.log('[Event Mapper] Status is an array, extracted first value:', statusValue);
   }
   // Handle object format
   else if (statusValue && typeof statusValue === 'object' && 'value' in statusValue) {
     statusValue = (statusValue as any).value;
-    console.log('[Event Mapper] Status is an object, extracted value:', statusValue);
   }
   
   const eventTitle = props.eventTitle || eventContent.name || 'Event';
   const eventType = mapEventType(eventTypeValue);
   const dateAndTime = props.dateAndTime;
   const status = mapEventStatus(statusValue);
-  
-  console.log('[Event Mapper] After extraction:', {
-    eventTitle,
-    eventType,
-    status,
-    hasDateAndTime: !!dateAndTime
-  });
   
   // Try to get description from various possible fields
   // The CMS might have briefSummary, fullSummary, or description fields
@@ -234,7 +193,6 @@ export async function mapEventFromContent(
   let speakerValue = props.speaker;
   if (Array.isArray(speakerValue)) {
     speakerValue = speakerValue.length > 0 ? speakerValue[0] : null;
-    console.log('[Event Mapper] Speaker is an array, using first item');
   }
   const speaker = await fetchSpeakerName(speakerValue);
   
@@ -271,9 +229,6 @@ export async function mapEventFromContent(
 
   // Validate that we have at least a title - if not, this event is invalid
   if (!eventTitle || eventTitle === 'Event' || eventTitle.trim() === '') {
-    console.warn('[Event Mapper] ⚠️ Event has no valid title, skipping');
-    console.warn('[Event Mapper] Event name:', eventContent.name);
-    console.warn('[Event Mapper] Event title from props:', props.eventTitle);
     return null;
   }
   
@@ -290,17 +245,6 @@ export async function mapEventFromContent(
     // agenda can be added later if needed in CMS
   };
   
-  console.log('[Event Mapper] ✅ mapEventFromContent completed:', {
-    id: mappedEvent.id,
-    title: mappedEvent.title,
-    type: mappedEvent.type,
-    status: mappedEvent.status,
-    speaker: mappedEvent.speaker,
-    date: mappedEvent.date,
-    time: mappedEvent.time,
-    hasDescription: !!mappedEvent.description && mappedEvent.description !== 'No description available.'
-  });
-  
   return mappedEvent;
 }
 
@@ -309,122 +253,47 @@ export async function mapEventFromContent(
  */
 export async function getAllEvents(): Promise<Event[]> {
   try {
-    console.log('[Event Mapper] ========================================');
-    console.log('[Event Mapper] Starting getAllEvents()');
-    
     // Get all paths under "events"
-    console.log('[Event Mapper] Calling getPaths("events")...');
     const paths = await getPaths('events');
     
-    console.log(`[Event Mapper] getPaths returned:`, paths);
-    console.log(`[Event Mapper] Found ${paths?.length || 0} paths under 'events'`);
-    
-    if (paths && paths.length > 0) {
-      paths.forEach((p, index) => {
-        console.log(`[Event Mapper] Path ${index + 1}:`, {
-          path: p.path,
-          name: p.name,
-          id: p.id,
-          hasRoute: !!p.route
-        });
-      });
-    }
-    
     if (!paths || paths.length === 0) {
-      console.warn('[Event Mapper] ⚠️ No paths found under "events"');
-      console.warn('[Event Mapper] Make sure events are published and under the "events" content node');
       return [];
     }
     
-    console.log(`[Event Mapper] Processing ${paths.length} paths...`);
-    
     // Fetch all event content in parallel
-    const eventPromises = paths.map(async (pathItem, index) => {
+    const eventPromises = paths.map(async (pathItem) => {
       try {
         const path = pathItem.path;
-        console.log(`[Event Mapper] [${index + 1}/${paths.length}] Processing path: ${path}`);
         
         if (!path || path === '#') {
-          console.warn(`[Event Mapper] [${index + 1}/${paths.length}] ⚠️ Invalid path, skipping`);
           return null;
         }
         
         // Clean path: remove leading slash if present
         const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-        console.log(`[Event Mapper] [${index + 1}/${paths.length}] Cleaned path: "${cleanPath}"`);
         
-        console.log(`[Event Mapper] [${index + 1}/${paths.length}] Fetching content from CMS...`);
         const eventContent = await getContentItem(cleanPath);
-        
-        console.log(`[Event Mapper] [${index + 1}/${paths.length}] Content fetched:`, {
-          contentType: eventContent?.contentType,
-          name: eventContent?.name,
-          id: eventContent?.id,
-          hasProperties: !!eventContent?.properties
-        });
         
         if (eventContent) {
           if (eventContent.contentType === 'event') {
-            console.log(`[Event Mapper] [${index + 1}/${paths.length}] ✅ Valid event content found`);
             // Pass the original path to help with ID extraction
             const mappedEvent = await mapEventFromContent(eventContent as EventContentModel, path);
-            
-            if (mappedEvent) {
-              console.log(`[Event Mapper] [${index + 1}/${paths.length}] ✅ Successfully mapped event:`, {
-                id: mappedEvent.id,
-                title: mappedEvent.title,
-                type: mappedEvent.type,
-                status: mappedEvent.status,
-                speaker: mappedEvent.speaker,
-                date: mappedEvent.date,
-                time: mappedEvent.time
-              });
-            } else {
-              console.warn(`[Event Mapper] [${index + 1}/${paths.length}] ⚠️ mapEventFromContent returned null`);
-              console.warn(`[Event Mapper] [${index + 1}/${paths.length}] Event content was:`, {
-                name: eventContent.name,
-                contentType: eventContent.contentType,
-                hasProperties: !!eventContent.properties
-              });
-            }
             return mappedEvent;
-          } else {
-            console.warn(`[Event Mapper] [${index + 1}/${paths.length}] ⚠️ Content is not an event`);
-            console.warn(`[Event Mapper] [${index + 1}/${paths.length}] Expected contentType: "event", got: "${eventContent.contentType}"`);
-            console.warn(`[Event Mapper] [${index + 1}/${paths.length}] Content name: "${eventContent.name}"`);
           }
-        } else {
-          console.warn(`[Event Mapper] [${index + 1}/${paths.length}] ⚠️ getContentItem returned null/undefined for path: ${cleanPath}`);
         }
         return null;
-      } catch (error) {
-        console.error(`[Event Mapper] [${index + 1}/${paths.length}] ❌ Error fetching event at path ${pathItem.path}:`, error);
+      } catch {
         return null;
       }
     });
     
-    console.log('[Event Mapper] Waiting for all event fetches to complete...');
     const events = await Promise.all(eventPromises);
-    
-    console.log(`[Event Mapper] All fetches complete. Got ${events.length} results`);
     
     // Filter out null results
     const validEvents = events.filter((event): event is Event => event !== null);
     
-    console.log(`[Event Mapper] ✅ Final result: ${validEvents.length} valid events`);
-    validEvents.forEach((event, index) => {
-      console.log(`[Event Mapper] Event ${index + 1}: ${event.id} - ${event.title}`);
-    });
-    
-    console.log('[Event Mapper] ========================================');
-    
     return validEvents;
-  } catch (error) {
-    console.error('[Event Mapper] ❌ Fatal error in getAllEvents():', error);
-    console.error('[Event Mapper] Error details:', {
-      message: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined
-    });
+  } catch {
     return [];
   }
 }
@@ -474,10 +343,7 @@ export async function getEventById(id: string): Promise<Event | null> {
     }
     
     return null;
-  } catch (error) {
-    if (import.meta.env.DEV) {
-      console.error(`Failed to fetch event with ID ${id}:`, error);
-    }
+  } catch {
     return null;
   }
 }

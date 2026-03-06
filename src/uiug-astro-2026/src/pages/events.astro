@@ -5,34 +5,11 @@ import { getAllEvents } from '../lib/event-mapper';
 
 // Fetch all events from CMS
 let events = [];
-console.log('[Events Page] ========================================');
-console.log('[Events Page] Starting to fetch events from CMS...');
 try {
   events = await getAllEvents();
-  console.log(`[Events Page] ✅ getAllEvents() completed`);
-  console.log(`[Events Page] Received ${events.length} events from CMS`);
-  
-  if (events.length > 0) {
-    console.log('[Events Page] Events received:');
-    events.forEach((event, index) => {
-      console.log(`[Events Page]   ${index + 1}. ID: ${event.id}, Title: ${event.title}, Status: ${event.status}`);
-    });
-  } else {
-    console.warn('[Events Page] ⚠️ No events found in CMS!');
-    console.warn('[Events Page] Make sure:');
-    console.warn('[Events Page]   1. Events are published under the "events" content node');
-    console.warn('[Events Page]   2. Events have the correct content type "event"');
-    console.warn('[Events Page]   3. CMS API is accessible and returning data');
-  }
-} catch (error) {
-  console.error('[Events Page] ❌ Error fetching events from CMS:', error);
-  console.error('[Events Page] Error details:', {
-    message: error instanceof Error ? error.message : String(error),
-    stack: error instanceof Error ? error.stack : undefined
-  });
-  console.warn('[Events Page] Falling back to empty array. Check CMS connection.');
+} catch {
+  events = [];
 }
-console.log('[Events Page] ========================================');
 ---
 
 <Layout title="Events | UIUG">

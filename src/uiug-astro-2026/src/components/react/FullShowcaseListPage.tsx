@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Search, Terminal, Layers, Cpu, ArrowUpRight } from 'lucide-react';
-import { allProjects } from '../../data/projects';
+import type { Project } from '../../data/projects';
 
-const FullShowcaseListPage: React.FC = () => {
+interface FullShowcaseListPageProps {
+  projects?: Project[];
+}
+
+const FullShowcaseListPage: React.FC<FullShowcaseListPageProps> = ({ projects = [] }) => {
   const [filter, setFilter] = useState<'ALL' | 'COMMERCE' | 'FINTECH' | 'GOVT' | 'ENTERPRISE' | 'STARTUP'>('ALL');
   const [search, setSearch] = useState('');
 
-  const filteredProjects = allProjects.filter((p) => {
+  const filteredProjects = projects.filter((p) => {
     const matchesFilter = filter === 'ALL' || p.category === filter;
     const matchesSearch =
       p.title.toLowerCase().includes(search.toLowerCase()) ||

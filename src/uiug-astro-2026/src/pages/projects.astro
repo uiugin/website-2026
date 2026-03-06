@@ -1,8 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import FullShowcaseListPage from '../components/react/FullShowcaseListPage';
+import { getAllProjects } from '../lib/project-mapper';
+
+// Fetch all projects from CMS
+let projects = [];
+try {
+  projects = await getAllProjects();
+} catch {
+  projects = [];
+}
 ---
 
 <Layout title="Projects | UIUG">
-  <FullShowcaseListPage client:load />
+  <FullShowcaseListPage projects={projects} client:load />
 </Layout>

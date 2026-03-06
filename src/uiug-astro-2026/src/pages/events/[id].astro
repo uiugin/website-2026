@@ -5,32 +5,11 @@ import { getAllEvents, getEventById } from '../../lib/event-mapper';
 
 export async function getStaticPaths() {
   const events = await getAllEvents();
-  
-  if (import.meta.env.DEV) {
-    console.log(`[Events] Found ${events.length} events for static paths`);
-    events.forEach(event => {
-      console.log(`[Events] Generating path for event: /events/${event.id} (${event.title})`);
-    });
-  }
-  
   return events.map((event) => ({ params: { id: event.id } }));
 }
 
 const { id } = Astro.params;
-
-if (import.meta.env.DEV) {
-  console.log(`[Event Detail] Looking for event with ID: ${id}`);
-}
-
 const event = id ? await getEventById(id) : undefined;
-
-if (import.meta.env.DEV) {
-  if (event) {
-    console.log(`[Event Detail] Found event: ${event.title} (ID: ${event.id})`);
-  } else {
-    console.warn(`[Event Detail] Event not found for ID: ${id}`);
-  }
-}
 ---
 
 {event ? (

@@ -14,7 +14,6 @@ if (import.meta.env.DEV) {
     const nodeProcess = (globalThis as any).process || (globalThis as any).global?.process;
     if (nodeProcess?.env) {
       nodeProcess.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-      console.warn('⚠️  SSL certificate validation disabled for development (self-signed cert)');
     }
   } catch {
     // Ignore if process is not available
@@ -188,10 +187,7 @@ export function getMediaUrl(
 export async function getHomeContent() {
   try {
     return await getContentItem('home');
-  } catch (error) {
-    if (import.meta.env.DEV) {
-      console.error('Failed to fetch Home content:', error);
-    }
+  } catch {
     return null;
   }
 }

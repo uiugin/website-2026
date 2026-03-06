@@ -1,14 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ProjectDetailPage from '../../components/react/ProjectDetailPage';
-import { allProjects, getProjectById } from '../../data/projects';
+import { getAllProjects, getProjectById } from '../../lib/project-mapper';
 
-export function getStaticPaths() {
-  return allProjects.map((project) => ({ params: { id: project.id } }));
+export async function getStaticPaths() {
+  const projects = await getAllProjects();
+  return projects.map((project) => ({ params: { id: project.id } }));
 }
 
 const { id } = Astro.params;
-const project = id ? getProjectById(id) : undefined;
+const project = id ? await getProjectById(id) : undefined;
 ---
 
 {project ? (
