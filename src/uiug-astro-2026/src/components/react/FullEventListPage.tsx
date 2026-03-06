@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Search, Terminal, Calendar, User, Tag, ArrowUpRight, Radio, Clock, MapPin } from 'lucide-react';
-import { allEvents } from '../../data/events';
+import type { Event } from '../../data/events';
 
-const FullEventListPage: React.FC = () => {
+interface FullEventListPageProps {
+  events?: Event[];
+}
+
+const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) => {
   const [filter, setFilter] = useState<'ALL' | 'INCOMING' | 'ARCHIVED'>('ALL');
   const [search, setSearch] = useState('');
 
-  const filteredEvents = allEvents.filter((e) => {
+  // Debug log - will show in browser console
+  React.useEffect(() => {
+    console.log('[FullEventListPage] Received events:', events.length, events);
+  }, [events]);
+
+  const filteredEvents = events.filter((e) => {
     const matchesFilter = filter === 'ALL' || e.status === filter;
     const matchesSearch =
       e.title.toLowerCase().includes(search.toLowerCase()) ||
