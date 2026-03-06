@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SpeakerDetailPage from '../../components/react/SpeakerDetailPage';
+import { allSpeakers, getSpeakerById } from '../../data/speakers';
+
+export function getStaticPaths() {
+  return allSpeakers.map((speaker) => ({ params: { id: speaker.id } }));
+}
+
+const { id } = Astro.params;
+const speaker = id ? getSpeakerById(id) : undefined;
+---
+
+{speaker ? (
+  <Layout title={`${speaker.name} | Speakers | UIUG`}>
+    <SpeakerDetailPage speaker={speaker} client:load />
+  </Layout>
+) : (
+  <Layout title="Not Found | UIUG">
+    <div class="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+      <div class="text-center">
+        <h1 class="font-display text-4xl uppercase text-black dark:text-white mb-4">SPEAKER_NOT_FOUND</h1>
+        <a href="/speakers" class="font-mono font-bold text-primary hover:underline">← BACK_TO_SPEAKERS</a>
+      </div>
+    </div>
+  </Layout>
+)}

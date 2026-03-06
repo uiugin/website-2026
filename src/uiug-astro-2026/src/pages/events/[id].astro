@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import EventDetailPage from '../../components/react/EventDetailPage';
+import { allEvents, getEventById } from '../../data/events';
+
+export function getStaticPaths() {
+  return allEvents.map((event) => ({ params: { id: event.id } }));
+}
+
+const { id } = Astro.params;
+const event = id ? getEventById(id) : undefined;
+---
+
+{event ? (
+  <Layout title={`${event.title} | Events | UIUG`}>
+    <EventDetailPage event={event} client:load />
+  </Layout>
+) : (
+  <Layout title="Not Found | UIUG">
+    <div class="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+      <div class="text-center">
+        <h1 class="font-display text-4xl uppercase text-black dark:text-white mb-4">EVENT_NOT_FOUND</h1>
+        <a href="/events" class="font-mono font-bold text-primary hover:underline">← BACK_TO_EVENTS</a>
+      </div>
+    </div>
+  </Layout>
+)}
