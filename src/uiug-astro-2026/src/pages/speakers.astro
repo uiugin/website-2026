@@ -1,8 +1,17 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import FullSpeakerListPage from '../components/react/FullSpeakerListPage';
+import { getAllSpeakers } from '../lib/speaker-mapper';
+
+// Fetch all speakers from CMS
+let speakers = [];
+try {
+  speakers = await getAllSpeakers();
+} catch {
+  speakers = [];
+}
 ---
 
 <Layout title="Speakers | UIUG">
-  <FullSpeakerListPage client:load />
+  <FullSpeakerListPage speakers={speakers} client:load />
 </Layout>

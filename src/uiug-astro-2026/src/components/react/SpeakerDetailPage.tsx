@@ -112,7 +112,7 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
                   <div className="h-1 w-12 bg-primary" />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {speaker.topics.map((topic, idx) => (
+                  {(speaker.topics && speaker.topics.length > 0 ? speaker.topics : ['.NET 8', 'HEADLESS']).map((topic, idx) => (
                     <div
                       key={topic}
                       className="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-900 border-2 border-black dark:border-white group hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"

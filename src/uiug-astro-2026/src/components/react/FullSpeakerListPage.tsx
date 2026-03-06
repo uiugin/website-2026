@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Search, Terminal, Github, Twitter, Linkedin, Award, User } from 'lucide-react';
-import { allSpeakers } from '../../data/speakers';
+import type { Speaker } from '../../data/speakers';
 
-const FullSpeakerListPage: React.FC = () => {
+interface FullSpeakerListPageProps {
+  speakers?: Speaker[];
+}
+
+const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = [] }) => {
   const [filter, setFilter] = useState<'ALL' | 'MVP' | 'HQ' | 'AGENCY' | 'COMMUNITY'>('ALL');
   const [search, setSearch] = useState('');
 
-  const filteredSpeakers = allSpeakers.filter((s) => {
+  const filteredSpeakers = speakers.filter((s) => {
     const matchesFilter = filter === 'ALL' || s.category === filter;
     const matchesSearch =
       s.name.toLowerCase().includes(search.toLowerCase()) ||

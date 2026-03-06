@@ -1,14 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import SpeakerDetailPage from '../../components/react/SpeakerDetailPage';
-import { allSpeakers, getSpeakerById } from '../../data/speakers';
+import { getAllSpeakers, getSpeakerById } from '../../lib/speaker-mapper';
 
-export function getStaticPaths() {
-  return allSpeakers.map((speaker) => ({ params: { id: speaker.id } }));
+export async function getStaticPaths() {
+  const speakers = await getAllSpeakers();
+  return speakers.map((speaker) => ({ params: { id: speaker.id } }));
 }
 
 const { id } = Astro.params;
-const speaker = id ? getSpeakerById(id) : undefined;
+const speaker = id ? await getSpeakerById(id) : undefined;
 ---
 
 {speaker ? (
