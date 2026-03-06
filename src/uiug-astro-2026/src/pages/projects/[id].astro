@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import ProjectDetailPage from '../../components/react/ProjectDetailPage';
+import { allProjects, getProjectById } from '../../data/projects';
+
+export function getStaticPaths() {
+  return allProjects.map((project) => ({ params: { id: project.id } }));
+}
+
+const { id } = Astro.params;
+const project = id ? getProjectById(id) : undefined;
+---
+
+{project ? (
+  <Layout title={`${project.title} | Projects | UIUG`}>
+    <ProjectDetailPage project={project} client:load />
+  </Layout>
+) : (
+  <Layout title="Not Found | UIUG">
+    <div class="min-h-screen flex items-center justify-center bg-white dark:bg-black">
+      <div class="text-center">
+        <h1 class="font-display text-4xl uppercase text-black dark:text-white mb-4">PROJECT_NOT_FOUND</h1>
+        <a href="/projects" class="font-mono font-bold text-primary hover:underline">← BACK_TO_PROJECTS</a>
+      </div>
+    </div>
+  </Layout>
+)}
