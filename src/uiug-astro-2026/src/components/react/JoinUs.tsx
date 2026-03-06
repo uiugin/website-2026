@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { X, MessageSquare, Zap, Users, ArrowUpRight, Github } from 'lucide-react';
+import { X, MessageSquare, Zap, Users, ArrowUpRight, Github, Linkedin, Play } from 'lucide-react';
+import type { SocialLinks } from '../../types/layout';
 
-const JoinUs: React.FC = () => {
+interface JoinUsProps {
+  social?: SocialLinks;
+}
+
+const JoinUs: React.FC<JoinUsProps> = ({ social }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -73,29 +78,81 @@ const JoinUs: React.FC = () => {
                     </p>
 
                     <div className="space-y-4">
-                        <a href="#" className="flex items-center justify-between bg-white border-4 border-black p-4 text-black font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors group">
-                            <span className="flex items-center gap-3">
-                                <MessageSquare className="w-5 h-5 group-hover:text-primary transition-colors" />
-                                DISCORD_SERVER
-                            </span>
-                            <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                        </a>
+                        {/* Social links mapping */}
+                        {social?.discord && (
+                            <a 
+                                href={social.discord} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-between bg-white border-4 border-black p-4 text-black font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors group"
+                            >
+                                <span className="flex items-center gap-3">
+                                    <MessageSquare className="w-5 h-5 group-hover:text-primary transition-colors" />
+                                    DISCORD_SERVER
+                                </span>
+                                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            </a>
+                        )}
                         
-                        <a href="#" className="flex items-center justify-between bg-white border-4 border-black p-4 text-black font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors group">
-                            <span className="flex items-center gap-3">
-                                <Users className="w-5 h-5 group-hover:text-primary transition-colors" />
-                                MEETUP_GROUP
-                            </span>
-                            <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                        </a>
+                        {social?.meetup && (
+                            <a 
+                                href={social.meetup} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-between bg-white border-4 border-black p-4 text-black font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors group"
+                            >
+                                <span className="flex items-center gap-3">
+                                    <Users className="w-5 h-5 group-hover:text-primary transition-colors" />
+                                    MEETUP_GROUP
+                                </span>
+                                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            </a>
+                        )}
 
-                        <a href="#" className="flex items-center justify-between bg-white border-4 border-black p-4 text-black font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors group">
-                            <span className="flex items-center gap-3">
-                                <Github className="w-5 h-5 group-hover:text-primary transition-colors" />
-                                GITHUB_REPO
-                            </span>
-                            <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                        </a>
+                        {social?.github && (
+                            <a 
+                                href={social.github} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-between bg-white border-4 border-black p-4 text-black font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors group"
+                            >
+                                <span className="flex items-center gap-3">
+                                    <Github className="w-5 h-5 group-hover:text-primary transition-colors" />
+                                    GITHUB_REPO
+                                </span>
+                                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            </a>
+                        )}
+
+                        {social?.youtube && (
+                            <a 
+                                href={social.youtube} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-between bg-white border-4 border-black p-4 text-black font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors group"
+                            >
+                                <span className="flex items-center gap-3">
+                                    <Play className="w-5 h-5 group-hover:text-primary transition-colors" />
+                                    YOUTUBE_CHANNEL
+                                </span>
+                                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            </a>
+                        )}
+
+                        {social?.linkedin && (
+                            <a 
+                                href={social.linkedin} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-between bg-white border-4 border-black p-4 text-black font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors group"
+                            >
+                                <span className="flex items-center gap-3">
+                                    <Linkedin className="w-5 h-5 group-hover:text-primary transition-colors" />
+                                    LINKEDIN_PAGE
+                                </span>
+                                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                            </a>
+                        )}
                     </div>
 
                     <div className="mt-8 text-xs font-mono font-bold text-black opacity-60">
