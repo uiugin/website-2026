@@ -28,8 +28,13 @@ interface AppShellProps {
   fullListSpeakers?: Speaker[];
 }
 
+const LOADER_DONE_KEY = 'uiug-loader-done';
+
 const AppShell: React.FC<AppShellProps> = ({ children, logo, navItems, ctaItem, fullListSpeakers }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return sessionStorage.getItem(LOADER_DONE_KEY) !== '1';
+  });
   const [showFullSpeakerList, setShowFullSpeakerList] = useState(false);
 
   // Initialize state from local storage or system preference
@@ -119,7 +124,14 @@ const AppShell: React.FC<AppShellProps> = ({ children, logo, navItems, ctaItem, 
 
   return (
     <AppShellContext.Provider value={{ onOpenFullSpeakerList: () => setShowFullSpeakerList(true) }}>
-      {isLoading && <Loader onComplete={() => setIsLoading(false)} />}
+      {isLoading && (
+      <Loader
+        onComplete={() => {
+          if (typeof window !== 'undefined') sessionStorage.setItem(LOADER_DONE_KEY, '1');
+          setIsLoading(false);
+        }}
+      />
+    )}
 
       <div className={`min-h-screen font-mono text-black dark:text-white selection:bg-accent-yellow selection:text-black overflow-x-hidden w-full transition-opacity duration-1000 ${isLoading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={isLoading ? { visibility: 'hidden' } : { visibility: 'visible' }}>
         <Navbar

@@ -30,10 +30,10 @@ const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = []
   });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black overflow-y-auto">
-      <div className="absolute inset-0 lego-studs opacity-50 pointer-events-none" />
+    <div className="h-[calc(100vh-5rem)] md:h-[calc(100vh-8rem)] bg-white dark:bg-black overflow-y-auto flex flex-col">
+      <div className="absolute inset-0 lego-studs opacity-50 pointer-events-none" aria-hidden />
 
-      <div className="sticky top-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b-4 border-black dark:border-white p-4 md:p-6 flex justify-between items-center plastic-surface relative z-10">
+      <div className="sticky top-0 z-10 shrink-0 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b-4 border-black dark:border-white p-4 md:p-6 flex justify-between items-center plastic-surface">
         <div className="flex items-center gap-4">
           <a
             href="/"
@@ -64,7 +64,7 @@ const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = []
         </div>
       </div>
 
-      <div className="w-full p-4 md:p-8 relative z-10">
+      <div className="w-full p-4 md:p-8 relative z-0 flex-1 min-h-0">
         <h2 className="md:hidden text-4xl font-display font-black uppercase text-black dark:text-white leading-none mb-6">
           FULL_ROSTER_V2
         </h2>

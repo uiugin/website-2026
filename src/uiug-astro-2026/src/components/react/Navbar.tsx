@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Menu, X, Sun, Moon, Palette, Check } from 'lucide-react';
 import type { PaletteId, PaletteColors } from '../../lib/palette';
 import { PRESET_PALETTES } from '../../lib/palette';
@@ -34,6 +34,22 @@ const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
+  const paletteRef = useRef<HTMLDivElement>(null);
+  const paletteDrawerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isPaletteOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node;
+      const inPalette = paletteRef.current?.contains(target);
+      const inDrawer = paletteDrawerRef.current?.contains(target);
+      if (!inPalette && !inDrawer) {
+        setIsPaletteOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isPaletteOpen]);
 
   // Fallback to hardcoded items if API provides nothing
   const displayNavItems = navItems.length > 0
@@ -66,7 +82,7 @@ const Navbar: React.FC<NavbarProps> = ({
           ))}
 
           {/* Palette Toggle */}
-          <div className="relative">
+          <div className="relative" ref={paletteRef}>
             <button
               onClick={() => setIsPaletteOpen(!isPaletteOpen)}
               className={`h-full px-6 border-r-4 border-black dark:border-white flex items-center justify-center hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors ${currentPaletteId === 'custom' ? 'bg-primary text-black' : ''}`}
@@ -186,10 +202,23 @@ const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Palette Drawer (displayed below navbar if open) */}
+      {/* Mobile Palette Drawer - full screen overlay */}
       {isPaletteOpen && (
-        <div className="md:hidden border-t-4 border-black dark:border-white bg-white dark:bg-black absolute w-full left-0 top-full z-40 p-4 shadow-brutal-black dark:shadow-brutal-white">
-          <h4 className="font-display text-lg mb-4 text-black dark:text-white">SELECT_THEME</h4>
+        <div
+          ref={paletteDrawerRef}
+          className="md:hidden fixed inset-0 z-[60] bg-white dark:bg-black border-4 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white flex flex-col overflow-y-auto"
+        >
+          <div className="flex items-center justify-between p-4 border-b-4 border-black dark:border-white shrink-0">
+            <h4 className="font-display text-xl font-black uppercase text-black dark:text-white">SELECT_THEME</h4>
+            <button
+              onClick={() => setIsPaletteOpen(false)}
+              className="p-2 border-2 border-black dark:border-white hover:bg-primary hover:text-black dark:hover:bg-white dark:hover:text-black transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-8 h-8" />
+            </button>
+          </div>
+          <div className="p-4 flex-1">
           <div className="grid grid-cols-2 gap-3 mb-6">
             {(Object.entries(PRESET_PALETTES) as [string, typeof PRESET_PALETTES.default][]).map(([id, preset]) => (
               <button
@@ -232,12 +261,24 @@ const Navbar: React.FC<NavbarProps> = ({
               </div>
             </div>
           </div>
+          </div>
         </div>
       )}
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Menu - full screen overlay */}
       {isOpen && !isPaletteOpen && (
-        <div className="md:hidden border-t-4 border-black dark:border-white bg-white dark:bg-black absolute w-full left-0 top-full">
+        <div className="md:hidden fixed inset-0 z-[60] bg-white dark:bg-black border-4 border-black dark:border-white flex flex-col overflow-y-auto">
+          <div className="flex items-center justify-between p-4 border-b-4 border-black dark:border-white shrink-0">
+            <span className="font-display text-xl font-black uppercase text-black dark:text-white">MENU</span>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="p-2 border-2 border-black dark:border-white hover:bg-primary hover:text-black dark:hover:bg-white dark:hover:text-black transition-colors"
+              aria-label="Close menu"
+            >
+              <X className="w-8 h-8" />
+            </button>
+          </div>
+          <div className="flex flex-col flex-1">
           {displayNavItems.map((item, i) => (
             <a
               key={`mobile-${item.url}-${i}`}
@@ -259,6 +300,7 @@ const Navbar: React.FC<NavbarProps> = ({
           >
             {brutalize(displayCta.title)}
           </a>
+          </div>
         </div>
       )}
     </nav>

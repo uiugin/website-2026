@@ -60,8 +60,8 @@ const Contact: React.FC<Props> = ({ contact }) => {
   return (
     <section className="px-4 md:px-10 mb-20 w-full relative z-10" id="join">
       {/* Header */}
-       <div className="flex items-end gap-4 mb-10 md:mb-16 border-b-4 border-black dark:border-white pb-4">
-         <div className="h-4 w-4 md:h-8 md:w-8 bg-black dark:bg-white flex items-center justify-center">
+       <div className="flex items-center gap-4 mb-10 md:mb-16 border-b-4 border-black dark:border-white pb-4">
+         <div className="h-4 w-4 md:h-8 md:w-8 inline-flex items-center justify-center border-2 border-black dark:border-white bg-black dark:bg-white shrink-0 [&_svg]:block [&_svg]:shrink-0">
             <Terminal className="w-3 h-3 md:w-5 md:h-5 text-white dark:text-black" />
          </div>
          <h2 className="text-4xl md:text-6xl font-display font-black uppercase text-black dark:text-white tracking-tighter leading-none">

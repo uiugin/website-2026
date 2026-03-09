@@ -20,8 +20,8 @@ const FAQ: React.FC<Props> = ({ faq }) => {
     <section className="px-4 md:px-10 mb-20 w-full relative z-10" id="faq">
        {/* Header */}
        <div className="flex items-center gap-4 mb-10 md:mb-16 border-b-4 border-black dark:border-white pb-4">
-         <div className="bg-accent-yellow p-2 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-            <HelpCircle className="w-6 h-6 md:w-8 md:h-8 text-black" />
+         <div className="h-4 w-4 md:h-8 md:w-8 inline-flex items-center justify-center border-2 border-black dark:border-white bg-accent-yellow shrink-0 [&_svg]:block [&_svg]:shrink-0">
+            <HelpCircle className="w-3 h-3 md:w-5 md:h-5 text-black" />
          </div>
          <h2 className="text-4xl md:text-6xl font-display font-black uppercase text-black dark:text-white tracking-tighter leading-none">
             {title.toUpperCase()}
