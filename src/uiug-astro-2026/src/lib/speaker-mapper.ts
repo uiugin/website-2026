@@ -4,6 +4,7 @@
 import type { components } from '../api/types.js';
 import { getContentItem, getPaths, getMediaUrl } from '../api/umbraco.js';
 import type { Speaker } from '../data/speakers.js';
+import { mapSeoFromProps } from './seo-from-props.js';
 
 type SpeakerContentModel = components['schemas']['SpeakerContentModel'];
 
@@ -129,15 +130,15 @@ export async function mapSpeakerFromContent(
   let topics: string[] = [];
   if (propsAny.topics) {
     if (Array.isArray(propsAny.topics)) {
-      topics = propsAny.topics.map(t => {
+      topics = (propsAny.topics as unknown[]).map((t: unknown) => {
         if (typeof t === 'string') {
           return t;
         }
         return String(t);
-      }).filter(t => t && t.trim() !== '');
+      }).filter((t: string) => t && t.trim() !== '');
     } else if (typeof propsAny.topics === 'string') {
       // Split comma-separated string
-      topics = propsAny.topics.split(',').map(t => t.trim()).filter(t => t !== '');
+      topics = propsAny.topics.split(',').map((t: string) => t.trim()).filter((t: string) => t !== '');
     }
   }
 
@@ -145,6 +146,8 @@ export async function mapSpeakerFromContent(
   if (!speakerName || speakerName === 'Speaker' || speakerName.trim() === '') {
     return null;
   }
+
+  const seo = mapSeoFromProps(props as Parameters<typeof mapSeoFromProps>[0]);
 
   const mappedSpeaker: Speaker = {
     id: speakerId,
@@ -155,6 +158,7 @@ export async function mapSpeakerFromContent(
     category: category,
     topics: topics.length > 0 ? topics : [],
     bio: bio || '',
+    seo: seo ?? undefined,
   };
 
   return mappedSpeaker;
@@ -188,7 +192,7 @@ export async function getAllSpeakers(): Promise<Speaker[]> {
         
         if (speakerContent) {
           // Check if it's a speaker content type
-          const contentType = speakerContent.contentType || '';
+          const contentType = String(speakerContent.contentType ?? '');
           const isSpeaker = contentType === 'speaker' || 
                            contentType === 'SpeakerContentModel' ||
                            contentType.toLowerCase() === 'speaker' ||
@@ -196,7 +200,7 @@ export async function getAllSpeakers(): Promise<Speaker[]> {
           
           if (isSpeaker) {
             // Pass the original path to help with ID extraction
-            const mappedSpeaker = await mapSpeakerFromContent(speakerContent as SpeakerContentModel, path);
+            const mappedSpeaker = await mapSpeakerFromContent(speakerContent as unknown as SpeakerContentModel, path);
             return mappedSpeaker;
           }
         }
@@ -236,14 +240,14 @@ export async function getSpeakerById(id: string): Promise<Speaker | null> {
       try {
         const cleanPath = path.startsWith('/') ? path.substring(1) : path;
         const content = await getContentItem(cleanPath);
-        const contentType = content?.contentType || '';
+        const contentType = String(content?.contentType ?? '');
         const isSpeaker = contentType === 'speaker' || 
                          contentType === 'SpeakerContentModel' ||
                          contentType.toLowerCase() === 'speaker' ||
                          contentType.toLowerCase().includes('speaker');
         
         if (content && isSpeaker) {
-          speakerContent = content as SpeakerContentModel;
+          speakerContent = content as unknown as SpeakerContentModel;
           usedPath = path;
           break;
         }

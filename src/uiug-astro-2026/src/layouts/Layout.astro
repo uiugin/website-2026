@@ -1,11 +1,25 @@
 ---
 import '../styles/global.css';
+import type { PageSeo } from '../types/seo';
 
 interface Props {
   title?: string;
+  seo?: PageSeo | null;
 }
 
-const { title = "UIUG - Umbraco India User Group" } = Astro.props;
+const { title = "UIUG - Umbraco India User Group", seo } = Astro.props;
+
+const displayTitle = (seo?.title != null && seo.title !== '') ? seo.title : title;
+const site = Astro.site ? new URL(Astro.site).origin : Astro.url.origin;
+
+function absoluteUrl(url: string | null | undefined): string {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return `${site}${url.startsWith('/') ? '' : '/'}${url}`;
+}
+
+const canonical = seo?.canonicalUrl != null && seo.canonicalUrl !== '' ? absoluteUrl(seo.canonicalUrl) : undefined;
+const ogImage = seo?.ogImage != null && seo.ogImage !== '' ? absoluteUrl(seo.ogImage) : undefined;
 ---
 
 <!doctype html>
@@ -13,7 +27,25 @@ const { title = "UIUG - Umbraco India User Group" } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
+    <title>{displayTitle}</title>
+    {seo?.description != null && seo.description !== '' && (
+      <meta name="description" content={seo.description} />
+    )}
+    {seo?.keywords != null && seo.keywords !== '' && (
+      <meta name="keywords" content={seo.keywords} />
+    )}
+    {seo?.noindex === true && (
+      <meta name="robots" content="noindex" />
+    )}
+    {canonical && <link rel="canonical" href={canonical} />}
+    {(seo?.ogTitle ?? seo?.title ?? displayTitle) && (
+      <meta property="og:title" content={seo?.ogTitle ?? seo?.title ?? displayTitle} />
+    )}
+    {(seo?.ogDescription ?? seo?.description) != null && (seo?.ogDescription ?? seo?.description) !== '' && (
+      <meta property="og:description" content={seo?.ogDescription ?? seo?.description ?? ''} />
+    )}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:type" content="website" />
     <style>
       @import url(https://fonts.googleapis.com/css?family=Google+Sans+Text);
       @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');

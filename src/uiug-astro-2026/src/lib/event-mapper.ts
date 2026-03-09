@@ -4,6 +4,7 @@
 import type { components } from '../api/types.js';
 import { getContentItem, getPaths, getMediaUrl, resolveContentReference } from '../api/umbraco.js';
 import type { Event, Speaker, Attendee } from '../types/content.js';
+import { mapSeoFromProps } from './seo-from-props.js';
 
 type EventContentModel = components['schemas']['EventContentModel'];
 type SpeakerContentModel = components['schemas']['SpeakerContentModel'];
@@ -209,6 +210,8 @@ export async function mapEventFromContent(
 
   if (!eventTitle || eventTitle.trim() === '' || eventTitle === 'Event') return null;
 
+  const seo = mapSeoFromProps(props as Parameters<typeof mapSeoFromProps>[0]);
+
   return {
     id: eventId,
     title: eventTitle.toUpperCase(),
@@ -223,6 +226,7 @@ export async function mapEventFromContent(
     fullSummary: fullSummary || eventDescription,
     url: null,
     agenda: undefined,
+    seo: seo ?? undefined,
   };
 }
 

@@ -2,6 +2,7 @@
  * Domain types for CMS content, aligned with exampledatabackoffice and API.
  * Used by pages, mappers, and components.
  */
+import type { PageSeo } from './seo.js';
 
 export interface Speaker {
   id: string;
@@ -10,6 +11,7 @@ export interface Speaker {
   company?: string | null;
   avatarUrl?: string | null;
   profileUrl?: string | null;
+  seo?: PageSeo | null;
 }
 
 export interface Attendee {
@@ -46,4 +48,5 @@ export interface Event {
   location?: string | null;
   url?: string | null;
   agenda?: { time: string; task: string }[];
+  seo?: PageSeo | null;
 }

@@ -74,7 +74,7 @@ async function fetchSpeakerContent(speaker: components['schemas']['IApiContentMo
             // Check if it has properties and try to access them
             // contentType could be 'speaker' (lowercase) or 'SpeakerContentModel'
             if ('properties' in speakerContent) {
-              const speakerProps = (speakerContent as SpeakerContentModel).properties;
+              const speakerProps = (speakerContent as unknown as SpeakerContentModel).properties;
               if (speakerProps && (speakerProps.speakerName || speakerContent.name)) {
                 return mapSpeakerFromProps(speakerProps, speakerContent.id, speakerContent.name);
               }

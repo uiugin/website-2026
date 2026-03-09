@@ -5,7 +5,11 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
+// Set site for canonical URLs, Open Graph, and sitemap. Override with SITE_URL env if needed.
+const siteUrl = 'https://uiug.in';
+
 export default defineConfig({
+  site: siteUrl,
   integrations: [react()],
 
   server: {

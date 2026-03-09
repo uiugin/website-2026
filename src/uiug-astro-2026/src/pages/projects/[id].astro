@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import ProjectDetailPage from '../../components/react/ProjectDetailPage';
 import { getAllProjects, getProjectById } from '../../lib/project-mapper';
+import type { Project } from '../../data/projects';
 
 export async function getStaticPaths() {
   const projects = await getAllProjects();
@@ -9,11 +10,11 @@ export async function getStaticPaths() {
 }
 
 const { id } = Astro.params;
-const project = id ? await getProjectById(id) : undefined;
+const project: Project | null | undefined = id ? await getProjectById(id) : undefined;
 ---
 
 {project ? (
-  <Layout title={`${project.title} | Projects | UIUG`}>
+  <Layout title={`${project.title} | Projects | UIUG`} seo={project.seo}>
     <ProjectDetailPage project={project} client:load />
   </Layout>
 ) : (

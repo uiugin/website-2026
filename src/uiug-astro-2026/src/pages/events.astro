@@ -2,16 +2,22 @@
 import Layout from '../layouts/Layout.astro';
 import FullEventListPage from '../components/react/FullEventListPage';
 import { getAllEvents } from '../lib/event-mapper';
+import { getContentItem } from '../api/umbraco';
+import { mapSeoFromProps } from '../lib/seo-from-props';
+import type { Event } from '../types/content';
+import type { PageSeo } from '../types/seo';
 
-// Fetch all events from CMS
-let events = [];
+let events: Event[] = [];
+let listSeo: PageSeo | null = null;
 try {
   events = await getAllEvents();
+  const eventsContent = await getContentItem('events').catch(() => null);
+  listSeo = mapSeoFromProps(eventsContent?.properties as Parameters<typeof mapSeoFromProps>[0]);
 } catch {
   events = [];
 }
 ---
 
-<Layout title="Events | UIUG">
+<Layout title="Events | UIUG" seo={listSeo}>
   <FullEventListPage events={events} client:load />
 </Layout>

@@ -1,3 +1,5 @@
+import type { PageSeo } from '../types/seo.js';
+
 export interface Project {
   id: string;
   title: string;
@@ -9,6 +11,7 @@ export interface Project {
   category: 'COMMERCE' | 'FINTECH' | 'GOVT' | 'ENTERPRISE' | 'STARTUP';
   longDescription?: string;
   gallery?: string[];
+  seo?: PageSeo | null;
 }
 
 export const allProjects: Project[] = [

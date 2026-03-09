@@ -2,16 +2,22 @@
 import Layout from '../layouts/Layout.astro';
 import FullShowcaseListPage from '../components/react/FullShowcaseListPage';
 import { getAllProjects } from '../lib/project-mapper';
+import { getContentItem } from '../api/umbraco';
+import { mapSeoFromProps } from '../lib/seo-from-props';
+import type { Project } from '../data/projects';
+import type { PageSeo } from '../types/seo';
 
-// Fetch all projects from CMS
-let projects = [];
+let projects: Project[] = [];
+let listSeo: PageSeo | null = null;
 try {
   projects = await getAllProjects();
+  const projectsContent = await getContentItem('projects').catch(() => null);
+  listSeo = mapSeoFromProps(projectsContent?.properties as Parameters<typeof mapSeoFromProps>[0]);
 } catch {
   projects = [];
 }
 ---
 
-<Layout title="Projects | UIUG">
+<Layout title="Projects | UIUG" seo={listSeo}>
   <FullShowcaseListPage projects={projects} client:load />
 </Layout>

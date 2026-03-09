@@ -100,7 +100,7 @@ export async function mapSponsorsProps(
         }
       }
       // Handle Silver (check if it exists)
-      else if (contentType === 'silver') {
+      else if ((contentType as string) === 'silver') {
         const silverBlock = blockItem.content as any; // Silver might not be in types yet
         const silverProps = silverBlock?.properties;
         

@@ -4,6 +4,7 @@
 import type { components } from '../api/types.js';
 import { getContentItem, getPaths, getMediaUrl } from '../api/umbraco.js';
 import type { Project } from '../data/projects.js';
+import { mapSeoFromProps } from './seo-from-props.js';
 
 type ProjectContentModel = components['schemas']['ProjectContentModel'];
 type ApiLinkModel = components['schemas']['ApiLinkModel'];
@@ -102,7 +103,7 @@ export async function mapProjectFromContent(
         return String(s).toUpperCase();
       });
     } else if (typeof props.stack === 'string') {
-      stack = [props.stack.toUpperCase()];
+      stack = [String(props.stack).toUpperCase()];
     }
   }
   
@@ -181,6 +182,8 @@ export async function mapProjectFromContent(
     return null;
   }
   
+  const seo = mapSeoFromProps(props as Parameters<typeof mapSeoFromProps>[0]);
+
   const mappedProject: Project = {
     id: projectId,
     title: projectTitle.toUpperCase(),
@@ -191,9 +194,9 @@ export async function mapProjectFromContent(
     year: year,
     category: category,
     longDescription: longDescription || description || undefined,
-    // gallery can be added later if needed in CMS
+    seo: seo ?? undefined,
   };
-  
+
   return mappedProject;
 }
 
@@ -225,7 +228,7 @@ export async function getAllProjects(): Promise<Project[]> {
         
         if (projectContent) {
           // Check if it's a project content type (might be "project" or "ProjectContentModel")
-          const contentType = projectContent.contentType || '';
+          const contentType = String(projectContent.contentType ?? '');
           const isProject = contentType === 'project' || 
                            contentType === 'ProjectContentModel' ||
                            contentType.toLowerCase() === 'project' ||
@@ -233,7 +236,7 @@ export async function getAllProjects(): Promise<Project[]> {
           
           if (isProject) {
             // Pass the original path to help with ID extraction
-            const mappedProject = await mapProjectFromContent(projectContent as ProjectContentModel, path);
+            const mappedProject = await mapProjectFromContent(projectContent as unknown as ProjectContentModel, path);
             return mappedProject;
           }
         }
@@ -273,14 +276,14 @@ export async function getProjectById(id: string): Promise<Project | null> {
       try {
         const cleanPath = path.startsWith('/') ? path.substring(1) : path;
         const content = await getContentItem(cleanPath);
-        const contentType = content?.contentType || '';
+        const contentType = String(content?.contentType ?? '');
         const isProject = contentType === 'project' || 
                          contentType === 'ProjectContentModel' ||
                          contentType.toLowerCase() === 'project' ||
                          contentType.toLowerCase().includes('project');
         
         if (content && isProject) {
-          projectContent = content as ProjectContentModel;
+          projectContent = content as unknown as ProjectContentModel;
           usedPath = path;
           break;
         }

@@ -1,3 +1,5 @@
+import type { PageSeo } from '../types/seo.js';
+
 export interface Speaker {
   id: string;
   name: string;
@@ -7,6 +9,7 @@ export interface Speaker {
   category: 'MVP' | 'HQ' | 'AGENCY' | 'COMMUNITY';
   topics: string[];
   bio: string;
+  seo?: PageSeo | null;
 }
 
 export const allSpeakers: Speaker[] = [

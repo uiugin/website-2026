@@ -75,7 +75,7 @@ async function fetchProjectContent(project: components['schemas']['IApiContentMo
             // Check for any project-related contentType (could be 'project', 'ProjectContentModel', or document type alias)
             // First check if it has properties and try to access them
             if ('properties' in projectContent) {
-              const projectProps = (projectContent as ProjectContentModel).properties;
+              const projectProps = (projectContent as unknown as ProjectContentModel).properties;
               if (projectProps && (projectProps.projectTitle || projectProps.client || projectProps.description)) {
                 return mapProjectFromProps(projectProps, projectContent.id);
               }

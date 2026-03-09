@@ -2,16 +2,22 @@
 import Layout from '../layouts/Layout.astro';
 import FullSpeakerListPage from '../components/react/FullSpeakerListPage';
 import { getAllSpeakers } from '../lib/speaker-mapper';
+import { getContentItem } from '../api/umbraco';
+import { mapSeoFromProps } from '../lib/seo-from-props';
+import type { Speaker } from '../data/speakers';
+import type { PageSeo } from '../types/seo';
 
-// Fetch all speakers from CMS
-let speakers = [];
+let speakers: Speaker[] = [];
+let listSeo: PageSeo | null = null;
 try {
   speakers = await getAllSpeakers();
+  const speakersContent = await getContentItem('speakers').catch(() => null);
+  listSeo = mapSeoFromProps(speakersContent?.properties as Parameters<typeof mapSeoFromProps>[0]);
 } catch {
   speakers = [];
 }
 ---
 
-<Layout title="Speakers | UIUG">
+<Layout title="Speakers | UIUG" seo={listSeo}>
   <FullSpeakerListPage speakers={speakers} client:load />
 </Layout>

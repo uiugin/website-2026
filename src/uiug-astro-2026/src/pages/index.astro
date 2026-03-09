@@ -30,14 +30,17 @@ import { mapFAQProps } from '../lib/faq-mapper';
 import { mapContactProps } from '../lib/contact-mapper';
 import { mapSponsorsProps } from '../lib/sponsors-mapper';
 import { mapGalleryProps } from '../lib/gallery-mapper';
+import { mapSeoFromProps } from '../lib/seo-from-props';
 import type { components } from '../api/types';
+import type { PageSeo } from '../types/seo';
 
 // Fetch site settings from CMS server-side
 const layoutData = await getSiteSettings();
 
 // Fetch all blocks from Umbraco and Hero props
 let blocks: ReturnType<typeof getMainContentBlocks> = [];
-let heroProps = null;
+let heroProps: Awaited<ReturnType<typeof mapHeroProps>> | null = null;
+let homeSeo: PageSeo | null = null;
 const latestEventsPropsMap = new Map<number, Awaited<ReturnType<typeof mapLatestEventsProps>>>();
 const showcasePropsMap = new Map<number, Awaited<ReturnType<typeof mapShowcaseProps>>>();
 const speakersPropsMap = new Map<number, Awaited<ReturnType<typeof mapSpeakersProps>>>();
@@ -47,7 +50,8 @@ const galleryPropsMap = new Map<number, Awaited<ReturnType<typeof mapGalleryProp
 try {
   const homeContent = await getHomeContent();
   blocks = getMainContentBlocks(homeContent);
-  
+  homeSeo = mapSeoFromProps(homeContent?.properties as Parameters<typeof mapSeoFromProps>[0]);
+
   // Get Hero props for dynamic Hero component
   const heroBlock = getHeroBlock(homeContent);
   if (heroBlock) {
@@ -144,7 +148,7 @@ try {
 const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.splinecode';
 ---
 
-<Layout title={layoutData.siteName ? `${layoutData.siteName} - Umbraco India User Group` : 'UIUG - Umbraco India User Group'}>
+<Layout title={layoutData.siteName ? `${layoutData.siteName} - Umbraco India User Group` : 'UIUG - Umbraco India User Group'} seo={homeSeo}>
   {/* Preload Spline 404 scene - cache it early for faster 404 page loads */}
   <link rel="preload" href={splineSceneUrl} as="fetch" crossorigin="anonymous" />
   <link rel="dns-prefetch" href="https://prod.spline.design" />

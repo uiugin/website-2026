@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import EventDetailPage from '../../components/react/EventDetailPage';
 import { getAllEvents, getEventById } from '../../lib/event-mapper';
+import type { Event } from '../../types/content';
 
 export async function getStaticPaths() {
   const events = await getAllEvents();
@@ -9,11 +10,11 @@ export async function getStaticPaths() {
 }
 
 const { id } = Astro.params;
-const event = id ? await getEventById(id) : undefined;
+const event: Event | null | undefined = id ? await getEventById(id) : undefined;
 ---
 
 {event ? (
-  <Layout title={`${event.title} | Events | UIUG`}>
+  <Layout title={`${event.title} | Events | UIUG`} seo={event.seo}>
     <EventDetailPage event={event} client:load />
   </Layout>
 ) : (
