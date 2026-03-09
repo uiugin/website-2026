@@ -165,58 +165,44 @@ export async function mapSpeakerFromContent(
 }
 
 /**
- * Fetch all speakers from CMS
+ * Fetch all speakers from CMS (children of the speakers page, same pattern as getAllEvents).
  */
 export async function getAllSpeakers(): Promise<Speaker[]> {
   try {
-    // Get all paths under "speakers"
-    const paths = await getPaths('speakers');
-    
-    if (!paths || paths.length === 0) {
-      return [];
-    }
-    
-    // Fetch all speaker content in parallel
+    const paths = await getPaths('speakers', {
+      extraQueryParams: { take: '500' },
+    });
+    if (!paths?.length) return [];
+
     const speakerPromises = paths.map(async (pathItem) => {
       try {
         const path = pathItem.path;
-        
-        if (!path || path === '#') {
-          return null;
-        }
-        
-        // Clean path: remove leading slash if present
+        if (!path || path === '#') return null;
         const cleanPath = path.startsWith('/') ? path.substring(1) : path;
-        
+        // Skip the parent "speakers" page – we only want its children (speaker documents)
+        const isParentPage = cleanPath === 'speakers' || cleanPath === 'speakers/';
+        if (isParentPage) return null;
+
         const speakerContent = await getContentItem(cleanPath);
-        
-        if (speakerContent) {
-          // Check if it's a speaker content type
-          const contentType = String(speakerContent.contentType ?? '');
-          const isSpeaker = contentType === 'speaker' || 
-                           contentType === 'SpeakerContentModel' ||
-                           contentType.toLowerCase() === 'speaker' ||
-                           contentType.toLowerCase().includes('speaker');
-          
-          if (isSpeaker) {
-            // Pass the original path to help with ID extraction
-            const mappedSpeaker = await mapSpeakerFromContent(speakerContent as unknown as SpeakerContentModel, path);
-            return mappedSpeaker;
-          }
+        const contentType = String(speakerContent?.contentType ?? '');
+        const isSpeaker =
+          contentType === 'speaker' ||
+          contentType === 'SpeakerContentModel' ||
+          contentType.toLowerCase() === 'speaker' ||
+          contentType.toLowerCase().includes('speaker');
+        if (speakerContent && isSpeaker) {
+          return await mapSpeakerFromContent(speakerContent as unknown as SpeakerContentModel, path);
         }
         return null;
       } catch {
         return null;
       }
     });
-    
+
     const speakers = await Promise.all(speakerPromises);
-    
-    // Filter out null results
-    const validSpeakers = speakers.filter((speaker): speaker is Speaker => speaker !== null);
-    
-    return validSpeakers;
-  } catch {
+    return speakers.filter((s): s is Speaker => s !== null);
+  } catch (err) {
+    console.error('[getAllSpeakers] Failed to fetch speakers:', err);
     return [];
   }
 }

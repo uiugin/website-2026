@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ArrowLeft, Search, Terminal, Calendar, User, Tag, ArrowUpRight, Radio, Clock, MapPin, Users } from 'lucide-react';
 import type { Event } from '../../types/content';
 
@@ -7,8 +7,19 @@ interface FullEventListPageProps {
 }
 
 const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) => {
-  const [filter, setFilter] = useState<'ALL' | 'INCOMING' | 'ARCHIVED'>('ALL');
+  const statusOptions = useMemo(() => {
+    const statuses = [...new Set(events.map((e) => e.status).filter(Boolean))].sort();
+    return ['ALL', ...statuses] as const;
+  }, [events]);
+
+  const [filter, setFilter] = useState<string>('ALL');
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (filter !== 'ALL' && !(statusOptions as readonly string[]).includes(filter)) {
+      setFilter('ALL');
+    }
+  }, [statusOptions, filter]);
 
   const filteredEvents = events.filter((e) => {
     const matchesFilter = filter === 'ALL' || e.status === filter;
@@ -72,7 +83,7 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
-          {(['ALL', 'INCOMING', 'ARCHIVED'] as const).map((cat) => (
+          {statusOptions.map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
@@ -91,7 +102,7 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
           {filteredEvents.map((event) => (
             <div
               key={event.id}
-              className="group bg-white dark:bg-black border-4 border-black dark:border-white p-6 md:p-8 hover:-translate-y-1 transition-all duration-300 shadow-brutal-black dark:shadow-brutal-white hover:shadow-brutal-red relative overflow-hidden"
+              className="group bg-white dark:bg-black border-4 border-black dark:border-white p-6 md:p-8 hover:-translate-y-1 transition-all duration-300 shadow-brutal-black dark:shadow-brutal-white hover:shadow-brutal-red relative z-10 hover:z-20"
             >
               <div
                 className={`absolute top-0 right-0 px-4 py-1 font-mono text-xs font-bold border-l-4 border-b-4 border-black dark:border-white ${
@@ -130,9 +141,10 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
                   <h3 className="text-3xl md:text-5xl font-display uppercase leading-[0.85] mb-4 text-black dark:text-white group-hover:text-primary transition-colors">
                     {event.title}
                   </h3>
-                  <p className="font-mono text-sm md:text-base font-bold text-black dark:text-white opacity-70 leading-relaxed">
-                    {event.briefSummary}
-                  </p>
+                  <div
+                    className="font-mono text-sm md:text-base font-bold text-black dark:text-white opacity-70 leading-relaxed prose prose-sm dark:prose-invert max-w-none line-clamp-3 [&_p]:mb-2 [&_p:last-child]:mb-0 [&_a]:text-primary [&_a]:underline"
+                    dangerouslySetInnerHTML={{ __html: event.briefSummary ?? '' }}
+                  />
                 </div>
 
                 <div className="lg:col-span-3 flex flex-col gap-6 lg:items-end">

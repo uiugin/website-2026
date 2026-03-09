@@ -235,7 +235,9 @@ export async function mapEventFromContent(
  */
 export async function getAllEvents(): Promise<Event[]> {
   try {
-    const paths = await getPaths('events');
+    const paths = await getPaths('events', {
+      extraQueryParams: { take: '500' },
+    });
     if (!paths?.length) return [];
 
     const eventPromises = paths.map(async (pathItem) => {

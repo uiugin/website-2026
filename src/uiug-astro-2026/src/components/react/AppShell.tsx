@@ -2,9 +2,9 @@ import React, { useEffect, useState, createContext, useContext } from 'react';
 import type { PaletteId, PaletteColors } from '../../lib/palette';
 import { PRESET_PALETTES } from '../../lib/palette';
 import type { LayoutLink } from '../../types/layout';
+import type { Speaker } from '../../data/speakers';
 import Navbar from './Navbar';
 import Loader from './Loader';
-import FullSpeakerList from './FullSpeakerList';
 
 interface AppShellContextType {
   onOpenFullSpeakerList: () => void;
@@ -25,9 +25,10 @@ interface AppShellProps {
   logo?: string;
   navItems?: LayoutLink[];
   ctaItem?: LayoutLink | null;
+  fullListSpeakers?: Speaker[];
 }
 
-const AppShell: React.FC<AppShellProps> = ({ children, logo, navItems, ctaItem }) => {
+const AppShell: React.FC<AppShellProps> = ({ children, logo, navItems, ctaItem, fullListSpeakers }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [showFullSpeakerList, setShowFullSpeakerList] = useState(false);
 
@@ -135,12 +136,6 @@ const AppShell: React.FC<AppShellProps> = ({ children, logo, navItems, ctaItem }
         <main className="relative pt-20 md:pt-32">
           {children}
         </main>
-
-        {/* Full Speaker List Overlay */}
-        <FullSpeakerList
-          isOpen={showFullSpeakerList}
-          onClose={() => setShowFullSpeakerList(false)}
-        />
       </div>
     </AppShellContext.Provider>
   );

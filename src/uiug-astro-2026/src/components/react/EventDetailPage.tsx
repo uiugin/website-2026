@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import {
   ArrowLeft,
@@ -95,7 +95,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
     });
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!shareMenuOpen) {
       setShareMenuPosition(null);
       return;
@@ -110,7 +110,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
     };
   }, [shareMenuOpen]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!bookmarkFeedback || typeof document === 'undefined') {
       setBookmarkFeedbackPosition(null);
       return;
@@ -392,34 +392,34 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
             {event.title}
           </h1>
 
-          <div className={`grid grid-cols-1 gap-8 border-y-4 border-black dark:border-white py-8 ${hasAttendees ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
-            <div className="flex items-center gap-4">
+          <div className={`grid grid-cols-1 gap-8 border-y-4 border-black dark:border-white py-8 px-6 md:px-8 ${hasAttendees ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
+            <div className="flex items-center gap-4 w-full min-w-0">
               <Calendar className="w-10 h-10 text-primary shrink-0" />
-              <div>
+              <div className="min-w-0 flex-1">
                 <span className="block text-[10px] font-mono font-bold text-gray-500 uppercase">DATE_STAMP</span>
-                <span className="text-2xl font-display uppercase text-black dark:text-white">{event.date}</span>
+                <span className="text-2xl font-display uppercase text-black dark:text-white break-words">{event.date}</span>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 w-full min-w-0">
               <Clock className="w-10 h-10 text-primary shrink-0" />
-              <div>
+              <div className="min-w-0 flex-1">
                 <span className="block text-[10px] font-mono font-bold text-gray-500 uppercase">TIME_WINDOW</span>
-                <span className="text-2xl font-display uppercase text-black dark:text-white">{event.time}</span>
+                <span className="text-2xl font-display uppercase text-black dark:text-white break-words">{event.time}</span>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 w-full min-w-0">
               <MapPin className="w-10 h-10 text-primary shrink-0" />
-              <div>
+              <div className="min-w-0 flex-1">
                 <span className="block text-[10px] font-mono font-bold text-gray-500 uppercase">COORDINATES</span>
-                <span className="text-2xl font-display uppercase text-black dark:text-white">{event.location ?? 'VIRTUAL_STREAM'}</span>
+                <span className="text-2xl font-display uppercase text-black dark:text-white break-words">{event.location ?? 'VIRTUAL_STREAM'}</span>
               </div>
             </div>
             {hasAttendees && (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 w-full min-w-0">
                 <Users className="w-10 h-10 text-primary shrink-0" />
-                <div>
+                <div className="min-w-0 flex-1">
                   <span className="block text-[10px] font-mono font-bold text-gray-500 uppercase">ATTENDEES</span>
-                  <span className="text-2xl font-display uppercase text-black dark:text-white">{attendeesCount} JOINED</span>
+                  <span className="text-2xl font-display uppercase text-black dark:text-white break-words">{attendeesCount} JOINED</span>
                 </div>
               </div>
             )}
@@ -432,9 +432,10 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
               <h3 className="font-display text-3xl uppercase text-black dark:text-white mb-8 flex items-center gap-4">
                 <Terminal className="w-8 h-8 text-primary shrink-0" /> BRIEFING_SUMMARY
               </h3>
-              <p className="font-mono text-xl md:text-2xl font-bold text-black dark:text-white leading-relaxed mb-8">
-                {event.briefSummary}
-              </p>
+              <div
+                className="font-mono text-xl md:text-2xl font-bold text-black dark:text-white leading-relaxed mb-8 prose prose-lg dark:prose-invert max-w-none [&_p]:mb-2 [&_p:last-child]:mb-0 [&_a]:text-primary [&_a]:underline"
+                dangerouslySetInnerHTML={{ __html: event.briefSummary ?? '' }}
+              />
               <div
                 className="bg-gray-50 dark:bg-gray-900 border-4 border-black dark:border-white p-8 font-mono text-gray-700 dark:text-gray-400 leading-relaxed prose dark:prose-invert max-w-none [&_p]:mb-4 [&_p:last-child]:mb-0"
                 dangerouslySetInnerHTML={{ __html: event.fullSummary || event.briefSummary || 'No summary available.' }}

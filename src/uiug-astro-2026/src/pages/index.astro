@@ -33,6 +33,8 @@ import { mapGalleryProps } from '../lib/gallery-mapper';
 import { mapSeoFromProps } from '../lib/seo-from-props';
 import type { components } from '../api/types';
 import type { PageSeo } from '../types/seo';
+import { getAllSpeakers } from '../lib/speaker-mapper';
+import type { Speaker } from '../data/speakers';
 
 // Fetch site settings from CMS server-side
 const layoutData = await getSiteSettings();
@@ -143,6 +145,14 @@ try {
 } catch {
   // Continue with empty blocks array - components will be skipped
 }
+
+// Same data as /speakers page: for full-list modal (VIEW_FULL_ROSTER)
+let fullListSpeakers: Speaker[] = [];
+try {
+  fullListSpeakers = await getAllSpeakers();
+} catch {
+  fullListSpeakers = [];
+}
 ---
 
 <Layout title={layoutData.siteName ? `${layoutData.siteName} - Umbraco India User Group` : 'UIUG - Umbraco India User Group'} seo={homeSeo}>
@@ -151,6 +161,7 @@ try {
     logo={layoutData.logo}
     navItems={layoutData.navItems}
     ctaItem={layoutData.ctaItem}
+    fullListSpeakers={fullListSpeakers}
   >
     {/* Dynamically render components based on Umbraco block list order */}
     {blocks.map((block, index) => {

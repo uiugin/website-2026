@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ArrowLeft, Search, Terminal, Layers, Cpu, ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
 
@@ -7,8 +7,19 @@ interface FullShowcaseListPageProps {
 }
 
 const FullShowcaseListPage: React.FC<FullShowcaseListPageProps> = ({ projects = [] }) => {
-  const [filter, setFilter] = useState<'ALL' | 'COMMERCE' | 'FINTECH' | 'GOVT' | 'ENTERPRISE' | 'STARTUP'>('ALL');
+  const categoryOptions = useMemo(() => {
+    const categories = [...new Set(projects.map((p) => p.category).filter(Boolean))].sort();
+    return ['ALL', ...categories] as const;
+  }, [projects]);
+
+  const [filter, setFilter] = useState<string>('ALL');
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (filter !== 'ALL' && !(categoryOptions as readonly string[]).includes(filter)) {
+      setFilter('ALL');
+    }
+  }, [categoryOptions, filter]);
 
   const filteredProjects = projects.filter((p) => {
     const matchesFilter = filter === 'ALL' || p.category === filter;
@@ -71,7 +82,7 @@ const FullShowcaseListPage: React.FC<FullShowcaseListPageProps> = ({ projects = 
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
-          {(['ALL', 'COMMERCE', 'FINTECH', 'GOVT', 'ENTERPRISE', 'STARTUP'] as const).map((cat) => (
+          {categoryOptions.map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}

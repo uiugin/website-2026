@@ -10,6 +10,7 @@
     <PackageReference Include="Umbraco.Cms" Version="17.2.0" />
     <PackageReference Include="Umbraco.Cms.DevelopmentMode.Backoffice" Version="17.2.0" />
     <PackageReference Include="Umbraco.Community.DeliveryApiExtensions" Version="17.0.0" />
+    <PackageReference Include="uSync" Version="17.0.4" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,12 @@
+using UIUG.Web.Options;
+using UIUG.Web.Services.MeetupImport;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<MeetupImportOptions>(
+    builder.Configuration.GetSection(MeetupImportOptions.SectionName));
+builder.Services.AddScoped<IMeetupImportService, MeetupImportService>();
+builder.Services.AddControllers();
 
 builder.CreateUmbracoBuilder()
     .AddBackOffice()
@@ -23,5 +31,7 @@ app.UseUmbraco()
         u.UseBackOfficeEndpoints();
         u.UseWebsiteEndpoints();
     });
+
+app.MapControllers();
 
 await app.RunAsync();

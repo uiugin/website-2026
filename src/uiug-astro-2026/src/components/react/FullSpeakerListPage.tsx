@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ArrowLeft, Search, Terminal, Github, Twitter, Linkedin, Award, User } from 'lucide-react';
 import type { Speaker } from '../../data/speakers';
 
@@ -7,8 +7,19 @@ interface FullSpeakerListPageProps {
 }
 
 const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = [] }) => {
-  const [filter, setFilter] = useState<'ALL' | 'MVP' | 'HQ' | 'AGENCY' | 'COMMUNITY'>('ALL');
+  const categoryOptions = useMemo(() => {
+    const categories = [...new Set(speakers.map((s) => s.category).filter(Boolean))].sort();
+    return ['ALL', ...categories] as const;
+  }, [speakers]);
+
+  const [filter, setFilter] = useState<string>('ALL');
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (filter !== 'ALL' && !(categoryOptions as readonly string[]).includes(filter)) {
+      setFilter('ALL');
+    }
+  }, [categoryOptions, filter]);
 
   const filteredSpeakers = speakers.filter((s) => {
     const matchesFilter = filter === 'ALL' || s.category === filter;
@@ -70,7 +81,7 @@ const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = []
         </div>
 
         <div className="flex flex-wrap gap-3 mb-12">
-          {(['ALL', 'MVP', 'HQ', 'AGENCY', 'COMMUNITY'] as const).map((cat) => (
+          {categoryOptions.map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}

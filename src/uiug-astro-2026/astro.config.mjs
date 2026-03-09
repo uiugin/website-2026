@@ -10,6 +10,7 @@ const siteUrl = 'https://uiug.in';
 
 export default defineConfig({
   site: siteUrl,
+  output: 'static', // SSG only – all pages pre-rendered at build time
   integrations: [react()],
 
   server: {

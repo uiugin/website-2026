@@ -52,12 +52,12 @@ const Sponsors: React.FC<Props> = ({ sponsors }) => {
                   <div className="flex flex-col items-center md:items-start text-center md:text-left">
                     <div className="flex items-center gap-2 mb-4">
                       <Shield className="w-8 h-8 text-black fill-white dark:fill-black" />
-                      <span className="font-mono font-bold text-black uppercase">OFFICIAL_HQ</span>
+                      <span className="font-mono font-bold text-black uppercase">OFFICIAL_PARTNER</span>
                     </div>
                     <h3 className="text-5xl md:text-7xl font-display font-black text-black uppercase tracking-tighter leading-none mb-2">
                       {sponsor.companyName.toUpperCase()}
                     </h3>
-                    <p className="font-mono font-bold text-black dark:text-white max-w-md border-l-4 border-black dark:border-white pl-4">
+                    <p className="font-mono font-bold text-black max-w-md border-l-4 border-black dark:border-white pl-4">
                       {sponsor.description}
                     </p>
                   </div>

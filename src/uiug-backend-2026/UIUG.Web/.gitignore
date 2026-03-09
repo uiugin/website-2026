@@ -475,3 +475,4 @@ umbraco-package-schema.json
 
 # Media files
 /wwwroot/media/
+/uSync/
