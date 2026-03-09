@@ -143,17 +143,9 @@ try {
 } catch {
   // Continue with empty blocks array - components will be skipped
 }
-
-// Preload Spline 404 scene for faster loading when users hit 404 page
-const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.splinecode';
 ---
 
 <Layout title={layoutData.siteName ? `${layoutData.siteName} - Umbraco India User Group` : 'UIUG - Umbraco India User Group'} seo={homeSeo}>
-  {/* Preload Spline 404 scene - cache it early for faster 404 page loads */}
-  <link rel="preload" href={splineSceneUrl} as="fetch" crossorigin="anonymous" />
-  <link rel="dns-prefetch" href="https://prod.spline.design" />
-  <link rel="preconnect" href="https://prod.spline.design" crossorigin />
-  
   <AppShell 
     client:only="react"
     logo={layoutData.logo}
@@ -193,7 +185,7 @@ const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.spline
       if (componentId === 'countdown') {
         const countdownBlock = block.content as components['schemas']['CountdownElementModel'];
         const countdownProps = mapCountdownProps(countdownBlock);
-        return <Countdown countdown={countdownProps} client:load />;
+        return <Countdown countdown={countdownProps} client:visible />;
       }
       if (componentId === 'latestEvents') {
         const latestEventsProps = latestEventsPropsMap.get(index);
@@ -201,7 +193,7 @@ const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.spline
       }
       if (componentId === 'speakers') {
         const speakersProps = speakersPropsMap.get(index);
-        return <Speakers speakers={speakersProps} client:load />;
+        return <Speakers speakers={speakersProps} client:visible />;
       }
       if (componentId === 'showcase') {
         const showcaseProps = showcasePropsMap.get(index);
@@ -213,19 +205,19 @@ const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.spline
       }
       if (componentId === 'gallery') {
         const galleryProps = galleryPropsMap.get(index);
-        return <Gallery gallery={galleryProps} client:load />;
+        return <Gallery gallery={galleryProps} client:visible />;
       }
       if (componentId === 'appreciation') {
-        return <Appreciation client:load />;
+        return <Appreciation client:visible />;
       }
       if (componentId === 'faq') {
         const faqProps = faqPropsMap.get(index);
-        return <FAQ faq={faqProps} client:load />;
+        return <FAQ faq={faqProps} client:visible />;
       }
       if (componentId === 'contact') {
         const contactBlock = block.content as components['schemas']['ContactUsElementModel'];
         const contactProps = mapContactProps(contactBlock);
-        return <Contact contact={contactProps} client:load />;
+        return <Contact contact={contactProps} client:visible />;
       }
       
       return null;
@@ -233,13 +225,13 @@ const splineSceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.spline
     
     {/* Footer remains separate - uses siteSettings */}
     <Footer 
-      client:load 
+      client:idle 
       footer={layoutData.footer}
       social={layoutData.social}
     />
     
     {/* JoinUs floating action button - not from CMS */}
-    <JoinUs client:load social={layoutData.social} />
+    <JoinUs client:idle social={layoutData.social} />
   </AppShell>
 </Layout>
 

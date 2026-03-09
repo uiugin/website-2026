@@ -96,6 +96,9 @@ const FullShowcaseListPage: React.FC<FullShowcaseListPageProps> = ({ projects = 
                 <img
                   src={project.image}
                   alt={project.title}
+                  width={640}
+                  height={360}
+                  loading="lazy"
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                 />
                 <div className="absolute top-2 left-2 bg-primary text-black px-2 py-0.5 font-mono font-bold text-[10px] border border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">

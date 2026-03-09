@@ -238,6 +238,9 @@ const FullSpeakerList: React.FC<FullSpeakerListProps> = ({ isOpen, onClose }) =>
                             <img 
                                 src={speaker.image} 
                                 alt={speaker.name}
+                                width={400}
+                                height={400}
+                                loading="lazy"
                                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                             />
                             {/* Overlay Scanlines */}

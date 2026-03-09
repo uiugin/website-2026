@@ -33,7 +33,7 @@ if (!buttons || !Array.isArray(buttons) || buttons.length === 0) {
   buttons = defaultButtons;
 }
 
-const slideImage = hero?.slideImage || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2070&auto=format&fit=crop';
+const slideImage = hero?.slideImage || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop';
 const slideLabel = hero?.slideLabel || 'RUNTIME: .NET_CORE';
 const slideLabelTwo = hero?.slideLabelTwo || 'CACHE: REFRESHED';
 
@@ -101,13 +101,9 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
                   <a href={buttons[1].url || '#'} class="inline-block">
                     <Button variant={buttons[1].variant || 'outline'} client:load>{buttons[1].text || 'Button'}</Button>
                   </a>
-                ) : buttons.length > 0 && buttons[0] ? (
-                  <a href={buttons[0].url || '#'} class="inline-block">
-                    <Button variant="outline" client:load>{buttons[0].text || 'Button'}</Button>
-                  </a>
-                ) : (
+                ) : buttons.length === 0 ? (
                   <Button variant="outline" client:load>View_Members</Button>
-                )}
+                ) : null}
               </div>
           </div>
         </Reveal>

@@ -53,6 +53,9 @@ const moreButtonUrl = showcase?.moreButtonUrl;
                     <img 
                         src={project.image} 
                         alt={project.title} 
+                        width={640}
+                        height={360}
+                        loading="lazy"
                         class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-110"
                     />
                     <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>

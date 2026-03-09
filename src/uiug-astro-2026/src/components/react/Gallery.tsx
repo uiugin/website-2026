@@ -44,6 +44,9 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
                 <img 
                     src={item.src} 
                     alt={item.caption}
+                    width={400}
+                    height={400}
+                    loading="lazy"
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-100 group-hover:scale-110"
                 />
 
@@ -116,6 +119,8 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
                     <img 
                         src={selectedItem.src} 
                         alt={selectedItem.caption}
+                        width={800}
+                        height={450}
                         className="w-full h-full object-contain"
                     />
                     

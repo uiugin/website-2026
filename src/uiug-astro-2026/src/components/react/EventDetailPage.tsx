@@ -479,6 +479,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
                           <img
                             src={attendee.photoUrl}
                             alt={attendee.name}
+                            width={40}
+                            height={40}
+                            loading="lazy"
                             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all"
                             referrerPolicy="no-referrer"
                           />
@@ -528,7 +531,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
                       <div key={speaker.id} className="flex items-center gap-4 mb-6">
                         <div className="w-16 h-16 border-2 border-primary overflow-hidden shrink-0 bg-gray-800 dark:bg-gray-200">
                           {speaker.avatarUrl ? (
-                            <img src={speaker.avatarUrl} alt={speaker.name} className="w-full h-full object-cover grayscale" />
+                            <img src={speaker.avatarUrl} alt={speaker.name} width={64} height={64} loading="lazy" className="w-full h-full object-cover grayscale" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center font-display text-2xl text-primary">
                               {speaker.name.charAt(0)}

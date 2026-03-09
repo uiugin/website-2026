@@ -15,7 +15,7 @@ const project: Project | null | undefined = id ? await getProjectById(id) : unde
 
 {project ? (
   <Layout title={`${project.title} | Projects | UIUG`} seo={project.seo}>
-    <ProjectDetailPage project={project} client:load />
+    <ProjectDetailPage project={project} client:visible />
   </Layout>
 ) : (
   <Layout title="Not Found | UIUG">

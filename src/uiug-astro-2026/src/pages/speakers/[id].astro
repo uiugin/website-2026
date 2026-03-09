@@ -15,7 +15,7 @@ const speaker: Speaker | null | undefined = id ? await getSpeakerById(id) : unde
 
 {speaker ? (
   <Layout title={`${speaker.name} | Speakers | UIUG`} seo={speaker.seo}>
-    <SpeakerDetailPage speaker={speaker} client:load />
+    <SpeakerDetailPage speaker={speaker} client:visible />
   </Layout>
 ) : (
   <Layout title="Not Found | UIUG">

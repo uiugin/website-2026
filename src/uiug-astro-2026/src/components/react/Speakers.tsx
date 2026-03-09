@@ -169,6 +169,9 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
                             <img 
                                 src={speaker.image} 
                                 alt={speaker.name}
+                                width={400}
+                                height={400}
+                                loading="lazy"
                                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-110"
                             />
                             <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 mix-blend-multiply transition-opacity duration-300 pointer-events-none"></div>

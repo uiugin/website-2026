@@ -15,7 +15,7 @@ const event: Event | null | undefined = id ? await getEventById(id) : undefined;
 
 {event ? (
   <Layout title={`${event.title} | Events | UIUG`} seo={event.seo}>
-    <EventDetailPage event={event} client:load />
+    <EventDetailPage event={event} client:visible />
   </Layout>
 ) : (
   <Layout title="Not Found | UIUG">

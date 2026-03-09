@@ -38,6 +38,9 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ project }) => {
             <img
               src={project.image}
               alt={project.title}
+              width={1280}
+              height={549}
+              fetchPriority="high"
               className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-100 group-hover:scale-105"
             />
           </div>
@@ -89,7 +92,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ project }) => {
                       key={idx}
                       className="border-4 border-black dark:border-white p-2 bg-white dark:bg-black shadow-brutal-black dark:shadow-brutal-white hover:-translate-y-2 transition-transform"
                     >
-                      <img src={img} alt={`Gallery ${idx + 1}`} className="w-full aspect-video object-cover grayscale hover:grayscale-0 transition-all" />
+                      <img src={img} alt={`Gallery ${idx + 1}`} width={640} height={360} loading="lazy" className="w-full aspect-video object-cover grayscale hover:grayscale-0 transition-all" />
                     </div>
                   ))}
                 </div>

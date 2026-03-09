@@ -148,7 +148,7 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
                           {event.attendees.slice(0, 3).map((attendee, i) => (
                             <div key={attendee.id} className="w-6 h-6 border-2 border-black dark:border-white overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                               {attendee.photoUrl ? (
-                                <img src={attendee.photoUrl} alt={attendee.name} className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" />
+                                <img src={attendee.photoUrl} alt={attendee.name} width={24} height={24} loading="lazy" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" />
                               ) : (
                                 <span className="text-[10px] font-bold font-mono text-black dark:text-white">
                                   {attendee.name.charAt(0).toUpperCase()}
@@ -174,6 +174,9 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
                                     <img
                                       src={attendee.photoUrl}
                                       alt={attendee.name}
+                                      width={32}
+                                      height={32}
+                                      loading="lazy"
                                       className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all"
                                       referrerPolicy="no-referrer"
                                     />
