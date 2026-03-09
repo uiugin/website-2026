@@ -3,14 +3,21 @@
  * Maps Umbraco Latest Events block properties to Latest Events component props
  */
 import type { components } from '../api/types.js';
-import { getContentItem } from '../api/umbraco.js';
+import { getContentItem, resolveContentReference } from '../api/umbraco.js';
+import { mapEventFromContent } from './event-mapper.js';
 
 type LatestEventsElementModel = components['schemas']['LatestEventsElementModel'];
 type ApiLinkModel = components['schemas']['ApiLinkModel'];
 type EventContentModel = components['schemas']['EventContentModel'];
-type SpeakerContentModel = components['schemas']['SpeakerContentModel'];
 
-export interface Event {
+/** Attendee summary for block display (avatar + name) */
+export interface LatestEventsAttendeeItem {
+  name: string;
+  photoUrl?: string | null;
+}
+
+/** Event item for the Latest Events block (home page) */
+export interface LatestEventsEventItem {
   id: string;
   title: string;
   type: string;
@@ -19,131 +26,74 @@ export interface Event {
   status: 'INCOMING' | 'ARCHIVED';
   colors: 'default' | 'yellow' | 'accent';
   url?: string;
+  attendeesCount: number;
+  attendees: LatestEventsAttendeeItem[];
 }
 
 export interface LatestEventsProps {
   title?: string;
-  events?: Event[];
+  events?: LatestEventsEventItem[];
 }
 
 function linkHref(link: ApiLinkModel | null | undefined): string {
   if (!link) return '#';
-  
-  // Prefer url, then route.path
   const href = link.url ?? link.route?.path ?? '#';
-  
-  // Normalize special cases like "/#/" to "/"
-  if (href === '/#/' || href === '#/') {
-    return '/';
-  }
-  
-  // Ensure href starts with / for relative paths, or is absolute
+  if (href === '/#/' || href === '#/') return '/';
   if (href && href !== '#' && !href.startsWith('http') && !href.startsWith('/')) {
     return `/${href}`;
   }
-  
   return href;
 }
 
-function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return '';
-  
-  try {
-    const date = new Date(dateString);
-    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    const month = months[date.getMonth()];
-    const day = date.getDate();
-    const year = date.getFullYear();
-    
-    // Format time if available
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const timeStr = hours !== 0 || minutes !== 0 
-      ? ` ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}` 
-      : '';
-    
-    return `${month} ${day}, ${year}${timeStr}`;
-  } catch {
-    return dateString;
-  }
-}
-
-async function fetchSpeakerName(speaker: components['schemas']['IApiContentModel'] | null | undefined): Promise<string> {
-  if (!speaker) {
-    return 'SPEAKER';
-  }
-  
-  // Check if speaker properties are already expanded
-  if (speaker.contentType === 'speaker' && 'properties' in speaker) {
-    const speakerProps = (speaker as SpeakerContentModel).properties;
-    if (speakerProps?.speakerName) {
-      const name = speakerProps.speakerName.toUpperCase().replace(/\s+/g, '_');
-      return name;
-    }
-    // Fallback to name if speakerName is not available
-    if (speaker.name) {
-      const name = speaker.name.toUpperCase().replace(/\s+/g, '_');
-      return name;
-    }
-  }
-  
-  // If properties are not expanded, try to fetch speaker content
-  if (speaker.route?.path) {
-    try {
-      const cleanPath = speaker.route.path.startsWith('/') ? speaker.route.path.substring(1) : speaker.route.path;
-      if (cleanPath && cleanPath !== '#' && cleanPath !== '') {
-        const speakerContent = await getContentItem(cleanPath);
-        if (speakerContent) {
-          if (speakerContent.contentType === 'speaker') {
-            const speakerProps = (speakerContent as SpeakerContentModel).properties;
-            if (speakerProps?.speakerName) {
-              const name = speakerProps.speakerName.toUpperCase().replace(/\s+/g, '_');
-              return name;
-            }
-            // Fallback to name
-            if (speakerContent.name) {
-              const name = speakerContent.name.toUpperCase().replace(/\s+/g, '_');
-              return name;
-            }
-          }
-        }
-      }
-    } catch (error) {
-      // Silently handle fetch errors
-    }
-  }
-  
-  // Fallback to name property if available
-  if (speaker.name) {
-    const name = speaker.name.toUpperCase().replace(/\s+/g, '_');
-    return name;
-  }
-  
-  return 'SPEAKER';
-}
-
-async function fetchEventContent(destinationId: string | null | undefined, routePath: string | null | undefined): Promise<EventContentModel | null> {
+async function fetchEventContent(
+  destinationId: string | null | undefined,
+  routePath: string | null | undefined
+): Promise<EventContentModel | null> {
   if (!destinationId && !routePath) return null;
-  
   try {
-    // Try to fetch by route path first (more reliable)
     if (routePath) {
-      // Remove leading slash if present, getContentItem expects path without leading slash
       const cleanPath = routePath.startsWith('/') ? routePath.substring(1) : routePath;
       if (cleanPath && cleanPath !== '#' && cleanPath !== '') {
         const content = await getContentItem(cleanPath);
-        if (content && content.contentType === 'event') {
-          return content as EventContentModel;
-        }
+        if (content?.contentType === 'event') return content as EventContentModel;
       }
     }
-    
-    // Fallback: try to fetch by ID if we have destinationId
-    // Note: This might require a different API endpoint
+    if (destinationId) {
+      const resolved = await resolveContentReference({ id: destinationId });
+      if (resolved?.contentType === 'event') return resolved as EventContentModel;
+    }
     return null;
   } catch {
     return null;
   }
+}
+
+/** Map domain Event to block event item with attendeesCount */
+function toBlockEventItem(
+  event: Awaited<ReturnType<typeof mapEventFromContent>>,
+  urlOverride?: string
+): LatestEventsEventItem | null {
+  if (!event) return null;
+  const speaker = event.speakers?.[0]?.name?.toUpperCase().replace(/\s+/g, '_') ?? 'SPEAKER';
+  const eventType = typeof event.type === 'string' ? event.type : (Array.isArray(event.type) ? event.type[0] : 'EVENT');
+  const colors = (event as { colors?: string }).colors?.toLowerCase() as 'default' | 'yellow' | 'accent' | undefined;
+  const attendees: LatestEventsAttendeeItem[] = (event.attendees ?? []).map((a) => ({
+    name: a.name,
+    photoUrl: a.photoUrl ?? null,
+  }));
+
+  return {
+    id: event.id,
+    title: event.title,
+    type: String(eventType).toUpperCase(),
+    speaker,
+    date: event.date,
+    status: event.status,
+    colors: colors ?? 'default',
+    url: urlOverride ?? `/events/${event.id}`,
+    attendeesCount: attendees.length,
+    attendees,
+  };
 }
 
 /**
@@ -152,83 +102,63 @@ async function fetchEventContent(destinationId: string | null | undefined, route
 export async function mapLatestEventsProps(
   latestEventsElement: LatestEventsElementModel | null | undefined
 ): Promise<LatestEventsProps> {
-  if (!latestEventsElement?.properties) {
-    return {};
+  if (!latestEventsElement?.properties) return {};
+
+  const props = latestEventsElement.properties as {
+    title?: string | null;
+    moreButton?: ApiLinkModel[] | null;
+    events?: Array<{ id?: string; route?: { path?: string }; properties?: unknown }> | null;
+  };
+  const events: LatestEventsEventItem[] = [];
+
+  // Prefer props.events (content refs) when present (e.g. from block list)
+  const eventsRefs = props.events;
+  if (Array.isArray(eventsRefs) && eventsRefs.length > 0) {
+    const results = await Promise.all(
+      eventsRefs.map(async (ref) => {
+        const resolved = await resolveContentReference(ref);
+        if (!resolved || resolved.contentType !== 'event') return null;
+        const mapped = await mapEventFromContent(resolved as EventContentModel);
+        return toBlockEventItem(mapped);
+      })
+    );
+    results.forEach((e) => {
+      if (e) events.push(e);
+    });
   }
 
-  const props = latestEventsElement.properties;
-  const events: Event[] = [];
-
-  // Map moreButton links to events
-  if (props.moreButton && Array.isArray(props.moreButton)) {
-    // Fetch all event content in parallel
+  // Fallback: moreButton links
+  if (events.length === 0 && props.moreButton && Array.isArray(props.moreButton)) {
     const eventContentPromises = props.moreButton.map(async (link, index) => {
       if (!link) return null;
-
       const eventUrl = linkHref(link);
-      const routePath = link.route?.path;
-      const destinationId = link.destinationId;
-      
-      // Fetch event content
-      const eventContent = await fetchEventContent(destinationId, routePath);
-      
-      if (eventContent && eventContent.properties) {
-        const eventProps = eventContent.properties;
-        
-        // Extract event properties
-        const eventTitle = eventProps.eventTitle || link.title || 'Event';
-        const eventType = eventProps.eventType || 'EVENT';
-        const dateAndTime = eventProps.dateAndTime;
-        const status = (eventProps.status?.toUpperCase() === 'INCOMING' ? 'INCOMING' : 'ARCHIVED') as 'INCOMING' | 'ARCHIVED';
-        const colors = (eventProps.colors?.toLowerCase() || 'default') as 'default' | 'yellow' | 'accent';
-        
-        // Fetch speaker name (may need to fetch speaker content separately)
-        const speaker = await fetchSpeakerName(eventProps.speaker);
-        
-        // Extract ID from event content
-        const eventId = eventContent.id || destinationId || link.route?.startItem?.id || `event-${index}`;
-        
-        return {
-          id: eventId.substring(0, 8), // Use first 8 chars of UUID
-          title: eventTitle.toUpperCase(),
-          type: eventType.toUpperCase(),
-          speaker: speaker,
-          date: formatDate(dateAndTime),
-          status: status,
-          colors: colors,
-          url: eventUrl
-        };
-      } else {
-        // Fallback: use link data if event content not available
-        const eventTitle = link.title || 'Event';
-        const eventId = destinationId || link.route?.startItem?.id || `event-${index}`;
-        
-        return {
-          id: eventId.substring(0, 8),
-          title: eventTitle.toUpperCase(),
-          type: 'EVENT',
-          speaker: 'SPEAKER',
-          date: '',
-          status: 'ARCHIVED' as const,
-          colors: 'default' as const,
-          url: eventUrl
-        };
+      const eventContent = await fetchEventContent(link.destinationId ?? undefined, link.route?.path ?? undefined);
+      if (eventContent) {
+        const mapped = await mapEventFromContent(eventContent);
+        return toBlockEventItem(mapped, eventUrl !== '#' ? eventUrl : undefined);
       }
+      const eventId = (link.destinationId ?? link.route?.startItem?.id ?? `event-${index}`)?.toString().substring(0, 8) ?? `event-${index}`;
+      return {
+        id: eventId,
+        title: (link.title ?? 'Event').toUpperCase(),
+        type: 'EVENT',
+        speaker: 'SPEAKER',
+        date: '',
+        status: 'ARCHIVED' as const,
+        colors: 'default' as const,
+        url: eventUrl,
+        attendeesCount: 0,
+        attendees: [],
+      } satisfies LatestEventsEventItem;
     });
-
-    // Wait for all event content to be fetched
     const eventResults = await Promise.all(eventContentPromises);
-    
-    // Filter out null results and add to events array
-    eventResults.forEach((event) => {
-      if (event) {
-        events.push(event);
-      }
+    eventResults.forEach((e) => {
+      if (e) events.push(e);
     });
   }
 
   return {
-    title: props.title || undefined,
+    title: props.title ?? undefined,
     events: events.length > 0 ? events : undefined,
   };
 }

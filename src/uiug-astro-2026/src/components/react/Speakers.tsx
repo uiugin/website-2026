@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, Linkedin, Twitter, Globe, ScanLine, Pause, Play } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Linkedin, Twitter, Globe, ScanLine, Play } from 'lucide-react';
 import type { SpeakersProps as MappedSpeakersProps } from '../../lib/speakers-mapper';
 import { useAppShell } from './AppShell';
 

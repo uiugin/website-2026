@@ -1,0 +1,38 @@
+{
+    "contentType": "projects",
+    "name": "Projects",
+    "createDate": "2026-03-09T10:37:05.0608206Z",
+    "updateDate": "2026-03-09T10:37:27.2615193Z",
+    "route": {
+      "path": "/projects/",
+      "queryString": null,
+      "startItem": {
+        "id": "a6bc2a0d-46cd-431c-877a-c69b0c90beab",
+        "path": "home"
+      }
+    },
+    "id": "5ba47d15-2b92-46b4-ab76-dbafcf35ed34",
+    "properties": {
+      "pageBrowserTitle": null,
+      "metaDescription": null,
+      "metaKeywords": null,
+      "socialMediaTitle": null,
+      "socialMediaImage": null,
+      "socialMediaDescription": null,
+      "blockThisPageFromSearchEngines": false,
+      "blockThisPageAndAllSubPagesFromSearchEngines": false,
+      "canonicalURL": null,
+      "websiteName": null,
+      "hideFromSearch": false,
+      "menuTitle": null,
+      "umbracoUrlName": null,
+      "umbracoUrlAlias": null,
+      "umbracoRedirect": null,
+      "umbracoInternalRedirectId": null,
+      "externalRedirect": null,
+      "searchEngineRelativePriority": null,
+      "searchEngineChangeFrequency": null,
+      "hideFromXmlSitemap": false
+    },
+    "cultures": {}
+  }

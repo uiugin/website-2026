@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Search, Terminal, Calendar, User, Tag, ArrowUpRight, Radio, Clock, MapPin } from 'lucide-react';
-import type { Event } from '../../data/events';
+import { ArrowLeft, Search, Terminal, Calendar, User, Tag, ArrowUpRight, Radio, Clock, MapPin, Users } from 'lucide-react';
+import type { Event } from '../../types/content';
 
 interface FullEventListPageProps {
   events?: Event[];
@@ -12,10 +12,11 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
 
   const filteredEvents = events.filter((e) => {
     const matchesFilter = filter === 'ALL' || e.status === filter;
+    const speakerNames = e.speakers?.map((s) => s.name).join(' ') ?? '';
     const matchesSearch =
       e.title.toLowerCase().includes(search.toLowerCase()) ||
-      e.speaker.toLowerCase().includes(search.toLowerCase()) ||
-      e.type.toLowerCase().includes(search.toLowerCase());
+      speakerNames.toLowerCase().includes(search.toLowerCase()) ||
+      String(e.type).toLowerCase().includes(search.toLowerCase());
     return matchesFilter && matchesSearch;
   });
 
@@ -117,11 +118,11 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
                       <Clock className="w-4 h-4 shrink-0" /> {event.time}
                     </div>
                     <div className="flex items-center gap-2 font-mono text-sm text-gray-500 font-bold">
-                      <MapPin className="w-4 h-4 shrink-0" /> {event.location}
+                      <MapPin className="w-4 h-4 shrink-0" /> {event.location ?? 'VIRTUAL_STREAM'}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 font-mono font-bold text-xs bg-gray-100 dark:bg-gray-900 border-2 border-black dark:border-white px-2 py-1 w-fit text-black dark:text-white">
-                    <Tag className="w-4 h-4 shrink-0" /> {event.type}
+                    <Tag className="w-4 h-4 shrink-0" /> {typeof event.type === 'string' ? event.type : (Array.isArray(event.type) ? event.type[0] : 'EVENT')}
                   </div>
                 </div>
 
@@ -130,16 +131,69 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
                     {event.title}
                   </h3>
                   <p className="font-mono text-sm md:text-base font-bold text-black dark:text-white opacity-70 leading-relaxed">
-                    {event.description}
+                    {event.briefSummary}
                   </p>
                 </div>
 
                 <div className="lg:col-span-3 flex flex-col gap-6 lg:items-end">
-                  <div className="flex items-center gap-3 font-mono font-bold uppercase text-sm border-4 border-black dark:border-white px-4 py-2 bg-accent-yellow text-black shadow-brutal-black dark:shadow-brutal-white">
-                    <User className="w-5 h-5 shrink-0" />
-                    <span>{event.speaker}</span>
+                  <div className="flex flex-wrap gap-3 lg:justify-end">
+                    <div className="flex items-center gap-3 font-mono font-bold uppercase text-sm border-4 border-black dark:border-white px-4 py-2 bg-accent-yellow text-black shadow-brutal-black dark:shadow-brutal-white">
+                      <User className="w-5 h-5 shrink-0" />
+                      <span>{event.speakers?.length ? event.speakers.map((s) => s.name.toUpperCase().replace(/\s+/g, '_')).join(', ') : 'SPEAKER'}</span>
+                    </div>
+
+                    {(event.attendees?.length ?? 0) > 0 && (
+                      <div className="relative group/attendees flex items-center gap-3 font-mono font-bold uppercase text-sm border-4 border-black dark:border-white px-4 py-2 bg-white dark:bg-black text-black dark:text-white shadow-brutal-black dark:shadow-brutal-white">
+                        <div className="flex -space-x-2 mr-2">
+                          {event.attendees.slice(0, 3).map((attendee, i) => (
+                            <div key={attendee.id} className="w-6 h-6 border-2 border-black dark:border-white overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                              {attendee.photoUrl ? (
+                                <img src={attendee.photoUrl} alt={attendee.name} className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" />
+                              ) : (
+                                <span className="text-[10px] font-bold font-mono text-black dark:text-white">
+                                  {attendee.name.charAt(0).toUpperCase()}
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                        <Users className="w-5 h-5 text-primary shrink-0" />
+                        <span>{event.attendees.length} JOINED</span>
+
+                        {/* Hover Popover */}
+                        <div className="invisible group-hover/attendees:visible opacity-0 group-hover/attendees:opacity-100 absolute bottom-full right-0 mb-4 p-4 bg-white dark:bg-black border-4 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white z-50 min-w-[280px] transition-all duration-200 translate-y-2 group-hover/attendees:translate-y-0 pointer-events-none">
+                          <div className="text-[10px] mb-3 border-b-2 border-black dark:border-white pb-1 flex justify-between items-center">
+                            <span>ATTENDEE_MANIFEST</span>
+                            <span className="text-primary">{event.attendees.length} TOTAL</span>
+                          </div>
+                          <div className="max-h-[240px] overflow-y-auto custom-scrollbar pr-1">
+                            <div className="grid grid-cols-6 gap-2">
+                              {event.attendees.map((attendee) => (
+                                <div key={attendee.id} className="w-8 h-8 border-2 border-black dark:border-white overflow-hidden group/item relative bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                  {attendee.photoUrl ? (
+                                    <img
+                                      src={attendee.photoUrl}
+                                      alt={attendee.name}
+                                      className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all"
+                                      referrerPolicy="no-referrer"
+                                    />
+                                  ) : (
+                                    <span className="text-[10px] font-bold font-mono text-black dark:text-white">
+                                      {attendee.name.charAt(0).toUpperCase()}
+                                    </span>
+                                  )}
+                                  <div className="absolute inset-0 bg-primary/0 hover:bg-primary/20 transition-colors" />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="absolute -bottom-2 right-8 w-4 h-4 bg-white dark:bg-black border-r-4 border-b-4 border-black dark:border-white rotate-45" />
+                        </div>
+                      </div>
+                    )}
                   </div>
-                            <a
+
+                  <a
                     href={`/events/${event.id}`}
                     className="w-full lg:w-auto bg-black text-white dark:bg-white dark:text-black px-6 py-3 font-display text-lg uppercase border-2 border-transparent hover:bg-primary hover:text-black transition-all flex items-center justify-center gap-3 group/btn"
                   >

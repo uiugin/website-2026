@@ -1,0 +1,68 @@
+{
+    "contentType": "project",
+    "name": "Project 1 (1)",
+    "createDate": "2026-03-09T10:37:05.0672587Z",
+    "updateDate": "2026-03-09T10:49:23.0034062Z",
+    "route": {
+      "path": "/projects/project-1-1/",
+      "queryString": null,
+      "startItem": {
+        "id": "a6bc2a0d-46cd-431c-877a-c69b0c90beab",
+        "path": "home"
+      }
+    },
+    "id": "578381ee-ae49-43ce-ad38-e5e239961a12",
+    "properties": {
+      "pageBrowserTitle": null,
+      "metaDescription": null,
+      "metaKeywords": null,
+      "socialMediaTitle": null,
+      "socialMediaImage": null,
+      "socialMediaDescription": null,
+      "blockThisPageFromSearchEngines": false,
+      "blockThisPageAndAllSubPagesFromSearchEngines": false,
+      "canonicalURL": null,
+      "websiteName": null,
+      "hideFromSearch": false,
+      "menuTitle": null,
+      "umbracoUrlName": null,
+      "umbracoUrlAlias": null,
+      "umbracoRedirect": null,
+      "umbracoInternalRedirectId": null,
+      "externalRedirect": null,
+      "searchEngineRelativePriority": null,
+      "searchEngineChangeFrequency": null,
+      "hideFromXmlSitemap": false,
+      "projectTitle": "NEURAL_COMMERCE",
+      "client": "RETAIL_GIANT_ASIA",
+      "shortDescription": "A high-performance headless commerce solution handling 5M+ SKUs with sub-second load times. Integrated with ERP and AI recommendation engines.",
+      "description": {
+        "markup": "<p><span style=\"color: oklch(0.373 0.034 259.733); font-family: &quot;Space Mono&quot;, monospace; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;\">Detailed technical documentation for this build is currently being indexed. This project represents a significant milestone in the Umbraco India community showcase, demonstrating advanced implementation patterns and architectural excellence.</span></p>",
+        "blocks": []
+      },
+      "image": [
+        {
+          "focalPoint": null,
+          "crops": [],
+          "id": "baace27b-f067-499c-a416-7948e4a7373e",
+          "name": "fa-people-arrows.png",
+          "mediaType": "Image",
+          "url": "/media/4quoudao/fa-people-arrows.png",
+          "extension": "png",
+          "width": 225,
+          "height": 225,
+          "bytes": 2801,
+          "properties": {}
+        }
+      ],
+      "stack": [
+        "Umbraco 13",
+        ".Net 8",
+        "Blazor"
+      ],
+      "year": "2025",
+      "url": [],
+      "projectType": "Commerce"
+    },
+    "cultures": {}
+  }

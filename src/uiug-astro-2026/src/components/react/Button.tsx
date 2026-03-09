@@ -22,13 +22,22 @@ const Button: React.FC<ButtonProps> = ({
     yellow: "bg-accent-yellow text-black hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black shadow-brutal-black dark:shadow-brutal-white"
   };
 
+  // Only render icon if it's a valid React component (function or class). When passed from Astro islands,
+  // component references can be serialized as plain objects or ESM { default: Component }, causing "Element type is invalid".
+  const ValidIcon =
+    typeof Icon === 'function'
+      ? Icon
+      : Icon && typeof (Icon as { default?: unknown }).default === 'function'
+        ? (Icon as { default: React.ComponentType<LucideProps> }).default
+        : null;
+
   return (
     <button 
       className={`${baseStyles} ${variants[variant]} ${className}`}
       {...props}
     >
       {children}
-      {Icon && <Icon className="w-6 h-6" />}
+      {ValidIcon && <ValidIcon className="w-6 h-6" />}
     </button>
   );
 };

@@ -1,0 +1,58 @@
+{
+    "contentType": "speaker",
+    "name": "Speaker",
+    "createDate": "2026-03-09T10:36:51.1135698Z",
+    "updateDate": "2026-03-09T10:47:59.7147025Z",
+    "route": {
+      "path": "/speakers/speaker/",
+      "queryString": null,
+      "startItem": {
+        "id": "a6bc2a0d-46cd-431c-877a-c69b0c90beab",
+        "path": "home"
+      }
+    },
+    "id": "578d05e2-aaa6-4ddd-9e5f-f7f679142503",
+    "properties": {
+      "pageBrowserTitle": null,
+      "metaDescription": null,
+      "metaKeywords": null,
+      "socialMediaTitle": null,
+      "socialMediaImage": null,
+      "socialMediaDescription": null,
+      "blockThisPageFromSearchEngines": false,
+      "blockThisPageAndAllSubPagesFromSearchEngines": false,
+      "canonicalURL": null,
+      "websiteName": null,
+      "hideFromSearch": false,
+      "menuTitle": null,
+      "umbracoUrlName": null,
+      "umbracoUrlAlias": null,
+      "umbracoRedirect": null,
+      "umbracoInternalRedirectId": null,
+      "externalRedirect": null,
+      "searchEngineRelativePriority": null,
+      "searchEngineChangeFrequency": null,
+      "hideFromXmlSitemap": false,
+      "speakerName": "Ravi Kumar",
+      "role": "MVP / Architect",
+      "company": "Umbraco HQ",
+      "avatarImage": [
+        {
+          "focalPoint": null,
+          "crops": [],
+          "id": "bbec1157-5edf-4a53-bf35-7161bab7648f",
+          "name": "man.jpg",
+          "mediaType": "Image",
+          "url": "/media/1dnludnw/man.jpg",
+          "extension": "jpg",
+          "width": 142,
+          "height": 142,
+          "bytes": 2198,
+          "properties": {}
+        }
+      ],
+      "bio": "Leading the charge in .NET architecture and headless CMS solutions across enterprise scales. Passionate about clean code and community growth.",
+      "speakerType": "HQ"
+    },
+    "cultures": {}
+  }

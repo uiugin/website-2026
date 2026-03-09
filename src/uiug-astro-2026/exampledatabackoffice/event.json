@@ -1,0 +1,129 @@
+{
+    "contentType": "event",
+    "name": "Event1",
+    "createDate": "2026-03-09T10:36:57.7626462Z",
+    "updateDate": "2026-03-09T10:42:26.9737459Z",
+    "route": {
+      "path": "/events/event1/",
+      "queryString": null,
+      "startItem": {
+        "id": "a6bc2a0d-46cd-431c-877a-c69b0c90beab",
+        "path": "home"
+      }
+    },
+    "id": "a0345df8-3f6e-4b70-9d48-09b6992ee16e",
+    "properties": {
+      "pageBrowserTitle": null,
+      "metaDescription": null,
+      "metaKeywords": null,
+      "socialMediaTitle": null,
+      "socialMediaImage": null,
+      "socialMediaDescription": null,
+      "blockThisPageFromSearchEngines": false,
+      "blockThisPageAndAllSubPagesFromSearchEngines": false,
+      "canonicalURL": null,
+      "websiteName": null,
+      "hideFromSearch": false,
+      "menuTitle": null,
+      "umbracoUrlName": null,
+      "umbracoUrlAlias": null,
+      "umbracoRedirect": null,
+      "umbracoInternalRedirectId": null,
+      "externalRedirect": null,
+      "searchEngineRelativePriority": null,
+      "searchEngineChangeFrequency": null,
+      "hideFromXmlSitemap": false,
+      "eventTitle": "BUILDING SCALABLE APIS WITH UMBRACO 14",
+      "eventType": [
+        "WORKSHOP"
+      ],
+      "speaker": [
+        {
+          "contentType": "speaker",
+          "name": "Speaker",
+          "createDate": "2026-03-09T10:36:51.1135698Z",
+          "updateDate": "2026-03-09T10:47:59.7147025Z",
+          "route": {
+            "path": "/speakers/speaker/",
+            "queryString": null,
+            "startItem": {
+              "id": "a6bc2a0d-46cd-431c-877a-c69b0c90beab",
+              "path": "home"
+            }
+          },
+          "id": "578d05e2-aaa6-4ddd-9e5f-f7f679142503",
+          "properties": {
+            "pageBrowserTitle": null,
+            "metaDescription": null,
+            "metaKeywords": null,
+            "socialMediaTitle": null,
+            "socialMediaImage": null,
+            "socialMediaDescription": null,
+            "blockThisPageFromSearchEngines": false,
+            "blockThisPageAndAllSubPagesFromSearchEngines": false,
+            "canonicalURL": null,
+            "websiteName": null,
+            "hideFromSearch": false,
+            "menuTitle": null,
+            "umbracoUrlName": null,
+            "umbracoUrlAlias": null,
+            "umbracoRedirect": null,
+            "umbracoInternalRedirectId": null,
+            "externalRedirect": null,
+            "searchEngineRelativePriority": null,
+            "searchEngineChangeFrequency": null,
+            "hideFromXmlSitemap": false,
+            "speakerName": "Ravi Kumar",
+            "role": "MVP / Architect",
+            "company": "Umbraco HQ",
+            "avatarImage": [
+              {
+                "focalPoint": null,
+                "crops": [],
+                "id": "bbec1157-5edf-4a53-bf35-7161bab7648f",
+                "name": "man.jpg",
+                "mediaType": "Image",
+                "url": "/media/1dnludnw/man.jpg",
+                "extension": "jpg",
+                "width": 142,
+                "height": 142,
+                "bytes": 2198,
+                "properties": {}
+              }
+            ],
+            "bio": "Leading the charge in .NET architecture and headless CMS solutions across enterprise scales. Passionate about clean code and community growth.",
+            "speakerType": "HQ"
+          }
+        }
+      ],
+      "dateAndTime": "2026-03-20T17:05:00+05:30",
+      "status": "UPCOMING_SESSION",
+      "briefSummary": "Deep dive into the new API capabilities of Umbraco 14 and how to leverage them for high-traffic applications.",
+      "fullSummary": {
+        "markup": "<p><span style=\"color: oklch(0.373 0.034 259.733); font-family: &quot;Space Mono&quot;, monospace; font-size: 14px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: oklch(0.985 0.002 247.839); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; float: none; display: inline !important;\">This session covers the architectural evolution of Umbraco in the Indian context. We explore how local development teams are pushing the boundaries of what's possible with .NET and Umbraco, focusing on performance, scalability, and developer experience.</span></p>",
+        "blocks": []
+      },
+      "attendees": [
+        {
+          "contentType": "attendee",
+          "name": "Sample Attendee",
+          "createDate": "2026-03-09T10:42:05.0319846Z",
+          "updateDate": "2026-03-09T10:42:05.0932698Z",
+          "route": {
+            "path": "/attendees/sample-attendee/",
+            "queryString": null,
+            "startItem": {
+              "id": "a71da6ca-d4cf-4f1a-baf8-a25cc3c614d2",
+              "path": "repositories"
+            }
+          },
+          "id": "029b743e-48e5-42c9-8919-06734cf9fc7d",
+          "properties": {
+            "attendeeName": "Sample Attendee",
+            "attendeePhoto": null
+          }
+        }
+      ]
+    },
+    "cultures": {}
+  }

@@ -1,0 +1,38 @@
+{
+    "contentType": "events",
+    "name": "Events",
+    "createDate": "2026-03-09T10:36:57.753924Z",
+    "updateDate": "2026-03-09T10:37:27.2421617Z",
+    "route": {
+      "path": "/events/",
+      "queryString": null,
+      "startItem": {
+        "id": "a6bc2a0d-46cd-431c-877a-c69b0c90beab",
+        "path": "home"
+      }
+    },
+    "id": "a9136371-dade-4b98-81ef-f13e23905520",
+    "properties": {
+      "pageBrowserTitle": null,
+      "metaDescription": null,
+      "metaKeywords": null,
+      "socialMediaTitle": null,
+      "socialMediaImage": null,
+      "socialMediaDescription": null,
+      "blockThisPageFromSearchEngines": false,
+      "blockThisPageAndAllSubPagesFromSearchEngines": false,
+      "canonicalURL": null,
+      "websiteName": null,
+      "hideFromSearch": false,
+      "menuTitle": null,
+      "umbracoUrlName": null,
+      "umbracoUrlAlias": null,
+      "umbracoRedirect": null,
+      "umbracoInternalRedirectId": null,
+      "externalRedirect": null,
+      "searchEngineRelativePriority": null,
+      "searchEngineChangeFrequency": null,
+      "hideFromXmlSitemap": false
+    },
+    "cultures": {}
+  }

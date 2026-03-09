@@ -122,6 +122,51 @@ export const getContentItem = (path: string) =>
     })
     .then(UmbracoClient.format.contentItem);
 
+/** Fetch a single content item by id (GUID). */
+export const getContentItemById = (id: string) =>
+  umbraco
+    .get('/umbraco/delivery/api/v2/content/item/{id}', {
+      params: { path: { id } },
+    })
+    .then(UmbracoClient.format.contentItem);
+
+type ApiContentRef = {
+  id?: string | null;
+  route?: { path?: string | null } | null;
+  properties?: unknown;
+};
+
+/** Resolve a content reference (node picker). If expanded, return as-is; else fetch by route.path or by id. */
+export async function resolveContentReference(
+  ref: ApiContentRef | ApiContentRef[] | null | undefined
+): Promise<components['schemas']['IApiContentResponseModel'] | null> {
+  const single = Array.isArray(ref) ? ref[0] ?? null : ref;
+  if (!single) return null;
+  if (single.properties != null && typeof single.properties === 'object' && Object.keys(single.properties as object).length > 0) {
+    return single as unknown as components['schemas']['IApiContentResponseModel'];
+  }
+  if (single.route?.path) {
+    const path = single.route.path.replace(/^\/|\/$/g, '') || '';
+    if (path && path !== '#') {
+      try {
+        const item = await getContentItem(path);
+        return item as components['schemas']['IApiContentResponseModel'];
+      } catch {
+        // fall through to try by id
+      }
+    }
+  }
+  if (single.id) {
+    try {
+      const item = await getContentItemById(single.id);
+      return item as components['schemas']['IApiContentResponseModel'];
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
 /** Fetch content paths (e.g. for static paths). */
 export const getPaths = (
   basePath: string,
