@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Mail, MapPin, Send, MessageSquare, ArrowRight, Terminal } from 'lucide-react';
 import type { ContactProps } from '../../lib/contact-mapper';
 
@@ -6,11 +6,27 @@ interface Props {
   contact?: ContactProps;
 }
 
+interface ContactSubmitResponse {
+    success?: boolean;
+    message?: string;
+    errors?: Record<string, string[]>;
+}
+
 const Contact: React.FC<Props> = ({ contact }) => {
   // Use dynamic title from props, fallback to default
   const title = contact?.title || 'INITIATE_UPLINK';
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    const contactSubmitUrl =
+        (import.meta.env.PUBLIC_CONTACT_API_URL as string | undefined)?.trim() ||
+        'https://localhost:44392/api/contact/submit';
 
   useEffect(() => {
     // Check if Leaflet is loaded and map container exists
@@ -57,6 +73,66 @@ const Contact: React.FC<Props> = ({ contact }) => {
     }
   }, []);
 
+    const buildErrorMessage = (payload: ContactSubmitResponse | null, fallback: string): string => {
+        if (!payload) {
+            return fallback;
+        }
+
+        if (payload.errors && typeof payload.errors === 'object') {
+            const validationMessages = Object.values(payload.errors)
+                .flat()
+                .filter((value) => value && value.trim().length > 0);
+
+            if (validationMessages.length > 0) {
+                return validationMessages.join(' ');
+            }
+        }
+
+        if (payload.message && payload.message.trim().length > 0) {
+            return payload.message;
+        }
+
+        return fallback;
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        setIsSubmitting(true);
+        setSuccessMessage(null);
+        setErrorMessage(null);
+
+        try {
+            const response = await fetch(contactSubmitUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    message,
+                }),
+            });
+
+            const payload = (await response.json().catch(() => null)) as ContactSubmitResponse | null;
+
+            if (!response.ok) {
+                setErrorMessage(buildErrorMessage(payload, 'FAILED_TO_TRANSMIT_PACKET'));
+                return;
+            }
+
+            setSuccessMessage(payload?.message || 'CONTACT_SUBMISSION_SAVED_SUCCESSFULLY');
+            setName('');
+            setEmail('');
+            setMessage('');
+        } catch {
+            setErrorMessage('NETWORK_ERROR_FAILED_TO_TRANSMIT_PACKET');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
   return (
     <section className="px-4 md:px-10 mb-20 w-full relative z-10" id="join">
       {/* Header */}
@@ -79,14 +155,17 @@ const Contact: React.FC<Props> = ({ contact }) => {
                 // TRANSMISSION_FORM
             </div>
 
-            <form className="flex flex-col gap-6 mt-8" onSubmit={(e) => e.preventDefault()}>
+            <form className="flex flex-col gap-6 mt-8" onSubmit={handleSubmit}>
                 <div className="flex flex-col gap-2">
                     <label className="font-mono font-bold text-sm uppercase text-black dark:text-white flex items-center gap-2">
                         <span className="w-2 h-2 bg-primary"></span> IDENTITY_STRING
                     </label>
                     <input 
+                        name="name"
                         type="text" 
                         placeholder="ENTER_NAME"
+                        value={name}
+                        onChange={(event) => setName(event.target.value)}
                         className="w-full bg-gray-50 dark:bg-gray-900 border-4 border-black dark:border-white p-4 font-mono font-bold text-black dark:text-white focus:outline-none focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--color-primary)] transition-all placeholder:text-gray-400"
                     />
                 </div>
@@ -96,8 +175,11 @@ const Contact: React.FC<Props> = ({ contact }) => {
                         <span className="w-2 h-2 bg-primary"></span> RETURN_ADDRESS
                     </label>
                     <input 
+                        name="email"
                         type="email" 
                         placeholder="USER@DOMAIN.COM"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
                         className="w-full bg-gray-50 dark:bg-gray-900 border-4 border-black dark:border-white p-4 font-mono font-bold text-black dark:text-white focus:outline-none focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--color-primary)] transition-all placeholder:text-gray-400"
                     />
                 </div>
@@ -107,14 +189,29 @@ const Contact: React.FC<Props> = ({ contact }) => {
                         <span className="w-2 h-2 bg-primary"></span> PAYLOAD_DATA
                     </label>
                     <textarea 
+                        name="message"
                         rows={5}
                         placeholder="INPUT_MESSAGE..."
+                        value={message}
+                        onChange={(event) => setMessage(event.target.value)}
                         className="w-full bg-gray-50 dark:bg-gray-900 border-4 border-black dark:border-white p-4 font-mono font-bold text-black dark:text-white focus:outline-none focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--color-primary)] transition-all placeholder:text-gray-400 resize-none"
                     ></textarea>
                 </div>
 
-                <button type="submit" className="group mt-4 bg-black text-white dark:bg-white dark:text-black p-4 font-display text-xl uppercase border-4 border-transparent hover:bg-primary hover:text-black hover:border-black transition-colors flex items-center justify-between shadow-[4px_4px_0px_0px_rgba(255,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-                    TRANSMIT_PACKET
+                {successMessage && (
+                    <div className="font-mono font-bold text-sm text-green-700 dark:text-green-300">
+                        {successMessage}
+                    </div>
+                )}
+
+                {errorMessage && (
+                    <div className="font-mono font-bold text-sm text-red-700 dark:text-red-300">
+                        {errorMessage}
+                    </div>
+                )}
+
+                <button type="submit" disabled={isSubmitting} className="group mt-4 bg-black text-white dark:bg-white dark:text-black p-4 font-display text-xl uppercase border-4 border-transparent hover:bg-primary hover:text-black hover:border-black transition-colors flex items-center justify-between shadow-[4px_4px_0px_0px_rgba(255,0,0,1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1 disabled:opacity-70 disabled:cursor-not-allowed">
+                    {isSubmitting ? 'TRANSMITTING...' : 'TRANSMIT_PACKET'}
                     <Send className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                 </button>
             </form>
