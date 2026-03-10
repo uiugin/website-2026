@@ -1,0 +1,23 @@
+{
+  "$schema": "../../umbraco-package-schema.json",
+  "name": "RebuildSite",
+  "version": "1.0.0",
+  "extensions": [
+    {
+      "type": "dashboard",
+      "alias": "My.Settings.Dashboard",
+      "name": "My Dashboard",
+      "js": "/App_Plugins/RebuildSite/dashboard.js",
+      "meta": {
+        "label": "Rebuild Site",
+        "pathname": "rebuild-site"
+      },
+      "conditions": [
+        {
+          "alias": "Umb.Condition.SectionAlias",
+          "match": "Umb.Section.Settings"
+        }
+      ]
+    }
+  ]
+}
