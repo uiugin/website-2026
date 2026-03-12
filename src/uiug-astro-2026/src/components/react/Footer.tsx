@@ -223,8 +223,8 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                         ))}
                      </ul>
 
-                     {/* Background Code Deco - sufficient contrast for a11y (gray-500 on gray-900) */}
-                     <div className="absolute bottom-0 right-0 p-4 pointer-events-none font-mono text-[10px] text-right text-gray-500" aria-hidden="true">
+                     {/* Background Code Deco - text-gray-400 on gray-900 for WCAG AA contrast */}
+                     <div className="absolute bottom-0 right-0 p-4 pointer-events-none font-mono text-[10px] text-right text-gray-400" aria-hidden="true">
                         {`while(alive) {
   code();
   deploy();
