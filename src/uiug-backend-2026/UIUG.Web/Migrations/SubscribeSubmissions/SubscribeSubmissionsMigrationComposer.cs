@@ -1,5 +1,8 @@
+using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Composing;
+using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Migrations;
+using Umbraco.Cms.Core.Notifications;
 using Umbraco.Cms.Core.Scoping;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Infrastructure.Migrations;
@@ -11,31 +14,39 @@ public class SubscribeSubmissionsMigrationComposer : IComposer
 {
     public void Compose(IUmbracoBuilder builder)
     {
-        builder.Components().Append<SubscribeSubmissionsMigrationComponent>();
+        builder.AddNotificationAsyncHandler<UmbracoApplicationStartedNotification, SubscribeSubmissionsMigrationHandler>();
     }
 }
 
-public class SubscribeSubmissionsMigrationComponent : IAsyncComponent
+public class SubscribeSubmissionsMigrationHandler : INotificationAsyncHandler<UmbracoApplicationStartedNotification>
 {
     private readonly IMigrationPlanExecutor _migrationPlanExecutor;
     private readonly ICoreScopeProvider _coreScopeProvider;
     private readonly IKeyValueService _keyValueService;
-    private readonly ILogger<SubscribeSubmissionsMigrationComponent> _logger;
+    private readonly IRuntimeState _runtimeState;
+    private readonly ILogger<SubscribeSubmissionsMigrationHandler> _logger;
 
-    public SubscribeSubmissionsMigrationComponent(
+    public SubscribeSubmissionsMigrationHandler(
         IMigrationPlanExecutor migrationPlanExecutor,
         ICoreScopeProvider coreScopeProvider,
         IKeyValueService keyValueService,
-        ILogger<SubscribeSubmissionsMigrationComponent> logger)
+        IRuntimeState runtimeState,
+        ILogger<SubscribeSubmissionsMigrationHandler> logger)
     {
         _migrationPlanExecutor = migrationPlanExecutor;
         _coreScopeProvider = coreScopeProvider;
         _keyValueService = keyValueService;
+        _runtimeState = runtimeState;
         _logger = logger;
     }
 
-    public async Task InitializeAsync(bool isCompleted, CancellationToken cancellationToken)
+    public async Task HandleAsync(UmbracoApplicationStartedNotification notification, CancellationToken cancellationToken)
     {
+        if (_runtimeState.Level < RuntimeLevel.Run)
+        {
+            return;
+        }
+
         var migrationPlan = new MigrationPlan("SubscribeSubmissions");
         migrationPlan.From(string.Empty)
             .To<CreateSubscribeSubmissionsTableMigration>("subscribe-submissions-db");
@@ -44,10 +55,5 @@ public class SubscribeSubmissionsMigrationComponent : IAsyncComponent
         await upgrader.ExecuteAsync(_migrationPlanExecutor, _coreScopeProvider, _keyValueService);
 
         _logger.LogInformation("Subscribe submissions migration plan executed.");
-    }
-
-    public Task TerminateAsync(bool isCompleted, CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
     }
 }
