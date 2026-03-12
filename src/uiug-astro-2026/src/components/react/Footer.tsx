@@ -155,9 +155,9 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
             />
          )}
 
-         {/* Marquee Border */}
-         <div className="bg-accent-yellow text-black py-2 overflow-hidden border-b-4 border-black relative z-20">
-            <div className="animate-marquee-footer whitespace-nowrap font-mono font-bold text-sm uppercase flex gap-8">
+         {/* Marquee Border - explicit text-black for WCAG contrast on yellow */}
+         <div className="bg-accent-yellow py-2 overflow-hidden border-b-4 border-black relative z-20">
+            <div className="animate-marquee-footer whitespace-nowrap font-mono font-bold text-sm uppercase flex gap-8 text-black">
                <span>{marqueeText}</span>
                <span>{marqueeText}</span>
                <span>{marqueeText}</span>
@@ -202,10 +202,10 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                   {/* Decorative Corner */}
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary border-2 border-white z-20"></div>
 
-                  <div className="bg-white/5 p-6 h-full backdrop-blur-sm relative overflow-hidden">
-                     <div className="flex items-center gap-2 mb-6 text-primary border-b-2 border-dashed border-gray-700 pb-2">
-                        <Terminal className="w-5 h-5" />
-                        <span className="font-mono font-bold">DIRECTORY_LISTING</span>
+                  <div className="bg-gray-900 p-6 h-full backdrop-blur-sm relative overflow-hidden">
+                     <div className="flex items-center gap-2 mb-6 text-primary border-b-2 border-dashed border-gray-600 pb-2">
+                        <Terminal className="w-5 h-5" aria-hidden="true" />
+                        <span className="font-mono font-bold text-white">DIRECTORY_LISTING</span>
                      </div>
                      <ul className="space-y-4 font-mono font-bold text-lg relative z-10">
                         {footerMenu.map((item, i) => (
@@ -223,8 +223,8 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                         ))}
                      </ul>
 
-                     {/* Background Code Deco */}
-                     <div className="absolute bottom-0 right-0 p-4 opacity-30 pointer-events-none font-mono text-[10px] text-right text-white" aria-hidden="true">
+                     {/* Background Code Deco - sufficient contrast for a11y (gray-500 on gray-900) */}
+                     <div className="absolute bottom-0 right-0 p-4 pointer-events-none font-mono text-[10px] text-right text-gray-500" aria-hidden="true">
                         {`while(alive) {
   code();
   deploy();
@@ -281,8 +281,8 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
 
             </div>
 
-            {/* Bottom Bar */}
-            <div className="mt-20 pt-8 border-t-2 border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-xs text-gray-300 uppercase">
+            {/* Bottom Bar - text-gray-400 for WCAG AA contrast on black */}
+            <div className="mt-20 pt-8 border-t-2 border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-xs text-gray-400 uppercase">
                <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" aria-hidden="true"></div>
                   <span>ID: UIUG_NODE_01</span>
@@ -290,10 +290,10 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                   <span>LOC: IN_KA_BLR</span>
                </div>
                <div className="flex gap-6">
-                  <a href="#" className="text-gray-300 hover:text-white hover:underline decoration-primary decoration-2 underline-offset-4">Privacy_Policy</a>
-                  <a href="#" className="text-gray-300 hover:text-white hover:underline decoration-primary decoration-2 underline-offset-4">Code_of_Conduct</a>
+                  <a href="#" className="text-gray-400 hover:text-white hover:underline decoration-primary decoration-2 underline-offset-4">Privacy_Policy</a>
+                  <a href="#" className="text-gray-400 hover:text-white hover:underline decoration-primary decoration-2 underline-offset-4">Code_of_Conduct</a>
                </div>
-               <div>
+               <div className="text-gray-400">
                   {copyright}
                </div>
             </div>
