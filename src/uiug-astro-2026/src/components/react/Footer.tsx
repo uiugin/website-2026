@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowUp, Terminal, Mail, Github, Twitter, Linkedin, Zap } from 'lucide-react';
 import type { FooterData, SocialLinks, LayoutLink } from '../../types/layout';
+
+interface SubscribeSubmitResponse {
+   success?: boolean;
+   message?: string;
+   errors?: Record<string, string[]>;
+}
 
 // Lucide icon mapping for social platforms
 const SOCIAL_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
@@ -22,8 +28,73 @@ function brutalize(text: string): string {
 }
 
 const Footer: React.FC<FooterProps> = ({ footer, social }) => {
+   const [subscribeEmail, setSubscribeEmail] = useState('');
+   const [isSubmittingSubscribe, setIsSubmittingSubscribe] = useState(false);
+   const [subscribeSuccessMessage, setSubscribeSuccessMessage] = useState<string | null>(null);
+   const [subscribeErrorMessage, setSubscribeErrorMessage] = useState<string | null>(null);
+
+   const subscribeSubmitUrl =
+      (import.meta.env.PUBLIC_SUBSCRIBE_API_URL as string | undefined)?.trim() ||
+      'https://localhost:44392/api/subscribe/submit';
+
    const scrollToTop = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+   };
+
+   const buildSubscribeErrorMessage = (payload: SubscribeSubmitResponse | null, fallback: string): string => {
+      if (!payload) {
+         return fallback;
+      }
+
+      if (payload.errors && typeof payload.errors === 'object') {
+         const validationMessages = Object.values(payload.errors)
+            .flat()
+            .filter((value) => value && value.trim().length > 0);
+
+         if (validationMessages.length > 0) {
+            return validationMessages.join(' ');
+         }
+      }
+
+      if (payload.message && payload.message.trim().length > 0) {
+         return payload.message;
+      }
+
+      return fallback;
+   };
+
+   const handleSubscribeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      setIsSubmittingSubscribe(true);
+      setSubscribeSuccessMessage(null);
+      setSubscribeErrorMessage(null);
+
+      try {
+         const response = await fetch(subscribeSubmitUrl, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+               email: subscribeEmail,
+            }),
+         });
+
+         const payload = (await response.json().catch(() => null)) as SubscribeSubmitResponse | null;
+
+         if (!response.ok) {
+            setSubscribeErrorMessage(buildSubscribeErrorMessage(payload, 'SUBSCRIBE_REQUEST_FAILED'));
+            return;
+         }
+
+         setSubscribeSuccessMessage(payload?.message || 'SUBSCRIBE_SUBMISSION_SAVED_SUCCESSFULLY');
+         setSubscribeEmail('');
+      } catch {
+         setSubscribeErrorMessage('NETWORK_ERROR_SUBSCRIBE_REQUEST_FAILED');
+      } finally {
+         setIsSubmittingSubscribe(false);
+      }
    };
 
    // Footer data with fallbacks
@@ -152,15 +223,27 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                      <h3 className="font-display font-black text-2xl text-black mb-2 uppercase leading-none">
                         STAY_WIRED
                      </h3>
-                     <form className="flex flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
+                     <form className="flex flex-col gap-3" onSubmit={handleSubscribeSubmit}>
                         <input
                            type="email"
                            placeholder="USER@HOST"
+                           value={subscribeEmail}
+                           onChange={(event) => setSubscribeEmail(event.target.value)}
                            className="bg-black text-white border-2 border-black p-3 font-mono text-sm focus:outline-none placeholder:text-gray-600 focus:border-white transition-colors"
                         />
-                        <button className="bg-black text-white font-bold font-mono text-sm py-3 px-4 hover:bg-white hover:text-black border-2 border-black transition-colors uppercase flex items-center justify-center gap-2">
-                           <Zap className="w-3 h-3" /> SUBSCRIBE
+                        <button disabled={isSubmittingSubscribe} className="bg-black text-white font-bold font-mono text-sm py-3 px-4 hover:bg-white hover:text-black border-2 border-black transition-colors uppercase flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
+                           <Zap className="w-3 h-3" /> {isSubmittingSubscribe ? 'SUBSCRIBING...' : 'SUBSCRIBE'}
                         </button>
+                        {subscribeSuccessMessage && (
+                           <div className="font-mono font-bold text-xs text-green-800">
+                              {subscribeSuccessMessage}
+                           </div>
+                        )}
+                        {subscribeErrorMessage && (
+                           <div className="font-mono font-bold text-xs text-red-800">
+                              {subscribeErrorMessage}
+                           </div>
+                        )}
                      </form>
                   </div>
                </div>

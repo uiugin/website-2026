@@ -475,3 +475,4 @@ umbraco-package-schema.json
 
 # Media files
 /wwwroot/media/
+/src/uiug-backend-2026/UIUG.Web/umbraco/Data/Umbraco.sqlite.db
