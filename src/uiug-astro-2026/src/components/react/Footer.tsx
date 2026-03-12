@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ArrowUp, Terminal, Mail, Github, Twitter, Linkedin, Zap } from 'lucide-react';
+import { ArrowUp, Terminal, Mail, Zap } from 'lucide-react';
+import { SiGithub, SiX, LinkedInIcon } from './SocialIcons';
 import type { FooterData, SocialLinks, LayoutLink } from '../../types/layout';
 
 interface SubscribeSubmitResponse {
@@ -8,11 +9,10 @@ interface SubscribeSubmitResponse {
    errors?: Record<string, string[]>;
 }
 
-// Lucide icon mapping for social platforms
 const SOCIAL_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
-   github: Github,
-   linkedin: Linkedin,
-   youtube: Twitter,
+   github: SiGithub,
+   linkedin: LinkedInIcon,
+   youtube: SiX,
    discord: Mail,
    meetup: Mail,
 };
@@ -35,7 +35,7 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
 
    const subscribeSubmitUrl =
       (import.meta.env.PUBLIC_SUBSCRIBE_API_URL as string | undefined)?.trim() ||
-      'https://localhost:44392/api/subscribe/submit';
+      (import.meta.env.DEV ? 'https://localhost:44392/api/subscribe/submit' : '');
 
    const scrollToTop = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -122,9 +122,9 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
          Icon: SOCIAL_ICONS[key] || Mail,
       }))
       : [
-         { key: 'github', url: '#', Icon: Github },
-         { key: 'twitter', url: '#', Icon: Twitter },
-         { key: 'linkedin', url: '#', Icon: Linkedin },
+         { key: 'github', url: '#', Icon: SiGithub },
+         { key: 'twitter', url: '#', Icon: SiX },
+         { key: 'linkedin', url: '#', Icon: LinkedInIcon },
          { key: 'mail', url: '#', Icon: Mail },
       ];
 
@@ -152,11 +152,17 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                         {footerLogo}<br /><span className="text-primary text-stroke-white">.EXE</span>
                      </h2>
                      <p className="font-mono text-gray-400 font-bold max-w-sm mb-8 border-l-4 border-white pl-4">
-                        {description.split('\n').map((line, i) => (
-                           <React.Fragment key={i}>
-                              {line}{i < description.split('\n').length - 1 && <br />}
-                           </React.Fragment>
-                        ))}
+                        {description
+                           .replace(/<br\s*\/?>/gi, '\n')
+                           .split('\n')
+                           .map((line) => line.trim())
+                           .filter((line) => line !== '')
+                           .map((line, i, lines) => (
+                              <React.Fragment key={i}>
+                                 {line}
+                                 {i < lines.length - 1 && <br />}
+                              </React.Fragment>
+                           ))}
                      </p>
                   </div>
 
@@ -229,7 +235,7 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                            placeholder="USER@HOST"
                            value={subscribeEmail}
                            onChange={(event) => setSubscribeEmail(event.target.value)}
-                           className="bg-black text-white border-2 border-black p-3 font-mono text-sm focus:outline-none placeholder:text-gray-600 focus:border-white transition-colors"
+                           className="bg-black text-white border-2 border-black p-3 font-mono text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 placeholder:text-gray-600 focus:border-white transition-colors"
                         />
                         <button disabled={isSubmittingSubscribe} className="bg-black text-white font-bold font-mono text-sm py-3 px-4 hover:bg-white hover:text-black border-2 border-black transition-colors uppercase flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed">
                            <Zap className="w-3 h-3" /> {isSubmittingSubscribe ? 'SUBSCRIBING...' : 'SUBSCRIBE'}

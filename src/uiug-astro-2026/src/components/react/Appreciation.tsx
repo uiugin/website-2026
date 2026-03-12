@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Heart, Zap, ThumbsUp, Star, MousePointer2, Hand } from 'lucide-react';
 
 interface Pop {

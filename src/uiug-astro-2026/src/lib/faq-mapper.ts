@@ -6,7 +6,6 @@ import type { components } from '../api/types.js';
 
 type FaqElementModel = components['schemas']['FaqElementModel'];
 type FaqSubBlockElementModel = components['schemas']['FaqSubBlockElementModel'];
-type ApiBlockListModel = components['schemas']['ApiBlockListModel'];
 type RichTextModel = components['schemas']['RichTextModel'];
 
 export interface FAQItem {

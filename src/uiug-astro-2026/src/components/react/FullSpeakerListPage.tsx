@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { ArrowLeft, Search, Terminal, Github, Twitter, Linkedin, Award, User } from 'lucide-react';
+import { ArrowLeft, Search, Terminal, Award, User } from 'lucide-react';
+import { SiGithub, SiX, LinkedInIcon } from './SocialIcons';
 import type { Speaker } from '../../data/speakers';
 
 interface FullSpeakerListPageProps {
@@ -42,9 +43,9 @@ const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = []
           >
             <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
           </a>
-          <h2 className="text-2xl md:text-4xl font-display font-black uppercase text-black dark:text-white leading-none hidden md:block">
+          <h1 className="text-2xl md:text-4xl font-display font-black uppercase text-black dark:text-white leading-none hidden md:block">
             FULL_ROSTER_V2
-          </h2>
+          </h1>
         </div>
 
         <div className="flex items-center gap-4">
@@ -53,7 +54,7 @@ const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = []
             <input
               type="text"
               placeholder="FIND_SPEAKER.EXE"
-              className="bg-transparent border-none outline-none font-mono text-sm font-bold w-full uppercase text-black dark:text-white placeholder:text-gray-400"
+              className="bg-transparent border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 font-mono text-sm font-bold w-full uppercase text-black dark:text-white placeholder:text-gray-400"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -65,16 +66,16 @@ const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = []
       </div>
 
       <div className="w-full p-4 md:p-8 relative z-0 flex-1 min-h-0">
-        <h2 className="md:hidden text-4xl font-display font-black uppercase text-black dark:text-white leading-none mb-6">
+        <h1 className="md:hidden text-4xl font-display font-black uppercase text-black dark:text-white leading-none mb-6">
           FULL_ROSTER_V2
-        </h2>
+        </h1>
 
         <div className="md:hidden flex items-center bg-gray-100 dark:bg-gray-900 border-2 border-black dark:border-white px-3 py-2 mb-6 focus-within:ring-2 ring-primary">
           <Search className="w-4 h-4 text-gray-500 mr-2 shrink-0" />
           <input
             type="text"
             placeholder="SEARCH_SPEAKERS..."
-            className="bg-transparent border-none outline-none font-mono text-sm font-bold w-full uppercase text-black dark:text-white"
+            className="bg-transparent border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 font-mono text-sm font-bold w-full uppercase text-black dark:text-white"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -173,9 +174,9 @@ const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = []
 
                   <div className="flex justify-between items-center border-t-2 border-dashed border-gray-300 dark:border-gray-700 pt-4">
                     <div className="flex gap-3">
-                      <Twitter className="w-5 h-5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
-                      <Linkedin className="w-5 h-5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
-                      <Github className="w-5 h-5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
+                      <SiX className="w-5 h-5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
+                      <LinkedInIcon className="w-5 h-5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
+                      <SiGithub className="w-5 h-5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
                     </div>
                     <Award className="w-5 h-5 text-accent-yellow shrink-0" />
                   </div>

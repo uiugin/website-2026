@@ -1,19 +1,30 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Spline from '@splinetool/react-spline';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import { Home, ArrowLeft } from 'lucide-react';
 
+const sceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.splinecode';
+
 const NotFound404: React.FC = () => {
+  type SplineProps = {
+    scene: string;
+    onLoad: (spline: any) => void;
+    onError: () => void;
+    style: React.CSSProperties;
+    renderOnDemand?: boolean;
+  };
+  const [SplineComponent, setSplineComponent] = useState<React.ComponentType<SplineProps> | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const splineRef = useRef<any>(null);
   const loadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Spline 404 scene
-  const sceneUrl = 'https://prod.spline.design/qThvraxcn3H54Udn/scene.splinecode';
+  useEffect(() => {
+    import('@splinetool/react-spline').then((mod) => {
+      setSplineComponent(mod.default as React.ComponentType<SplineProps>);
+    });
+  }, []);
 
   const handleLoad = (spline: any) => {
     splineRef.current = spline;
-    // Clear any timeout
     if (loadTimeoutRef.current) {
       clearTimeout(loadTimeoutRef.current);
     }
@@ -28,13 +39,12 @@ const NotFound404: React.FC = () => {
     setHasError(true);
   };
 
-  // Set a maximum loading time - if scene takes too long, hide loader
   useEffect(() => {
     loadTimeoutRef.current = setTimeout(() => {
       if (isLoading) {
         setIsLoading(false);
       }
-    }, 2000); // Hide loader after 2 seconds max
+    }, 2000);
 
     return () => {
       if (loadTimeoutRef.current) {
@@ -45,26 +55,25 @@ const NotFound404: React.FC = () => {
 
   return (
     <div className="fixed inset-0 w-full h-full bg-black dark:bg-white overflow-hidden">
-      {/* Spline Scene Container */}
       <div className="absolute inset-0 w-full h-full">
-        {!hasError ? (
-          <Spline
-            scene={sceneUrl}
-            onLoad={handleLoad}
-            onError={handleError}
-            style={{ width: '100%', height: '100%' }}
-            // Optimize rendering
-            renderOnDemand={false}
-          />
-        ) : (
-          // Fallback if scene fails to load
+        {!hasError && SplineComponent ? (
+          <Suspense fallback={<div className="w-full h-full bg-black dark:bg-white" />}>
+            <SplineComponent
+              scene={sceneUrl}
+              onLoad={handleLoad}
+              onError={handleError}
+              style={{ width: '100%', height: '100%' }}
+              renderOnDemand={false}
+            />
+          </Suspense>
+        ) : hasError ? (
           <div className="w-full h-full flex items-center justify-center bg-gray-900">
             <div className="text-white text-center">
               <div className="text-6xl mb-4">🦕</div>
               <p className="text-xl">Scene failed to load</p>
             </div>
           </div>
-        )}
+        ) : null}
         
         {/* Loading State - Minimal, fades out quickly */}
         {/* {isLoading && (

@@ -36,6 +36,47 @@ const Navbar: React.FC<NavbarProps> = ({
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const paletteRef = useRef<HTMLDivElement>(null);
   const paletteDrawerRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const previousActiveRef = useRef<HTMLElement | null>(null);
+
+  const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+  const trapFocus = (containerRef: React.RefObject<HTMLDivElement | null>, onClose: () => void) => {
+    if (!containerRef.current) return () => {};
+    previousActiveRef.current = document.activeElement as HTMLElement | null;
+    const focusables = containerRef.current.querySelectorAll<HTMLElement>(focusableSelector);
+    const first = focusables[0];
+    if (first) first.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const els = containerRef.current?.querySelectorAll<HTMLElement>(focusableSelector);
+      if (!els?.length) return;
+      const firstEl = els[0];
+      const lastEl = els[els.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      previousActiveRef.current?.focus?.();
+    };
+  };
 
   useEffect(() => {
     if (!isPaletteOpen) return;
@@ -48,8 +89,17 @@ const Navbar: React.FC<NavbarProps> = ({
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    const untrap = trapFocus(paletteDrawerRef, () => setIsPaletteOpen(false));
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      untrap();
+    };
   }, [isPaletteOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    return trapFocus(mobileMenuRef, () => setIsOpen(false));
+  }, [isOpen]);
 
   // Fallback to hardcoded items if API provides nothing
   const displayNavItems = navItems.length > 0
@@ -206,14 +256,18 @@ const Navbar: React.FC<NavbarProps> = ({
       {isPaletteOpen && (
         <div
           ref={paletteDrawerRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="nav-palette-dialog-title"
           className="md:hidden fixed inset-0 z-[60] bg-white dark:bg-black border-4 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white flex flex-col overflow-y-auto"
         >
           <div className="flex items-center justify-between p-4 border-b-4 border-black dark:border-white shrink-0">
-            <h4 className="font-display text-xl font-black uppercase text-black dark:text-white">SELECT_THEME</h4>
+            <h4 id="nav-palette-dialog-title" className="font-display text-xl font-black uppercase text-black dark:text-white">SELECT_THEME</h4>
             <button
+              type="button"
               onClick={() => setIsPaletteOpen(false)}
-              className="p-2 border-2 border-black dark:border-white hover:bg-primary hover:text-black dark:hover:bg-white dark:hover:text-black transition-colors"
-              aria-label="Close"
+              className="p-2 border-2 border-black dark:border-white hover:bg-primary hover:text-black dark:hover:bg-white dark:hover:text-black transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              aria-label="Close theme selector"
             >
               <X className="w-8 h-8" />
             </button>
@@ -267,12 +321,19 @@ const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Menu - full screen overlay */}
       {isOpen && !isPaletteOpen && (
-        <div className="md:hidden fixed inset-0 z-[60] bg-white dark:bg-black border-4 border-black dark:border-white flex flex-col overflow-y-auto">
+        <div
+          ref={mobileMenuRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="nav-menu-dialog-title"
+          className="md:hidden fixed inset-0 z-[60] bg-white dark:bg-black border-4 border-black dark:border-white flex flex-col overflow-y-auto"
+        >
           <div className="flex items-center justify-between p-4 border-b-4 border-black dark:border-white shrink-0">
-            <span className="font-display text-xl font-black uppercase text-black dark:text-white">MENU</span>
+            <span id="nav-menu-dialog-title" className="font-display text-xl font-black uppercase text-black dark:text-white">MENU</span>
             <button
+              type="button"
               onClick={() => setIsOpen(false)}
-              className="p-2 border-2 border-black dark:border-white hover:bg-primary hover:text-black dark:hover:bg-white dark:hover:text-black transition-colors"
+              className="p-2 border-2 border-black dark:border-white hover:bg-primary hover:text-black dark:hover:bg-white dark:hover:text-black transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               aria-label="Close menu"
             >
               <X className="w-8 h-8" />

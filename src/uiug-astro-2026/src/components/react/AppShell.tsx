@@ -30,12 +30,12 @@ interface AppShellProps {
 
 const LOADER_DONE_KEY = 'uiug-loader-done';
 
-const AppShell: React.FC<AppShellProps> = ({ children, logo, navItems, ctaItem, fullListSpeakers }) => {
+const AppShell: React.FC<AppShellProps> = ({ children, logo, navItems, ctaItem, fullListSpeakers: _fullListSpeakers }) => {
   const [isLoading, setIsLoading] = useState(() => {
     if (typeof window === 'undefined') return true;
     return sessionStorage.getItem(LOADER_DONE_KEY) !== '1';
   });
-  const [showFullSpeakerList, setShowFullSpeakerList] = useState(false);
+  const [_showFullSpeakerList, setShowFullSpeakerList] = useState(false);
 
   // Initialize state from local storage or system preference
   const [isDark, setIsDark] = useState(() => {
@@ -145,9 +145,9 @@ const AppShell: React.FC<AppShellProps> = ({ children, logo, navItems, ctaItem, 
           navItems={navItems}
           ctaItem={ctaItem}
         />
-        <main className="relative pt-20 md:pt-32">
+        <div className="relative pt-20 md:pt-32">
           {children}
-        </main>
+        </div>
       </div>
     </AppShellContext.Provider>
   );

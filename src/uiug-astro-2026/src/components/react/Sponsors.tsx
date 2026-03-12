@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Globe, Cpu, Gem, ArrowRight, Zap, Database } from 'lucide-react';
+import { Shield, Globe, Cpu, Gem, ArrowRight } from 'lucide-react';
 import { Reveal } from './Reveal';
 import type { SponsorsProps } from '../../lib/sponsors-mapper';
 

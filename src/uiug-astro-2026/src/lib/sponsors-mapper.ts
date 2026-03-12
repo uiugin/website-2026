@@ -7,7 +7,6 @@ import type { components } from '../api/types.js';
 type SponsorsElementModel = components['schemas']['SponsorsElementModel'];
 type PlatinumElementModel = components['schemas']['PlatinumElementModel'];
 type GoldElementModel = components['schemas']['GoldElementModel'];
-type ApiBlockListModel = components['schemas']['ApiBlockListModel'];
 type ApiLinkModel = components['schemas']['ApiLinkModel'];
 
 export interface Sponsor {
@@ -62,7 +61,7 @@ export async function mapSponsorsProps(
 
   // Handle sponsors block list - ApiBlockListModel contains items array
   if (props.sponsorsBlock && 'items' in props.sponsorsBlock && Array.isArray(props.sponsorsBlock.items)) {
-    props.sponsorsBlock.items.forEach((blockItem, index) => {
+    props.sponsorsBlock.items.forEach((blockItem) => {
       if (!blockItem?.content) {
         return;
       }

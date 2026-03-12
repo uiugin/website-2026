@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 @theme {
+  /* Primary/accent: ensure text and UI on these backgrounds meet WCAG AA (4.5:1 for normal text) */
   --color-primary: #FF0000;
   --color-accent-yellow: #FFFF00;
-  
+
   --font-family-display: 'Archivo Black', sans-serif;
   --font-family-mono: 'Space Mono', monospace;
 }
@@ -106,6 +107,26 @@ body {
   }
 }
 
+/* Skip link: visually hidden until focus (a11y) */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  z-index: 9999;
+  padding: 0.75rem 1rem;
+  background: var(--color-primary);
+  color: black;
+  font-weight: 700;
+  text-decoration: none;
+  border: 4px solid black;
+  transition: left 0.2s ease;
+}
+.skip-link:focus {
+  left: 0;
+  top: 0;
+  outline: 4px solid var(--color-accent-yellow);
+  outline-offset: 2px;
+}
+
 /* Ensure font-display class uses Archivo Black for headings */
 .font-display {
   font-family: 'Archivo Black', sans-serif !important;
@@ -191,6 +212,24 @@ body {
   
   .animate-float-up {
     animation: float-up 0.8s ease-out forwards;
+  }
+}
+
+/* Respect prefers-reduced-motion: disable or minimize non-essential motion (a11y + sustainability) */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-marquee-reverse,
+  .animate-marquee-footer,
+  .animate-float-up {
+    animation: none !important;
+  }
+  .animate-spin-slow {
+    animation: none !important;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

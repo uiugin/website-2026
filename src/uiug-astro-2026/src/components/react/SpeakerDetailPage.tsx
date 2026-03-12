@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowLeft, Github, Twitter, Linkedin, Terminal, Mail, Globe } from 'lucide-react';
+import { ArrowLeft, Terminal, Mail, Globe } from 'lucide-react';
+import { SiGithub, SiX, LinkedInIcon } from './SocialIcons';
 import type { Speaker } from '../../data/speakers';
 
 interface SpeakerDetailPageProps {
@@ -71,13 +72,13 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
               <h4 className="font-display text-lg uppercase text-black dark:text-white border-b-2 border-black dark:border-white pb-2">CONNECT_CHANNELS</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <a href="#" className="flex items-center gap-3 p-3 bg-white dark:bg-black border-2 border-black dark:border-white hover:bg-primary hover:text-black transition-colors font-mono font-bold text-sm uppercase">
-                  <Twitter className="w-5 h-5 shrink-0" /> TWITTER_FEED
+                  <SiX className="w-5 h-5 shrink-0" /> TWITTER_FEED
                 </a>
                 <a href="#" className="flex items-center gap-3 p-3 bg-white dark:bg-black border-2 border-black dark:border-white hover:bg-primary hover:text-black transition-colors font-mono font-bold text-sm uppercase">
-                  <Linkedin className="w-5 h-5 shrink-0" /> LINKEDIN_NET
+                  <LinkedInIcon className="w-5 h-5 shrink-0" /> LINKEDIN_NET
                 </a>
                 <a href="#" className="flex items-center gap-3 p-3 bg-white dark:bg-black border-2 border-black dark:border-white hover:bg-primary hover:text-black transition-colors font-mono font-bold text-sm uppercase">
-                  <Github className="w-5 h-5 shrink-0" /> REPO_ACCESS
+                  <SiGithub className="w-5 h-5 shrink-0" /> REPO_ACCESS
                 </a>
                 <a href="#" className="flex items-center gap-3 p-3 bg-white dark:bg-black border-2 border-black dark:border-white hover:bg-primary hover:text-black transition-colors font-mono font-bold text-sm uppercase">
                   <Globe className="w-5 h-5 shrink-0" /> WEB_PORTAL

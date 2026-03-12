@@ -7,7 +7,6 @@ import { getMediaUrl, getContentItem } from '../api/umbraco.js';
 
 type HeroElementModel = components['schemas']['HeroElementModel'];
 type ApiLinkModel = components['schemas']['ApiLinkModel'];
-type EventContentModel = components['schemas']['EventContentModel'];
 type IApiContentModel = components['schemas']['IApiContentModel'];
 
 export interface HeroProps {

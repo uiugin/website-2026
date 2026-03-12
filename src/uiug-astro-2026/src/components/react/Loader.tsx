@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Cpu, Terminal, Zap } from 'lucide-react';
+import { Cpu, Terminal } from 'lucide-react';
 
 interface LoaderProps {
   onComplete: () => void;

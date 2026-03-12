@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X, MessageSquare, Zap, Users, ArrowUpRight, Github, Linkedin, Play } from 'lucide-react';
+import { X, MessageSquare, Zap, Users, ArrowUpRight, Play } from 'lucide-react';
+import { SiGithub, LinkedInIcon } from './SocialIcons';
 import type { SocialLinks } from '../../types/layout';
 
 interface JoinUsProps {
@@ -117,7 +118,7 @@ const JoinUs: React.FC<JoinUsProps> = ({ social }) => {
                                 className="flex items-center justify-between bg-white border-4 border-black p-4 text-black font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors group"
                             >
                                 <span className="flex items-center gap-3">
-                                    <Github className="w-5 h-5 group-hover:text-primary transition-colors" />
+                                    <SiGithub className="w-5 h-5 group-hover:text-primary transition-colors" />
                                     GITHUB_REPO
                                 </span>
                                 <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
@@ -147,7 +148,7 @@ const JoinUs: React.FC<JoinUsProps> = ({ social }) => {
                                 className="flex items-center justify-between bg-white border-4 border-black p-4 text-black font-bold font-mono uppercase hover:bg-black hover:text-white transition-colors group"
                             >
                                 <span className="flex items-center gap-3">
-                                    <Linkedin className="w-5 h-5 group-hover:text-primary transition-colors" />
+                                    <LinkedInIcon className="w-5 h-5 group-hover:text-primary transition-colors" />
                                     LINKEDIN_PAGE
                                 </span>
                                 <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />

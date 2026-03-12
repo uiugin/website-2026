@@ -13,14 +13,14 @@ const events = latestEvents?.events || [];
 const sectionTitle = latestEvents?.title || 'EVENT_LOG';
 ---
 
-<section class="px-4 md:px-10 mb-20 w-full relative z-10" id="events_01">
+<section class="px-4 md:px-10 mb-20 w-full relative z-10" id="events_01" aria-labelledby="events-heading">
   {/* Section Header */}
   <Reveal width="100%" client:visible>
     <div class="flex items-center gap-4 mb-10 md:mb-16 border-b-4 border-black dark:border-white pb-4">
         <div class="h-4 w-4 md:h-8 md:w-8 inline-flex items-center justify-center border-2 border-black dark:border-white bg-primary shrink-0 [&_svg]:block [&_svg]:shrink-0">
         <Calendar className="w-3 h-3 md:w-5 md:h-5 text-black" />
         </div>
-        <h2 class="text-4xl md:text-6xl font-display font-black uppercase text-black dark:text-white tracking-tighter leading-none">
+        <h2 id="events-heading" class="text-4xl md:text-6xl font-display font-black uppercase text-black dark:text-white tracking-tighter leading-none">
             {sectionTitle.toUpperCase()}
         </h2>
         <span class="font-mono text-xs font-bold text-gray-500 mb-2 ml-auto hidden md:block">
@@ -79,7 +79,7 @@ const sectionTitle = latestEvents?.title || 'EVENT_LOG';
                         {(event.attendeesCount ?? 0) > 0 && event.attendees?.length ? (
                             <div class="relative group/attendees flex items-center gap-2 font-mono font-bold uppercase text-xs border-2 border-black dark:border-white px-3 py-1 bg-white dark:bg-black text-black dark:text-white w-fit shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:shadow-[2px_2px_0px_0px_rgba(255,255,255,1)]">
                                 <div class="flex -space-x-2 mr-1">
-                                    {event.attendees.slice(0, 3).map((attendee: { name: string; photoUrl?: string | null }, i: number) => (
+                                    {event.attendees.slice(0, 3).map((attendee: { name: string; photoUrl?: string | null }) => (
                                         <div class="w-5 h-5 border border-black dark:border-white overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                                             {attendee.photoUrl ? (
                                                 <img src={attendee.photoUrl} alt={attendee.name} width={20} height={20} loading="lazy" class="w-full h-full object-cover grayscale" referrerpolicy="no-referrer" />
@@ -102,7 +102,7 @@ const sectionTitle = latestEvents?.title || 'EVENT_LOG';
                                     </div>
                                     <div class="max-h-[200px] overflow-y-auto custom-scrollbar pr-1">
                                         <div class="grid grid-cols-5 gap-2">
-                                            {event.attendees.map((attendee: { name: string; photoUrl?: string | null }, i: number) => (
+                                            {event.attendees.map((attendee: { name: string; photoUrl?: string | null }) => (
                                                 <div class="w-8 h-8 border-2 border-black dark:border-white overflow-hidden group/item relative bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                                                     {attendee.photoUrl ? (
                                                         <img

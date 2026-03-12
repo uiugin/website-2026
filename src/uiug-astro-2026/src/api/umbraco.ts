@@ -20,8 +20,12 @@ if (import.meta.env.DEV) {
   }
 }
 
-const apiUrl = 'https://localhost:44392';
-const apiToken = '5df43bf5-46ca-4976-8087-f3972df5849b';
+const apiUrl =
+  (import.meta.env.UMBRACO_API_URL as string | undefined)?.trim() ||
+  (import.meta.env.DEV ? 'https://localhost:44392' : '');
+const apiToken =
+  (import.meta.env.UMBRACO_API_TOKEN as string | undefined)?.trim() ||
+  (import.meta.env.DEV ? '5df43bf5-46ca-4976-8087-f3972df5849b' : '');
 
 export const umbraco = UmbracoClient.create<paths>({
   apiToken,

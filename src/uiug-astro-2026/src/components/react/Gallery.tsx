@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Image as ImageIcon, Play, Maximize2, X, Aperture } from 'lucide-react';
 import type { GalleryProps, MediaItem } from '../../lib/gallery-mapper';
+
+const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 interface Props {
   gallery?: GalleryProps;
@@ -8,6 +10,45 @@ interface Props {
 
 const Gallery: React.FC<Props> = ({ gallery }) => {
   const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const previousActiveRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!selectedItem || !modalRef.current) return;
+    previousActiveRef.current = document.activeElement as HTMLElement | null;
+    const focusables = modalRef.current.querySelectorAll<HTMLElement>(focusableSelector);
+    const first = focusables[0];
+    if (first) first.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedItem(null);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const els = modalRef.current?.querySelectorAll<HTMLElement>(focusableSelector);
+      if (!els?.length) return;
+      const firstEl = els[0];
+      const lastEl = els[els.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      previousActiveRef.current?.focus?.();
+    };
+  }, [selectedItem]);
   
   // Default values
   const defaultTitle = 'VISUAL_LOGS';
@@ -17,13 +58,13 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
   const mediaItems = gallery?.items || defaultItems;
 
   return (
-    <section className="px-4 md:px-10 mb-20 w-full relative z-10" id="gallery">
+    <section className="px-4 md:px-10 mb-20 w-full relative z-10" id="gallery" aria-labelledby="gallery-heading">
        {/* Header */}
        <div className="flex items-center gap-4 mb-10 md:mb-16 border-b-4 border-black dark:border-white pb-4">
          <div className="h-4 w-4 md:h-8 md:w-8 inline-flex items-center justify-center border-2 border-black dark:border-white bg-black dark:bg-white shrink-0 [&_svg]:block [&_svg]:shrink-0">
             <Aperture className="w-3 h-3 md:w-5 md:h-5 text-white dark:text-black" />
          </div>
-         <h2 className="text-4xl md:text-6xl font-display font-black uppercase text-black dark:text-white tracking-tighter leading-none">
+         <h2 id="gallery-heading" className="text-4xl md:text-6xl font-display font-black uppercase text-black dark:text-white tracking-tighter leading-none">
             {sectionTitle.toUpperCase()}
          </h2>
          <span className="font-mono text-xs font-bold text-gray-500 mb-2 ml-auto hidden md:block">
@@ -95,7 +136,13 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
 
       {/* Modal Lightbox */}
       {selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-10 bg-primary/90 backdrop-blur-sm animate-in fade-in duration-200">
+        <div
+          ref={modalRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="gallery-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-10 bg-primary/90 backdrop-blur-sm animate-in fade-in duration-200"
+        >
             <div className="relative w-full max-w-5xl bg-black border-4 border-white shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] flex flex-col">
                 {/* Modal Header */}
                 <div className="flex justify-between items-center p-4 border-b-4 border-white bg-black">
@@ -106,9 +153,11 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
                             VIEWING_FILE: {selectedItem.caption}.{selectedItem.type === 'video' ? 'mp4' : 'jpg'}
                          </span>
                     </div>
-                    <button 
+                    <button
+                        type="button"
                         onClick={() => setSelectedItem(null)}
-                        className="text-white hover:text-primary transition-colors"
+                        className="text-white hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        aria-label="Close gallery modal"
                     >
                         <X className="w-8 h-8" />
                     </button>
@@ -137,7 +186,7 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
                 <div className="p-6 bg-white border-t-4 border-black">
                     <div className="flex justify-between items-start">
                         <div>
-                            <h3 className="text-3xl font-display font-black uppercase text-black mb-1">
+                            <h3 id="gallery-modal-title" className="text-3xl font-display font-black uppercase text-black mb-1">
                                 {selectedItem.caption}
                             </h3>
                             <p className="font-mono text-sm font-bold text-gray-600">

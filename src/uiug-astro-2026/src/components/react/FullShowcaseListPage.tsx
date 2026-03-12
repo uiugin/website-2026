@@ -43,9 +43,9 @@ const FullShowcaseListPage: React.FC<FullShowcaseListPageProps> = ({ projects = 
           >
             <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
           </a>
-          <h2 className="text-2xl md:text-4xl font-display font-black uppercase text-black dark:text-white leading-none hidden md:block">
+          <h1 className="text-2xl md:text-4xl font-display font-black uppercase text-black dark:text-white leading-none hidden md:block">
             PROJECT_ARCHIVE_V1
-          </h2>
+          </h1>
         </div>
 
         <div className="flex items-center gap-4">
@@ -54,7 +54,7 @@ const FullShowcaseListPage: React.FC<FullShowcaseListPageProps> = ({ projects = 
             <input
               type="text"
               placeholder="QUERY_DATABASE.SH"
-              className="bg-transparent border-none outline-none font-mono text-sm font-bold w-full uppercase text-black dark:text-white placeholder:text-gray-400"
+              className="bg-transparent border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 font-mono text-sm font-bold w-full uppercase text-black dark:text-white placeholder:text-gray-400"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -66,16 +66,16 @@ const FullShowcaseListPage: React.FC<FullShowcaseListPageProps> = ({ projects = 
       </div>
 
       <div className="w-full p-4 md:p-8 relative z-10">
-        <h2 className="md:hidden text-4xl font-display font-black uppercase text-black dark:text-white leading-none mb-6">
+        <h1 className="md:hidden text-4xl font-display font-black uppercase text-black dark:text-white leading-none mb-6">
           PROJECT_ARCHIVE
-        </h2>
+        </h1>
 
         <div className="md:hidden flex items-center bg-gray-100 dark:bg-gray-900 border-2 border-black dark:border-white px-3 py-2 mb-6 focus-within:ring-2 ring-primary">
           <Search className="w-4 h-4 text-gray-500 mr-2 shrink-0" />
           <input
             type="text"
             placeholder="SEARCH_PROJECTS..."
-            className="bg-transparent border-none outline-none font-mono text-sm font-bold w-full uppercase text-black dark:text-white"
+            className="bg-transparent border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 font-mono text-sm font-bold w-full uppercase text-black dark:text-white"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

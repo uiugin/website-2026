@@ -1,5 +1,6 @@
 import React from 'react';
-import { ArrowLeft, Database, Cpu, ExternalLink, Github, Code, Layout, Zap } from 'lucide-react';
+import { ArrowLeft, Database, Cpu, ExternalLink, Code, Layout, Zap } from 'lucide-react';
+import { SiGithub } from './SocialIcons';
 import type { Project } from '../../data/projects';
 
 interface ProjectDetailPageProps {
@@ -141,7 +142,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ project }) => {
                 type="button"
                 className="w-full group bg-white dark:bg-black border-4 border-black dark:border-white p-6 font-display text-2xl uppercase hover:bg-primary hover:text-black transition-all shadow-brutal-black dark:shadow-brutal-white flex items-center justify-between"
               >
-                VIEW_REPO <Github className="w-8 h-8 shrink-0" />
+                VIEW_REPO <SiGithub className="w-8 h-8 shrink-0" />
               </button>
             </div>
           </div>

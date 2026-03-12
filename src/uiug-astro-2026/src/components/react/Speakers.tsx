@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, Linkedin, Twitter, Globe, ScanLine, Play, Users } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Globe, ScanLine, Users } from 'lucide-react';
+import { SiX, LinkedInIcon } from './SocialIcons';
 import type { SpeakersProps as MappedSpeakersProps } from '../../lib/speakers-mapper';
 import { useAppShell } from './AppShell';
 
@@ -21,7 +22,7 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
-  const [activeSlide, setActiveSlide] = useState(0);
+  const [_activeSlide, setActiveSlide] = useState(0);
 
   // Use dynamic speakers from props, fallback to empty array
   const speakers = speakersData?.speakers || [];
@@ -159,7 +160,7 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
                 }
             `}</style>
             
-            {speakers.map((speaker, index) => (
+            {speakers.map((speaker) => (
                 <div 
                     key={speaker.id} 
                     className="min-w-[300px] md:min-w-[350px] snap-start bg-white dark:bg-black border-4 border-black dark:border-white p-4 shadow-brutal-black dark:shadow-brutal-white hover:-translate-y-2 hover:shadow-brutal-yellow transition-all duration-300 group relative overflow-hidden plastic-surface"
@@ -208,10 +209,10 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
                         {/* Links */}
                         <div className="flex gap-3 pt-4 border-t-4 border-black dark:border-white">
                             <button className="p-2 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
-                                <Twitter className="w-4 h-4" />
+                                <SiX className="w-4 h-4" />
                             </button>
                             <button className="p-2 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
-                                <Linkedin className="w-4 h-4" />
+                                <LinkedInIcon className="w-4 h-4" />
                             </button>
                             <button className="p-2 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
                                 <Globe className="w-4 h-4" />

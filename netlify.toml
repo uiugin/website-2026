@@ -1,0 +1,12 @@
+# Netlify config when building from repo root (monorepo). Base directory = Astro app.
+
+[build]
+  base = "src/uiug-astro-2026"
+  command = "npm run build"
+  publish = "dist"
+
+# Long-lived cache for hashed assets (CDN) to reduce re-downloads
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

@@ -44,9 +44,9 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
           >
             <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
           </a>
-          <h2 className="text-2xl md:text-4xl font-display font-black uppercase text-black dark:text-white leading-none hidden md:block">
+          <h1 className="text-2xl md:text-4xl font-display font-black uppercase text-black dark:text-white leading-none hidden md:block">
             EVENT_ARCHIVE_V2
-          </h2>
+          </h1>
         </div>
 
         <div className="flex items-center gap-4">
@@ -55,7 +55,7 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
             <input
               type="text"
               placeholder="SEARCH_LOGS.EXE"
-              className="bg-transparent border-none outline-none font-mono text-sm font-bold w-full uppercase text-black dark:text-white placeholder:text-gray-400"
+              className="bg-transparent border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 font-mono text-sm font-bold w-full uppercase text-black dark:text-white placeholder:text-gray-400"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -67,16 +67,16 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
       </div>
 
       <div className="w-full p-4 md:p-8 relative z-10">
-        <h2 className="md:hidden text-4xl font-display font-black uppercase text-black dark:text-white leading-none mb-6">
+        <h1 className="md:hidden text-4xl font-display font-black uppercase text-black dark:text-white leading-none mb-6">
           EVENT_ARCHIVE
-        </h2>
+        </h1>
 
         <div className="md:hidden flex items-center bg-gray-100 dark:bg-gray-900 border-2 border-black dark:border-white px-3 py-2 mb-6 focus-within:ring-2 ring-primary">
           <Search className="w-4 h-4 text-gray-500 mr-2 shrink-0" />
           <input
             type="text"
             placeholder="SEARCH_EVENTS..."
-            className="bg-transparent border-none outline-none font-mono text-sm font-bold w-full uppercase text-black dark:text-white"
+            className="bg-transparent border-none outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 font-mono text-sm font-bold w-full uppercase text-black dark:text-white"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -157,7 +157,7 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
                     {(event.attendees?.length ?? 0) > 0 && (
                       <div className="relative group/attendees flex items-center gap-3 font-mono font-bold uppercase text-sm border-4 border-black dark:border-white px-4 py-2 bg-white dark:bg-black text-black dark:text-white shadow-brutal-black dark:shadow-brutal-white">
                         <div className="flex -space-x-2 mr-2">
-                          {event.attendees.slice(0, 3).map((attendee, i) => (
+                          {event.attendees.slice(0, 3).map((attendee) => (
                             <div key={attendee.id} className="w-6 h-6 border-2 border-black dark:border-white overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                               {attendee.photoUrl ? (
                                 <img src={attendee.photoUrl} alt={attendee.name} width={24} height={24} loading="lazy" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" />

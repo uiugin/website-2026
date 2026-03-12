@@ -121,7 +121,6 @@ async function entryForListPage(
 }
 
 export async function getSitemapEntries(site: string): Promise<SitemapEntry[]> {
-  const base = site.replace(/\/$/, '');
   const entries: SitemapEntry[] = [];
 
   // Static / list pages (optionally from CMS)

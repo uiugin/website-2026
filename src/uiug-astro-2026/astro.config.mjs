@@ -13,6 +13,13 @@ export default defineConfig({
   output: 'static', // SSG only – all pages pre-rendered at build time
   integrations: [react()],
 
+  image: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'localhost', pathname: '/**', port: '44392' },
+      { protocol: 'https', hostname: 'uiug2025.s.cmshelp.dk', pathname: '/**' },
+    ],
+  },
+
   server: {
     port: 3005,
     host: '0.0.0.0',

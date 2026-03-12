@@ -48,9 +48,11 @@ const ogImage = seo?.ogImage != null && seo.ogImage !== '' ? absoluteUrl(seo.ogI
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- font-display=swap to avoid blocking render; Space Mono + Archivo Black are used in theme -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" media="print" onload="this.media='all'" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans+Text&display=swap" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" media="print" onload="this.setAttribute('media','all')" />
+    <!-- Google Sans Text: not referenced in codebase; remove if unused elsewhere -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans+Text&display=swap" media="print" onload="this.setAttribute('media','all')" />
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" />
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans+Text&display=swap" />
@@ -94,7 +96,10 @@ const ogImage = seo?.ogImage != null && seo.ogImage !== '' ? absoluteUrl(seo.ogI
     </script>
   </head>
   <body>
-    <slot />
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <main id="main-content">
+      <slot />
+    </main>
   </body>
 </html>
 

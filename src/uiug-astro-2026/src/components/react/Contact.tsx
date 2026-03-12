@@ -26,7 +26,7 @@ const Contact: React.FC<Props> = ({ contact }) => {
 
     const contactSubmitUrl =
         (import.meta.env.PUBLIC_CONTACT_API_URL as string | undefined)?.trim() ||
-        'https://localhost:44392/api/contact/submit';
+        (import.meta.env.DEV ? 'https://localhost:44392/api/contact/submit' : '');
 
   useEffect(() => {
     // Check if Leaflet is loaded and map container exists
@@ -166,7 +166,7 @@ const Contact: React.FC<Props> = ({ contact }) => {
                         placeholder="ENTER_NAME"
                         value={name}
                         onChange={(event) => setName(event.target.value)}
-                        className="w-full bg-gray-50 dark:bg-gray-900 border-4 border-black dark:border-white p-4 font-mono font-bold text-black dark:text-white focus:outline-none focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--color-primary)] transition-all placeholder:text-gray-400"
+                        className="w-full bg-gray-50 dark:bg-gray-900 border-4 border-black dark:border-white p-4 font-mono font-bold text-black dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--color-primary)] transition-all placeholder:text-gray-400"
                     />
                 </div>
 
@@ -180,7 +180,7 @@ const Contact: React.FC<Props> = ({ contact }) => {
                         placeholder="USER@DOMAIN.COM"
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
-                        className="w-full bg-gray-50 dark:bg-gray-900 border-4 border-black dark:border-white p-4 font-mono font-bold text-black dark:text-white focus:outline-none focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--color-primary)] transition-all placeholder:text-gray-400"
+                        className="w-full bg-gray-50 dark:bg-gray-900 border-4 border-black dark:border-white p-4 font-mono font-bold text-black dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--color-primary)] transition-all placeholder:text-gray-400"
                     />
                 </div>
 
@@ -194,7 +194,7 @@ const Contact: React.FC<Props> = ({ contact }) => {
                         placeholder="INPUT_MESSAGE..."
                         value={message}
                         onChange={(event) => setMessage(event.target.value)}
-                        className="w-full bg-gray-50 dark:bg-gray-900 border-4 border-black dark:border-white p-4 font-mono font-bold text-black dark:text-white focus:outline-none focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--color-primary)] transition-all placeholder:text-gray-400 resize-none"
+                        className="w-full bg-gray-50 dark:bg-gray-900 border-4 border-black dark:border-white p-4 font-mono font-bold text-black dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus:border-primary focus:shadow-[4px_4px_0px_0px_var(--color-primary)] transition-all placeholder:text-gray-400 resize-none"
                     ></textarea>
                 </div>
 

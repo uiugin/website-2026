@@ -7,23 +7,6 @@ import type { Project } from '../data/projects.js';
 import { mapSeoFromProps } from './seo-from-props.js';
 
 type ProjectContentModel = components['schemas']['ProjectContentModel'];
-type ApiLinkModel = components['schemas']['ApiLinkModel'];
-
-function linkHref(link: ApiLinkModel | null | undefined): string {
-  if (!link) return '#';
-  
-  const href = link.url ?? link.route?.path ?? '#';
-  
-  if (href === '/#/' || href === '#/') {
-    return '/';
-  }
-  
-  if (href && href !== '#' && !href.startsWith('http') && !href.startsWith('/')) {
-    return `/${href}`;
-  }
-  
-  return href;
-}
 
 /**
  * Extract text from rich text object (handles {markup, blocks} format)
@@ -113,12 +96,7 @@ export async function mapProjectFromContent(
     imageUrl = getMediaUrl(props.image[0]);
   }
   
-  // Handle URL - array of links
-  let projectUrl: string | undefined;
-  if (props.url && Array.isArray(props.url) && props.url.length > 0) {
-    projectUrl = linkHref(props.url[0]);
-  }
-  
+
   // Handle projectType (category) - might be array, object, or string
   // Check for projectType first (from CMS), then fallback to category
   let categoryValue: string | null | undefined = propsAny.projectType || propsAny.category;
