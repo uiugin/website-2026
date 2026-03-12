@@ -38,7 +38,7 @@ public class SubscribeSubmissionsMigrationComponent : IAsyncComponent
     {
         var migrationPlan = new MigrationPlan("SubscribeSubmissions");
         migrationPlan.From(string.Empty)
-            .To<CreateSubscribeSubmissionsTableMigration>("subscribe-submissions-db-v1");
+            .To<CreateSubscribeSubmissionsTableMigration>("subscribe-submissions-db");
 
         var upgrader = new Upgrader(migrationPlan);
         await upgrader.ExecuteAsync(_migrationPlanExecutor, _coreScopeProvider, _keyValueService);

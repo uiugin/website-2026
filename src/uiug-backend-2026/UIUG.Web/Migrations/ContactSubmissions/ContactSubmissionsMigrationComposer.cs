@@ -38,9 +38,7 @@ public class ContactSubmissionsMigrationComponent : IAsyncComponent
     {
         var migrationPlan = new MigrationPlan("ContactSubmissions");
         migrationPlan.From(string.Empty)
-            .To<CreateContactSubmissionsTableMigration>("contact-submissions-db-v1")
-            .To<EnsureContactSubmissionsIdentityMigration>("contact-submissions-db-v2")
-            .To<RebuildContactSubmissionsWithSeedMigration>("contact-submissions-db-v3");
+            .To<CreateContactSubmissionsTableMigration>("contact-submissions-db");
 
         var upgrader = new Upgrader(migrationPlan);
         await upgrader.ExecuteAsync(_migrationPlanExecutor, _coreScopeProvider, _keyValueService);

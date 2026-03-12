@@ -1,5 +1,4 @@
 using System.Net.Mail;
-using Microsoft.Data.Sqlite;
 using Umbraco.Cms.Infrastructure.Scoping;
 
 namespace UIUG.Web.Services.Subscribe;
@@ -45,26 +44,7 @@ public class SubscribeSubmissionService : ISubscribeSubmissionService
         };
 
         using var scope = _scopeProvider.CreateScope(autoComplete: true);
-
-        try
-        {
-            scope.Database.Insert(SubscribeSubmissionRecord.TableName, "Id", true, record);
-        }
-        catch (SqliteException ex) when (ex.Message.Contains("no such table: SubscribeSubmissions", StringComparison.OrdinalIgnoreCase))
-        {
-            _logger.LogWarning(ex, "SubscribeSubmissions table missing. Creating table and retrying insert.");
-
-            scope.Database.Execute(@"
-CREATE TABLE IF NOT EXISTS SubscribeSubmissions (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-    Email TEXT NOT NULL,
-    SubmittedAtUtc TEXT NOT NULL,
-    IpAddress TEXT NULL,
-    MachineInfo TEXT NULL
-);");
-
-            scope.Database.Insert(SubscribeSubmissionRecord.TableName, "Id", true, record);
-        }
+        scope.Database.Insert(SubscribeSubmissionRecord.TableName, "Id", true, record);
 
         _logger.LogInformation("Saved subscribe submission for email {Email}", record.Email);
 
