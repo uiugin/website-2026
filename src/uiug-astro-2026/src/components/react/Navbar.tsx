@@ -202,13 +202,14 @@ const Navbar: React.FC<NavbarProps> = ({
             )}
           </div>
 
-          {/* Theme Toggle Button */}
+          {/* Theme Toggle Button - desktop */}
           <button
+            type="button"
             onClick={toggleTheme}
             className="px-6 border-r-4 border-black dark:border-white flex items-center justify-center hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
-            aria-label="Toggle Dark Mode"
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           >
-            {isDark ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+            {isDark ? <Sun className="w-6 h-6" aria-hidden /> : <Moon className="w-6 h-6" aria-hidden />}
           </button>
 
           <a

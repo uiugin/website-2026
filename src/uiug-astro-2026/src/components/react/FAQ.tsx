@@ -58,11 +58,16 @@ const FAQ: React.FC<Props> = ({ faq }) => {
                     key={index}
                     className={`border-4 border-black dark:border-white transition-all duration-300 relative group ${activeIndex === index ? 'bg-white dark:bg-black shadow-brutal-yellow scale-[1.02] z-10' : 'bg-gray-50 dark:bg-gray-900 hover:bg-white dark:hover:bg-black hover:shadow-brutal-black dark:hover:shadow-brutal-white'}`}
                 >
-                    <button 
+                    <button
+                        type="button"
                         onClick={() => setActiveIndex(activeIndex === index ? null : index)}
                         className="w-full text-left p-4 md:p-6 flex items-start md:items-center justify-between gap-4"
+                        aria-expanded={activeIndex === index}
+                        aria-controls={`faq-answer-${index}`}
+                        id={`faq-question-${index}`}
                     >
                         <div className="flex items-center gap-4">
+                            {/* Number: high-contrast only (no text-primary) for accessibility */}
                             <span className={`font-mono font-bold text-xl md:text-2xl ${activeIndex === index ? 'text-black dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
                                 {String(index + 1).padStart(2, '0')}
                             </span>
@@ -70,12 +75,16 @@ const FAQ: React.FC<Props> = ({ faq }) => {
                                 {faq.question}
                             </h3>
                         </div>
-                        <div className={`p-1 border-2 border-black dark:border-white transition-colors flex-shrink-0 ${activeIndex === index ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-transparent text-black dark:text-white'}`}>
+                        <div className={`p-1 border-2 border-black dark:border-white transition-colors flex-shrink-0 ${activeIndex === index ? 'bg-black text-white dark:bg-white dark:text-black' : 'bg-transparent text-black dark:text-white'}`} aria-hidden>
                             {activeIndex === index ? <Minus size={20} /> : <Plus size={20} />}
                         </div>
                     </button>
 
-                    <div 
+                    <div
+                        id={`faq-answer-${index}`}
+                        role="region"
+                        aria-labelledby={`faq-question-${index}`}
+                        aria-hidden={activeIndex !== index}
                         className={`overflow-hidden transition-all duration-300 ease-in-out ${activeIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
                     >
                         <div className="p-4 md:p-6 pt-0 font-mono font-bold text-sm md:text-base text-gray-700 dark:text-gray-300 border-t-2 border-dashed border-gray-300 dark:border-gray-700 mx-4 md:mx-6 mb-4 md:mb-6 mt-2 flex gap-4">
