@@ -12,10 +12,10 @@ export default defineConfig({
   site: siteUrl,
   output: 'static', // SSG only – all pages pre-rendered at build time
   integrations: [react()],
-  // Prefetch in-site links for instant-feeling navigation with ClientRouter (view transitions)
+  // Prefetch when link enters viewport only (not all routes on load) to keep initial load smaller
   prefetch: {
     defaultStrategy: 'viewport',
-    prefetchAll: true,
+    prefetchAll: false,
   },
 
   image: {

@@ -49,8 +49,8 @@ const ogImage = seo?.ogImage != null && seo.ogImage !== '' ? absoluteUrl(seo.ogI
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://uiug.cmshelp.dk" crossorigin />
-    <link rel="preconnect" href="https://www.transparenttextures.com" />
+    <!-- LCP images from CMS: no crossorigin so preconnect matches img request type -->
+    <link rel="preconnect" href="https://uiug.cmshelp.dk" />
     <!-- font-display=swap to avoid blocking render; Space Mono + Archivo Black are used in theme -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" media="print" onload="this.setAttribute('media','all')" />
