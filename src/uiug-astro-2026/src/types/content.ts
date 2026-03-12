@@ -42,6 +42,8 @@ export interface Event {
   attendees: Attendee[];
   date: string;
   time: string;
+  /** ISO date string for sorting (latest first) */
+  startDateIso?: string;
   status: EventStatus;
   briefSummary: string;
   fullSummary: string;

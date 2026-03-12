@@ -220,6 +220,7 @@ export async function mapEventFromContent(
     attendees,
     date: formatDate(dateAndTime),
     time: formatTime(dateAndTime),
+    startDateIso: dateAndTime ?? undefined,
     location,
     status,
     briefSummary: eventDescription,

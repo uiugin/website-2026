@@ -31,6 +31,18 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
     return matchesFilter && matchesSearch;
   });
 
+  const sortedEvents = useMemo(
+    () =>
+      [...filteredEvents].sort((a, b) => {
+        const da = a.startDateIso ?? '';
+        const db = b.startDateIso ?? '';
+        if (!da) return 1;
+        if (!db) return -1;
+        return db.localeCompare(da);
+      }),
+    [filteredEvents]
+  );
+
   return (
     <div className="min-h-screen bg-white dark:bg-black overflow-y-auto">
       <div className="absolute inset-0 lego-studs opacity-50 pointer-events-none" />
@@ -99,7 +111,7 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
         </div>
 
         <div className="flex flex-col gap-8">
-          {filteredEvents.map((event) => (
+          {sortedEvents.map((event) => (
             <div
               key={event.id}
               className="group bg-white dark:bg-black border-4 border-black dark:border-white p-6 md:p-8 hover:-translate-y-1 transition-all duration-300 shadow-brutal-black dark:shadow-brutal-white hover:shadow-brutal-red relative z-10 hover:z-20"
