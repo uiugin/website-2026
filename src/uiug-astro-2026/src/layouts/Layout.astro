@@ -5,9 +5,10 @@ import type { PageSeo } from '../types/seo';
 interface Props {
   title?: string;
   seo?: PageSeo | null;
+  preloadImageUrl?: string | null;
 }
 
-const { title = "UIUG - Umbraco India User Group", seo } = Astro.props;
+const { title = "UIUG - Umbraco India User Group", seo, preloadImageUrl } = Astro.props;
 
 const displayTitle = (seo?.title != null && seo.title !== '') ? seo.title : title;
 const site = Astro.site ? new URL(Astro.site).origin : Astro.url.origin;
@@ -28,9 +29,7 @@ const ogImage = seo?.ogImage != null && seo.ogImage !== '' ? absoluteUrl(seo.ogI
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{displayTitle}</title>
-    {seo?.description != null && seo.description !== '' && (
-      <meta name="description" content={seo.description} />
-    )}
+    <meta name="description" content={seo?.description?.trim() || 'UIUG - Umbraco India User Group. Community, events, and resources for Umbraco in India.'} />
     {seo?.keywords != null && seo.keywords !== '' && (
       <meta name="keywords" content={seo.keywords} />
     )}
@@ -41,13 +40,14 @@ const ogImage = seo?.ogImage != null && seo.ogImage !== '' ? absoluteUrl(seo.ogI
     {(seo?.ogTitle ?? seo?.title ?? displayTitle) && (
       <meta property="og:title" content={seo?.ogTitle ?? seo?.title ?? displayTitle} />
     )}
-    {(seo?.ogDescription ?? seo?.description) != null && (seo?.ogDescription ?? seo?.description) !== '' && (
-      <meta property="og:description" content={seo?.ogDescription ?? seo?.description ?? ''} />
-    )}
+    <meta property="og:description" content={(seo?.ogDescription ?? seo?.description)?.trim() || 'UIUG - Umbraco India User Group. Community, events, and resources for Umbraco in India.'} />
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="preconnect" href="https://uiug.cmshelp.dk" />
+    {preloadImageUrl && <link rel="preload" as="image" href={preloadImageUrl} />}
     <!-- font-display=swap to avoid blocking render; Space Mono + Archivo Black are used in theme -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" media="print" onload="this.setAttribute('media','all')" />

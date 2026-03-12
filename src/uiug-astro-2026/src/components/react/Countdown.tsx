@@ -6,7 +6,7 @@ const TimeBox: React.FC<{ value: number; label: string }> = ({ value, label }) =
     <span className="text-4xl md:text-7xl font-display font-black text-black dark:text-white tabular-nums leading-none">
       {String(value).padStart(2, '0')}
     </span>
-    <span className="text-xs md:text-sm font-bold font-mono uppercase mt-2 text-primary">
+    <span className="text-xs md:text-sm font-bold font-mono uppercase mt-2 text-gray-700 dark:text-gray-300">
       {label}
     </span>
   </div>

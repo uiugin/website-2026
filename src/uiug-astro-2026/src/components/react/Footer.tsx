@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUp, Terminal, Mail, Zap } from 'lucide-react';
 import { SiGithub, SiX, LinkedInIcon } from './SocialIcons';
 import type { FooterData, SocialLinks, LayoutLink } from '../../types/layout';
@@ -27,9 +27,26 @@ function brutalize(text: string): string {
    return text.toUpperCase().replace(/\s+/g, '_');
 }
 
+const GIPHY_URL = 'https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif';
+
 const Footer: React.FC<FooterProps> = ({ footer, social }) => {
    const [subscribeEmail, setSubscribeEmail] = useState('');
    const [isSubmittingSubscribe, setIsSubmittingSubscribe] = useState(false);
+   const [giphyInView, setGiphyInView] = useState(false);
+   const footerRef = useRef<HTMLElement>(null);
+
+   useEffect(() => {
+      const el = footerRef.current;
+      if (!el) return;
+      const obs = new IntersectionObserver(
+         ([e]) => {
+            if (e?.isIntersecting) setGiphyInView(true);
+         },
+         { rootMargin: '100px', threshold: 0 }
+      );
+      obs.observe(el);
+      return () => obs.disconnect();
+   }, []);
    const [subscribeSuccessMessage, setSubscribeSuccessMessage] = useState<string | null>(null);
    const [subscribeErrorMessage, setSubscribeErrorMessage] = useState<string | null>(null);
 
@@ -129,9 +146,14 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
       ];
 
    return (
-      <footer className="relative bg-black text-white border-t-8 border-primary overflow-hidden">
-         {/* Glitch Overlay Effect */}
-         <div className="absolute inset-0 opacity-5 pointer-events-none bg-[url('https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif')] bg-cover mix-blend-screen"></div>
+      <footer ref={footerRef} className="relative bg-black text-white border-t-8 border-primary overflow-hidden">
+         {/* GIPHY background: lazy-loaded when Footer enters viewport */}
+         {giphyInView && (
+            <div
+               className="absolute inset-0 opacity-5 pointer-events-none bg-cover mix-blend-screen"
+               style={{ backgroundImage: `url('${GIPHY_URL}')` }}
+            />
+         )}
 
          {/* Marquee Border */}
          <div className="bg-accent-yellow text-black py-2 overflow-hidden border-b-4 border-black relative z-20">
@@ -216,11 +238,14 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                <div className="lg:col-span-3 flex flex-col gap-8">
                   {/* Social Grid */}
                   <div className="grid grid-cols-2 gap-4">
-                     {socialEntries.map(({ key, url, Icon }) => (
-                        <a key={key} href={url} target="_blank" rel="noopener noreferrer" className="aspect-square bg-gray-900 border-2 border-gray-700 flex items-center justify-center hover:bg-primary hover:text-black hover:border-primary transition-all duration-300 group shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
-                           <Icon className="w-8 h-8 group-hover:scale-110 transition-transform" />
-                        </a>
-                     ))}
+                     {socialEntries.map(({ key, url, Icon }) => {
+                        const label = key === 'youtube' ? 'YouTube' : key === 'meetup' ? 'Meetup' : key === 'twitter' ? 'X (Twitter)' : key === 'mail' ? 'Email' : key.charAt(0).toUpperCase() + key.slice(1);
+                        return (
+                           <a key={key} href={url} target="_blank" rel="noopener noreferrer" aria-label={label} className="aspect-square bg-gray-900 border-2 border-gray-700 flex items-center justify-center hover:bg-primary hover:text-black hover:border-primary transition-all duration-300 group shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                              <Icon className="w-8 h-8 group-hover:scale-110 transition-transform" />
+                           </a>
+                        );
+                     })}
                   </div>
 
                   {/* Newsletter Box */}

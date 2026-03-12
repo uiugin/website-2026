@@ -63,7 +63,7 @@ const FAQ: React.FC<Props> = ({ faq }) => {
                         className="w-full text-left p-4 md:p-6 flex items-start md:items-center justify-between gap-4"
                     >
                         <div className="flex items-center gap-4">
-                            <span className={`font-mono font-bold text-xl md:text-2xl ${activeIndex === index ? 'text-primary' : 'text-gray-400'}`}>
+                            <span className={`font-mono font-bold text-xl md:text-2xl ${activeIndex === index ? 'text-primary' : 'text-gray-600 dark:text-gray-400'}`}>
                                 {String(index + 1).padStart(2, '0')}
                             </span>
                             <h3 className={`text-xl md:text-2xl font-display uppercase leading-none ${activeIndex === index ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-400 group-hover:text-black dark:group-hover:text-white'}`}>

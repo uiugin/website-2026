@@ -208,13 +208,13 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
 
                         {/* Links */}
                         <div className="flex gap-3 pt-4 border-t-4 border-black dark:border-white">
-                            <button className="p-2 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
+                            <button type="button" aria-label="X (Twitter)" className="p-2 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
                                 <SiX className="w-4 h-4" />
                             </button>
-                            <button className="p-2 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
+                            <button type="button" aria-label="LinkedIn profile" className="p-2 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
                                 <LinkedInIcon className="w-4 h-4" />
                             </button>
-                            <button className="p-2 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
+                            <button type="button" aria-label="Website" className="p-2 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
                                 <Globe className="w-4 h-4" />
                             </button>
                         </div>

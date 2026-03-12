@@ -155,7 +155,7 @@ try {
 }
 ---
 
-<Layout title={layoutData.siteName ? `${layoutData.siteName} - Umbraco India User Group` : 'UIUG - Umbraco India User Group'} seo={homeSeo}>
+<Layout title={layoutData.siteName ? `${layoutData.siteName} - Umbraco India User Group` : 'UIUG - Umbraco India User Group'} seo={homeSeo} preloadImageUrl={heroProps?.slideImage ?? null}>
   <AppShell 
     client:only="react"
     logo={layoutData.logo}

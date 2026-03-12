@@ -37,10 +37,10 @@ const slideImage = hero?.slideImage || 'https://images.unsplash.com/photo-155506
 const slideLabel = hero?.slideLabel || 'RUNTIME: .NET_CORE';
 const slideLabelTwo = hero?.slideLabelTwo || 'CACHE: REFRESHED';
 
-// Use dynamic values if available, otherwise use fallbacks
-const upcomingSessionTitle = hero?.upcomingSessionTitle || 'BUILDING SCALABLE APIS WITH UMBRACO 14';
-const upcomingSessionDate = hero?.upcomingSessionDate || 'NOV 28';
-const upcomingSessionTime = hero?.upcomingSessionTime || '19:00 IST';
+// Upcoming session: show "Yet to be announced" when values are null or empty
+const upcomingSessionTitle = hero?.upcomingSessionTitle?.trim() || 'Yet to be announced';
+const upcomingSessionDate = hero?.upcomingSessionDate?.trim() || 'Yet to be announced';
+const upcomingSessionTime = hero?.upcomingSessionTime?.trim() || 'Yet to be announced';
 
 // Parse title - handle HTML content from Umbraco
 // If title contains HTML, we'll render it with set:html, otherwise split by newlines
@@ -114,12 +114,13 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
     <div class="lg:col-span-5 xl:col-span-4 z-10 flex flex-col items-center justify-center lg:justify-end mt-10 lg:mt-0 w-full">
       <Slide direction="right" delay={0.4} width="100%" client:visible>
         <div class="relative w-full max-w-lg lg:max-w-full aspect-square border-4 border-black dark:border-white grayscale hover:grayscale-0 transition-all duration-500 shadow-brutal-yellow dark:shadow-brutal-white overflow-hidden bg-gray-900 group">
-            {/* Tech-ish Image Placeholder - Code Screen */}
-            <div 
-              class="absolute inset-0 bg-cover bg-center mix-blend-screen opacity-90 group-hover:scale-110 transition-transform duration-700"
-              style={`background-image: url('${slideImage}')`}
-            ></div>
-            
+            {/* LCP image: discoverable in HTML, high priority, not lazy-loaded */}
+            <img
+              src={slideImage}
+              alt=""
+              fetchpriority="high"
+              class="absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-90 group-hover:scale-110 transition-transform duration-700"
+            />
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
             
             {/* Floating Labels */}
@@ -141,12 +142,12 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
             </div>
             
             <p class="font-mono text-xs font-bold text-gray-500 dark:text-gray-400 mb-2">
-                // SESSION_042
+                // SESSION_NEW
             </p>
             
-            <h3 class="text-2xl md:text-3xl font-display uppercase leading-none mb-4 text-black dark:text-white group-hover:text-primary transition-colors">
+            <h2 class="text-2xl md:text-3xl font-display uppercase leading-none mb-4 text-black dark:text-white group-hover:text-primary transition-colors">
                 {upcomingSessionTitle}
-            </h3>
+            </h2>
             
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm font-bold font-mono text-black dark:text-white border-t-2 border-black dark:border-white pt-3">
                 <div class="flex gap-4">
