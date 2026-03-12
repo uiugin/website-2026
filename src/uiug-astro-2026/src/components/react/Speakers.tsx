@@ -142,7 +142,7 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
          </div>
       </div>
 
-      {/* Slider Container with Hover Pause */}
+      {/* Slider Container: static CTA card on the right above the slider; speaker slides scroll underneath it */}
       <div 
         className="relative"
         onMouseEnter={() => setIsPaused(true)}
@@ -150,7 +150,7 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
       >
         <div 
             ref={scrollRef}
-            className="flex gap-8 overflow-x-auto pb-12 snap-x snap-mandatory"
+            className="flex gap-8 overflow-x-auto overflow-y-visible pb-12 pt-2 snap-x snap-mandatory pr-[300px] md:pr-[350px]"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
             <style>{`
@@ -167,15 +167,21 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
                     {/* Inner Content - Lifted */}
                     <div className="bg-white dark:bg-black border-2 border-black dark:border-white p-4 relative z-10">
                         {/* Image Frame */}
-                        <div className="relative w-full aspect-square border-2 border-black dark:border-white mb-6 overflow-hidden bg-gray-200">
-                            <img 
-                                src={speaker.image} 
-                                alt={speaker.name}
-                                width={400}
-                                height={400}
-                                loading="lazy"
-                                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-110"
-                            />
+                        <div className="relative w-full aspect-square border-2 border-black dark:border-white mb-6 overflow-hidden bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+                            {speaker.image ? (
+                                <img 
+                                    src={speaker.image} 
+                                    alt={speaker.name}
+                                    width={400}
+                                    height={400}
+                                    loading="lazy"
+                                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 scale-105 group-hover:scale-110"
+                                />
+                            ) : (
+                                <span className="text-6xl md:text-8xl font-display font-black text-black dark:text-white uppercase">
+                                    {speaker.name.charAt(0).toUpperCase()}
+                                </span>
+                            )}
                             <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 mix-blend-multiply transition-opacity duration-300 pointer-events-none"></div>
                             
                             {/* Corner Accents */}
@@ -214,28 +220,27 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
                     </div>
                 </div>
             ))}
-            
-            {/* Call to action card at end */}
-             <div className="min-w-[300px] md:min-w-[350px] snap-start bg-accent-yellow border-4 border-black dark:border-white p-8 shadow-brutal-black dark:shadow-brutal-white flex flex-col items-center justify-center text-center gap-6 group hover:-translate-y-2 transition-transform duration-300 plastic-surface lego-studs">
-                 <div className="relative z-10">
-                    <h3 className="text-4xl font-display font-black uppercase leading-none text-black mb-4">
-                        {ctaHeading.toUpperCase()}
-                    </h3>
-                    <p className="font-mono font-bold text-sm text-black mb-6">
-                        {ctaDescription.toUpperCase()}
-                    </p>
-                    {ctaButtonUrl && ctaButtonUrl !== '#' ? (
-                      <a href={ctaButtonUrl} className="px-6 py-3 bg-black text-white font-bold uppercase border-4 border-transparent hover:bg-white hover:text-black hover:border-black transition-colors w-full flex items-center justify-center gap-2">
-                        SUBMIT_TALK <ArrowRight className="w-4 h-4" />
-                      </a>
-                    ) : (
-                      <button className="px-6 py-3 bg-black text-white font-bold uppercase border-4 border-transparent hover:bg-white hover:text-black hover:border-black transition-colors w-full flex items-center justify-center gap-2">
-                        SUBMIT_TALK <ArrowRight className="w-4 h-4" />
-                      </button>
-                    )}
-                 </div>
-             </div>
+        </div>
 
+        {/* Static CTA card - at the very end (right-0) so no slide peeks out to its right; same size as speaker cards */}
+        <div className="absolute right-0 top-2 w-[300px] md:w-[350px] h-[498px] flex items-center justify-center z-10 pointer-events-none">
+          <div className="pointer-events-auto w-[300px] md:w-[350px] h-[498px] flex flex-col items-center justify-center text-center gap-6 bg-accent-yellow border-4 border-black dark:border-white p-4 shadow-brutal-black dark:shadow-brutal-white plastic-surface lego-studs">
+            <h3 className="text-2xl md:text-4xl font-display font-black uppercase leading-none text-black mb-2">
+              {ctaHeading.toUpperCase()}
+            </h3>
+            <p className="font-mono font-bold text-sm text-black mb-4">
+              {ctaDescription.toUpperCase()}
+            </p>
+            {ctaButtonUrl && ctaButtonUrl !== '#' ? (
+              <a href={ctaButtonUrl} className="px-6 py-3 bg-black text-white font-bold uppercase border-4 border-transparent hover:bg-white hover:text-black hover:border-black transition-colors w-full flex items-center justify-center gap-2">
+                SUBMIT_TALK <ArrowRight className="w-4 h-4" />
+              </a>
+            ) : (
+              <button className="px-6 py-3 bg-black text-white font-bold uppercase border-4 border-transparent hover:bg-white hover:text-black hover:border-black transition-colors w-full flex items-center justify-center gap-2">
+                SUBMIT_TALK <ArrowRight className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
       

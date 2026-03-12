@@ -98,7 +98,7 @@ function mapSpeakerFromProps(
   fallbackName?: string | null
 ): Speaker {
   // Get image URL
-  let imageUrl = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop';
+  let imageUrl = '';
   if (speakerProps.avatarImage && Array.isArray(speakerProps.avatarImage) && speakerProps.avatarImage.length > 0) {
     imageUrl = getMediaUrl(speakerProps.avatarImage[0]);
   }

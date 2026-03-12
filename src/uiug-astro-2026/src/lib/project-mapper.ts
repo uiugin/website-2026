@@ -108,7 +108,7 @@ export async function mapProjectFromContent(
   }
   
   // Handle image - array of media items
-  let imageUrl = 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop';
+  let imageUrl = '';
   if (props.image && Array.isArray(props.image) && props.image.length > 0) {
     imageUrl = getMediaUrl(props.image[0]);
   }

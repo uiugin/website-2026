@@ -56,8 +56,8 @@ export async function mapSpeakerFromContent(
   // Handle bio - might be rich text object
   const bio = extractRichText(props.bio) || '';
 
-  // Handle image - array of media items
-  let imageUrl = 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1000&auto=format&fit=crop';
+  // Handle image - array of media items; empty when no avatar so UI can show first-letter fallback
+  let imageUrl = '';
   if (props.avatarImage && Array.isArray(props.avatarImage) && props.avatarImage.length > 0) {
     imageUrl = getMediaUrl(props.avatarImage[0]);
   }

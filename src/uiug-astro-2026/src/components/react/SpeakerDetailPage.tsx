@@ -34,15 +34,21 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16">
           <div className="lg:col-span-5">
             <div className="group relative border-8 border-black dark:border-white p-2 bg-white dark:bg-black shadow-brutal-black dark:shadow-brutal-white mb-8">
-              <div className="relative aspect-[4/5] overflow-hidden border-4 border-black dark:border-white">
-                <img
-                  src={speaker.image}
-                  alt={speaker.name}
-                  width={400}
-                  height={500}
-                  loading="lazy"
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                />
+              <div className="relative aspect-[4/5] overflow-hidden border-4 border-black dark:border-white bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
+                {speaker.image ? (
+                  <img
+                    src={speaker.image}
+                    alt={speaker.name}
+                    width={400}
+                    height={500}
+                    loading="lazy"
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                  />
+                ) : (
+                  <span className="text-6xl md:text-8xl font-display font-black text-black dark:text-white uppercase">
+                    {speaker.name.charAt(0).toUpperCase()}
+                  </span>
+                )}
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none opacity-30" />
               </div>
               <div className="absolute -bottom-4 -right-4 bg-accent-yellow text-black px-6 py-2 font-display text-xl border-4 border-black shadow-brutal-black">

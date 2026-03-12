@@ -28,9 +28,9 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
 
    // Footer data with fallbacks
    const footerLogo = footer?.footerLogo ?? 'UIUG';
-   const description = footer?.description ?? 'The Umbraco India User Group.\nArchitecting the future of CMS.\nBengaluru Node.';
+   const description = footer?.description ?? 'The Umbraco India User Group.\nArchitecting the future of CMS.\Kerala Node.';
    const copyright = footer?.copyright ?? `© ${new Date().getFullYear()} UIUG. ALL RIGHTS RESERVED.`;
-   const marqueeText = footer?.marquee ?? 'System_Shutdown_Sequence_Initiated // End_of_Line // UIUG_Bengaluru // Thank_You_For_Visiting //';
+   const marqueeText = footer?.marquee ?? 'System_Shutdown_Sequence_Initiated // End_of_Line // UIUG_KERALA // Thank_You_For_Visiting //';
 
    // Footer menu with fallbacks
    const footerMenu: LayoutLink[] = footer?.footerMenu && footer.footerMenu.length > 0

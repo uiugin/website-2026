@@ -187,7 +187,7 @@ const Contact: React.FC<Props> = ({ contact }) => {
                                 INDIA_REGION
                             </h3>
                             <div className="font-mono text-gray-400 font-bold text-xs mt-1">
-                                HQ: BENGALURU | STATUS: ACTIVE
+                                HQ: KERALA | STATUS: ACTIVE
                             </div>
                         </div>
                         <MapPin className="w-10 h-10 text-white group-hover:text-primary transition-colors" />
