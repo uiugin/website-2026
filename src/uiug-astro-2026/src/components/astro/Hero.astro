@@ -110,29 +110,24 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
       )}
     </div>
 
-    {/* Right Content / Image Overlay */}
+    {/* Right Content / Image Overlay - LCP: no animation wrapper so image is visible on first paint */}
     <div class="lg:col-span-5 xl:col-span-4 z-10 flex flex-col items-center justify-center lg:justify-end mt-10 lg:mt-0 w-full">
-      <Slide direction="right" delay={0.4} width="100%" client:visible>
-        <div class="relative w-full max-w-lg lg:max-w-full aspect-square border-4 border-black dark:border-white grayscale hover:grayscale-0 transition-all duration-500 shadow-brutal-yellow dark:shadow-brutal-white overflow-hidden bg-gray-900 group">
-            {/* LCP image: discoverable in HTML, high priority, not lazy-loaded */}
-            <img
-              src={slideImage}
-              alt=""
-              fetchpriority="high"
-              class="absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-90 group-hover:scale-110 transition-transform duration-700"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
-            
-            {/* Floating Labels */}
-            <div class="absolute top-4 left-4 bg-primary text-black dark:text-white px-2 py-1 text-xs md:text-sm font-bold border-2 border-black dark:border-white">
-            {slideLabel}
-            </div>
-            
-            <div class="absolute bottom-4 right-4 bg-accent-yellow text-black dark:text-white px-2 py-1 text-xs md:text-sm font-bold border-2 border-black dark:border-white">
-            {slideLabelTwo}
-            </div>
+      <div class="relative w-full max-w-lg lg:max-w-full aspect-square border-4 border-black dark:border-white grayscale hover:grayscale-0 transition-all duration-500 shadow-brutal-yellow dark:shadow-brutal-white overflow-hidden bg-gray-900 group">
+        <img
+          src={slideImage}
+          alt=""
+          fetchpriority="high"
+          loading="eager"
+          class="absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-90 group-hover:scale-110 transition-transform duration-700"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent opacity-60"></div>
+        <div class="absolute top-4 left-4 bg-primary text-black dark:text-white px-2 py-1 text-xs md:text-sm font-bold border-2 border-black dark:border-white">
+          {slideLabel}
         </div>
-      </Slide>
+        <div class="absolute bottom-4 right-4 bg-accent-yellow text-black dark:text-white px-2 py-1 text-xs md:text-sm font-bold border-2 border-black dark:border-white">
+          {slideLabelTwo}
+        </div>
+      </div>
 
       {/* Next Session Box */}
       <Slide direction="right" delay={0.6} width="100%" client:visible>

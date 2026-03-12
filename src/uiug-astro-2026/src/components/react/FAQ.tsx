@@ -63,10 +63,10 @@ const FAQ: React.FC<Props> = ({ faq }) => {
                         className="w-full text-left p-4 md:p-6 flex items-start md:items-center justify-between gap-4"
                     >
                         <div className="flex items-center gap-4">
-                            <span className={`font-mono font-bold text-xl md:text-2xl ${activeIndex === index ? 'text-primary' : 'text-gray-600 dark:text-gray-400'}`}>
+                            <span className={`font-mono font-bold text-xl md:text-2xl ${activeIndex === index ? 'text-black dark:text-white' : 'text-gray-700 dark:text-gray-300'}`}>
                                 {String(index + 1).padStart(2, '0')}
                             </span>
-                            <h3 className={`text-xl md:text-2xl font-display uppercase leading-none ${activeIndex === index ? 'text-black dark:text-white' : 'text-gray-600 dark:text-gray-400 group-hover:text-black dark:group-hover:text-white'}`}>
+                            <h3 className={`text-xl md:text-2xl font-display uppercase leading-none ${activeIndex === index ? 'text-black dark:text-white' : 'text-gray-700 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white'}`}>
                                 {faq.question}
                             </h3>
                         </div>
@@ -78,8 +78,8 @@ const FAQ: React.FC<Props> = ({ faq }) => {
                     <div 
                         className={`overflow-hidden transition-all duration-300 ease-in-out ${activeIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
                     >
-                        <div className="p-4 md:p-6 pt-0 font-mono font-bold text-sm md:text-base text-gray-600 dark:text-gray-300 border-t-2 border-dashed border-gray-300 dark:border-gray-700 mx-4 md:mx-6 mb-4 md:mb-6 mt-2 flex gap-4">
-                            <CornerDownRight className="w-5 h-5 flex-shrink-0 text-primary mt-1" />
+                        <div className="p-4 md:p-6 pt-0 font-mono font-bold text-sm md:text-base text-gray-700 dark:text-gray-300 border-t-2 border-dashed border-gray-300 dark:border-gray-700 mx-4 md:mx-6 mb-4 md:mb-6 mt-2 flex gap-4">
+                            <CornerDownRight className="w-5 h-5 flex-shrink-0 text-black dark:text-white mt-1" aria-hidden />
                             <div>
                                 {faq.answer}
                             </div>

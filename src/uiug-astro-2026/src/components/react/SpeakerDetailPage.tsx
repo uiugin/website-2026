@@ -14,9 +14,10 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
   useEffect(() => {
     if (!headerRef.current) return;
     const el = headerRef.current;
-    const ro = new ResizeObserver(() => setHeaderHeight(el.offsetHeight));
+    const readHeight = () => requestAnimationFrame(() => setHeaderHeight(el.offsetHeight));
+    const ro = new ResizeObserver(readHeight);
     ro.observe(el);
-    setHeaderHeight(el.offsetHeight);
+    readHeight();
     return () => ro.disconnect();
   }, []);
 

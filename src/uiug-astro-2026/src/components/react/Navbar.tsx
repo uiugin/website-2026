@@ -224,30 +224,37 @@ const Navbar: React.FC<NavbarProps> = ({
         {/* Mobile Controls */}
         <div className="flex md:hidden">
           <button
+            type="button"
+            aria-label={isPaletteOpen ? 'Close color palette' : 'Open color palette'}
             className={`px-5 border-l-4 border-black dark:border-white flex items-center justify-center hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors ${isPaletteOpen ? 'bg-black text-white dark:bg-white dark:text-black' : ''}`}
             onClick={() => {
               setIsPaletteOpen(!isPaletteOpen);
               setIsOpen(false);
             }}
           >
-            <Palette size={24} />
+            <Palette size={24} aria-hidden />
           </button>
 
           <button
+            type="button"
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
             className="px-5 border-l-4 border-black dark:border-white flex items-center justify-center hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
             onClick={toggleTheme}
           >
-            {isDark ? <Sun size={24} /> : <Moon size={24} />}
+            {isDark ? <Sun size={24} aria-hidden /> : <Moon size={24} aria-hidden />}
           </button>
 
           <button
+            type="button"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isOpen}
             className="px-6 border-l-4 border-black dark:border-white flex items-center justify-center hover:bg-primary dark:text-white dark:hover:text-black"
             onClick={() => {
               setIsOpen(!isOpen);
               setIsPaletteOpen(false);
             }}
           >
-            {isOpen ? <X size={32} /> : <Menu size={32} />}
+            {isOpen ? <X size={32} aria-hidden /> : <Menu size={32} aria-hidden />}
           </button>
         </div>
       </div>
