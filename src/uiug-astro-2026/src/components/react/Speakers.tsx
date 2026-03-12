@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { ArrowLeft, ArrowRight, Globe, ScanLine, Users } from 'lucide-react';
-import { SiX, LinkedInIcon } from './SocialIcons';
+import { ArrowLeft, ArrowRight, ScanLine, Users } from 'lucide-react';
+// Socials on slider cards commented out: Globe, SiX, LinkedInIcon
 import type { SpeakersProps as MappedSpeakersProps } from '../../lib/speakers-mapper';
 import { useAppShell } from './AppShell';
 
@@ -206,7 +206,7 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
                             </p>
                         </div>
 
-                        {/* Links */}
+                        {/* Social links on slider cards (commented out for now)
                         <div className="flex gap-3 pt-4 border-t-4 border-black dark:border-white">
                             <button type="button" aria-label="X (Twitter)" className="p-2 border-2 border-black dark:border-white hover:bg-black hover:text-white dark:text-white dark:hover:bg-white dark:hover:text-black transition-colors">
                                 <SiX className="w-4 h-4" />
@@ -218,14 +218,15 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
                                 <Globe className="w-4 h-4" />
                             </button>
                         </div>
+                        */}
                     </div>
                 </div>
             ))}
         </div>
 
-        {/* Static CTA card - desktop only: at the very end (right-0) so no slide peeks out to its right */}
-        <div className="hidden lg:flex absolute right-0 top-2 w-[350px] h-[498px] items-center justify-center z-10 pointer-events-none">
-          <div className="pointer-events-auto w-[350px] h-[498px] flex flex-col items-center justify-center text-center gap-6 bg-accent-yellow border-4 border-black dark:border-white p-4 shadow-brutal-black dark:shadow-brutal-white plastic-surface lego-studs">
+        {/* Static CTA card - desktop only: height matches speaker cards (448px without social row) */}
+        <div className="hidden lg:flex absolute right-0 top-2 w-[350px] h-[448px] items-center justify-center z-10 pointer-events-none">
+          <div className="pointer-events-auto w-[350px] h-[448px] flex flex-col items-center justify-center text-center gap-6 bg-accent-yellow border-4 border-black dark:border-white p-4 shadow-brutal-black dark:shadow-brutal-white plastic-surface lego-studs">
             <h3 className="text-2xl md:text-4xl font-display font-black uppercase leading-none text-black mb-2">
               {ctaHeading.toUpperCase()}
             </h3>

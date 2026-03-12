@@ -27,7 +27,8 @@ const Countdown: React.FC<Props> = ({ countdown }) => {
   const titleFirst = titleParts[0] || title;
   const titleSecond = titleParts.length > 1 ? `WITH ${titleParts[1]}` : null;
 
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  // Start with null so server and client render the same (00s); set real values after mount to avoid hydration mismatch
+  const [timeLeft, setTimeLeft] = useState<ReturnType<typeof calculateTimeLeft> | null>(null);
 
   function calculateTimeLeft() {
     let targetDate: Date;
@@ -79,6 +80,7 @@ const Countdown: React.FC<Props> = ({ countdown }) => {
   }
 
   useEffect(() => {
+    setTimeLeft(calculateTimeLeft());
     const timerInterval = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
@@ -114,10 +116,10 @@ const Countdown: React.FC<Props> = ({ countdown }) => {
       </div>
       
       <div className="flex flex-wrap justify-center gap-4 md:gap-8">
-        <TimeBox value={timeLeft.days} label="Days" />
-        <TimeBox value={timeLeft.hours} label="Hours" />
-        <TimeBox value={timeLeft.minutes} label="Mins" />
-        <TimeBox value={timeLeft.seconds} label="Secs" />
+        <TimeBox value={timeLeft?.days ?? 0} label="Days" />
+        <TimeBox value={timeLeft?.hours ?? 0} label="Hours" />
+        <TimeBox value={timeLeft?.minutes ?? 0} label="Mins" />
+        <TimeBox value={timeLeft?.seconds ?? 0} label="Secs" />
       </div>
 
       <div className="mt-8 text-center">

@@ -132,9 +132,9 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
 
       <div className="w-full p-4 md:p-8 relative z-10">
         <div className="flex flex-col gap-8">
-          {sortedEvents.map((event) => (
+          {sortedEvents.map((event, index) => (
             <div
-              key={event.id}
+              key={`${event.id}-${index}`}
               className="group bg-white dark:bg-black border-4 border-black dark:border-white p-6 md:p-8 hover:-translate-y-1 transition-all duration-300 shadow-brutal-black dark:shadow-brutal-white hover:shadow-brutal-red relative z-10 hover:z-20"
             >
               <div
