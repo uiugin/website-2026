@@ -210,7 +210,7 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                      <ul className="space-y-4 font-mono font-bold text-lg relative z-10">
                         {footerMenu.map((item, i) => (
                            <li key={`${item.url}-${i}`} className="group/item flex items-center gap-4 cursor-pointer">
-                              <span className="text-gray-600 group-hover/item:text-accent-yellow transition-colors font-mono text-xs">0{i + 1}</span>
+                              <span className="text-gray-300 group-hover/item:text-accent-yellow transition-colors font-mono text-xs">0{i + 1}</span>
                               <a
                                  href={item.url}
                                  target={item.target ?? undefined}
@@ -224,7 +224,7 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                      </ul>
 
                      {/* Background Code Deco */}
-                     <div className="absolute bottom-0 right-0 p-4 opacity-10 pointer-events-none font-mono text-[10px] text-right text-white">
+                     <div className="absolute bottom-0 right-0 p-4 opacity-30 pointer-events-none font-mono text-[10px] text-right text-white" aria-hidden="true">
                         {`while(alive) {
   code();
   deploy();
@@ -282,16 +282,16 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
             </div>
 
             {/* Bottom Bar */}
-            <div className="mt-20 pt-8 border-t-2 border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-xs text-gray-500 uppercase">
+            <div className="mt-20 pt-8 border-t-2 border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 font-mono text-xs text-gray-300 uppercase">
                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" aria-hidden="true"></div>
                   <span>ID: UIUG_NODE_01</span>
-                  <span className="mx-2 text-gray-700">|</span>
+                  <span className="mx-2 text-gray-500" aria-hidden="true">|</span>
                   <span>LOC: IN_KA_BLR</span>
                </div>
                <div className="flex gap-6">
-                  <a href="#" className="hover:text-white hover:underline decoration-primary decoration-2 underline-offset-4">Privacy_Policy</a>
-                  <a href="#" className="hover:text-white hover:underline decoration-primary decoration-2 underline-offset-4">Code_of_Conduct</a>
+                  <a href="#" className="text-gray-300 hover:text-white hover:underline decoration-primary decoration-2 underline-offset-4">Privacy_Policy</a>
+                  <a href="#" className="text-gray-300 hover:text-white hover:underline decoration-primary decoration-2 underline-offset-4">Code_of_Conduct</a>
                </div>
                <div>
                   {copyright}
