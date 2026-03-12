@@ -1,6 +1,7 @@
 using UIUG.Web.Options;
 using UIUG.Web.Services.Contact;
 using UIUG.Web.Services.MeetupImport;
+using UIUG.Web.Services.Subscribe;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.Configure<MeetupImportOptions>(
     builder.Configuration.GetSection(MeetupImportOptions.SectionName));
 builder.Services.AddScoped<IMeetupImportService, MeetupImportService>();
 builder.Services.AddScoped<IContactSubmissionService, ContactSubmissionService>();
+builder.Services.AddScoped<ISubscribeSubmissionService, SubscribeSubmissionService>();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {

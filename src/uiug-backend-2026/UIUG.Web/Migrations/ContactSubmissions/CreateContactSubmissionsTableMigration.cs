@@ -26,7 +26,7 @@ CREATE TABLE ContactSubmissions (
     CreatedAtUtc TEXT NOT NULL,
     IpAddress TEXT NULL,
     UserAgent TEXT NULL
-);");
+    );").Do();
 
         return Task.CompletedTask;
     }
@@ -67,15 +67,15 @@ CREATE TABLE ContactSubmissions__new (
     CreatedAtUtc TEXT NOT NULL,
     IpAddress TEXT NULL,
     UserAgent TEXT NULL
-);");
+    );").Do();
 
         Execute.Sql(@"
 INSERT INTO ContactSubmissions__new (Id, Name, Email, Message, CreatedAtUtc, IpAddress, UserAgent)
 SELECT Id, Name, Email, Message, CreatedAtUtc, IpAddress, UserAgent
-FROM ContactSubmissions;");
+    FROM ContactSubmissions;").Do();
 
-        Execute.Sql("DROP TABLE ContactSubmissions;");
-        Execute.Sql("ALTER TABLE ContactSubmissions__new RENAME TO ContactSubmissions;");
+        Execute.Sql("DROP TABLE ContactSubmissions;").Do();
+        Execute.Sql("ALTER TABLE ContactSubmissions__new RENAME TO ContactSubmissions;").Do();
 
         return Task.CompletedTask;
     }
@@ -101,10 +101,10 @@ CREATE TABLE ContactSubmissions (
     CreatedAtUtc TEXT NOT NULL,
     IpAddress TEXT NULL,
     UserAgent TEXT NULL
-);");
+);").Do();
 
             // Ensure first generated id starts from 1001.
-            Execute.Sql("INSERT OR REPLACE INTO sqlite_sequence(name, seq) VALUES ('ContactSubmissions', 1000);");
+            Execute.Sql("INSERT OR REPLACE INTO sqlite_sequence(name, seq) VALUES ('ContactSubmissions', 1000);").Do();
             return Task.CompletedTask;
         }
 
@@ -117,7 +117,7 @@ CREATE TABLE ContactSubmissions__rebuild (
     CreatedAtUtc TEXT NOT NULL,
     IpAddress TEXT NULL,
     UserAgent TEXT NULL
-);");
+);").Do();
 
         Execute.Sql(@"
 INSERT INTO ContactSubmissions__rebuild (Id, Name, Email, Message, CreatedAtUtc, IpAddress, UserAgent)
@@ -129,10 +129,10 @@ SELECT
     CreatedAtUtc,
     IpAddress,
     UserAgent
-FROM ContactSubmissions;");
+FROM ContactSubmissions;").Do();
 
-        Execute.Sql("DROP TABLE ContactSubmissions;");
-        Execute.Sql("ALTER TABLE ContactSubmissions__rebuild RENAME TO ContactSubmissions;");
+        Execute.Sql("DROP TABLE ContactSubmissions;").Do();
+        Execute.Sql("ALTER TABLE ContactSubmissions__rebuild RENAME TO ContactSubmissions;").Do();
 
         // Keep incrementing from current max id, but never below 1001.
         Execute.Sql(@"
@@ -141,7 +141,8 @@ VALUES (
     'ContactSubmissions',
     (SELECT CASE WHEN IFNULL(MAX(Id), 0) < 1000 THEN 1000 ELSE IFNULL(MAX(Id), 0) END FROM ContactSubmissions)
 )
-ON CONFLICT(name) DO UPDATE SET seq = excluded.seq;");
+    -- ON CONFLICT clause removed to avoid SQLite error
+").Do();
 
         return Task.CompletedTask;
     }
