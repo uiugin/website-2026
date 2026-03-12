@@ -1,6 +1,6 @@
-import React from 'react';
-import { ArrowLeft, Terminal, Mail, Globe } from 'lucide-react';
-import { SiGithub, SiX, LinkedInIcon } from './SocialIcons';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowLeft, Terminal } from 'lucide-react';
+// Connect/collaborate sections commented out: Mail, Globe, SiGithub, SiX, LinkedInIcon
 import type { Speaker } from '../../data/speakers';
 
 interface SpeakerDetailPageProps {
@@ -8,11 +8,26 @@ interface SpeakerDetailPageProps {
 }
 
 const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
+  const headerRef = useRef<HTMLElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  useEffect(() => {
+    if (!headerRef.current) return;
+    const el = headerRef.current;
+    const ro = new ResizeObserver(() => setHeaderHeight(el.offsetHeight));
+    ro.observe(el);
+    setHeaderHeight(el.offsetHeight);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white dark:bg-black overflow-y-auto">
+    <div className="min-h-screen bg-white dark:bg-black">
       <div className="absolute inset-0 lego-studs opacity-50 pointer-events-none" />
 
-      <div className="sticky top-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b-4 border-black dark:border-white p-4 md:p-6 flex justify-between items-center plastic-surface relative z-10">
+      <header
+        ref={headerRef}
+        className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/95 backdrop-blur-md border-b-4 border-black dark:border-white plastic-surface p-4 md:p-6 flex justify-between items-center"
+      >
         <div className="flex items-center gap-4">
           <a
             href="/speakers"
@@ -29,7 +44,9 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
         <div className="bg-primary text-black px-3 py-1 font-mono font-bold text-xs border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hidden md:block">
           STATUS: ACTIVE_SIGNAL
         </div>
-      </div>
+      </header>
+
+      <div style={{ minHeight: headerHeight || 80 }} aria-hidden="true" />
 
       <div className="max-w-7xl mx-auto p-4 md:p-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16">
@@ -57,6 +74,7 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
               </div>
             </div>
 
+            {/* Contribution count and session count (commented out)
             <div className="grid grid-cols-2 gap-4 mb-8">
               <div className="bg-gray-100 dark:bg-gray-900 border-4 border-black dark:border-white p-4">
                 <span className="block text-[10px] font-mono font-bold text-gray-500 uppercase mb-1">CONTRIBUTIONS</span>
@@ -67,7 +85,9 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
                 <span className="text-2xl font-display font-black text-black dark:text-white">24</span>
               </div>
             </div>
+            */}
 
+            {/* Connect channels section (commented out)
             <div className="flex flex-col gap-4">
               <h4 className="font-display text-lg uppercase text-black dark:text-white border-b-2 border-black dark:border-white pb-2">CONNECT_CHANNELS</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -85,6 +105,7 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
                 </a>
               </div>
             </div>
+            */}
           </div>
 
           <div className="lg:col-span-7">
@@ -115,6 +136,7 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
                 </p>
               </section>
 
+              {/* CORE_EXPERTISE section (commented out)
               <section>
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-1 flex-grow bg-black dark:bg-white" />
@@ -140,7 +162,9 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
                   ))}
                 </div>
               </section>
+              */}
 
+              {/* Want to collaborate section (commented out)
               <section className="bg-primary border-4 border-black p-8 shadow-brutal-black">
                 <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                   <div className="flex items-center gap-4">
@@ -158,6 +182,7 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
                   </button>
                 </div>
               </section>
+              */}
             </div>
           </div>
         </div>

@@ -151,7 +151,7 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
       >
         <div 
             ref={scrollRef}
-            className="flex gap-8 overflow-x-auto overflow-y-visible pb-12 pt-2 snap-x snap-mandatory pr-[300px] md:pr-[350px]"
+            className="flex gap-8 overflow-x-auto overflow-y-visible pb-12 pt-2 snap-x snap-mandatory pr-0 lg:pr-[350px]"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
             <style>{`
@@ -223,9 +223,9 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
             ))}
         </div>
 
-        {/* Static CTA card - at the very end (right-0) so no slide peeks out to its right; same size as speaker cards */}
-        <div className="absolute right-0 top-2 w-[300px] md:w-[350px] h-[498px] flex items-center justify-center z-10 pointer-events-none">
-          <div className="pointer-events-auto w-[300px] md:w-[350px] h-[498px] flex flex-col items-center justify-center text-center gap-6 bg-accent-yellow border-4 border-black dark:border-white p-4 shadow-brutal-black dark:shadow-brutal-white plastic-surface lego-studs">
+        {/* Static CTA card - desktop only: at the very end (right-0) so no slide peeks out to its right */}
+        <div className="hidden lg:flex absolute right-0 top-2 w-[350px] h-[498px] items-center justify-center z-10 pointer-events-none">
+          <div className="pointer-events-auto w-[350px] h-[498px] flex flex-col items-center justify-center text-center gap-6 bg-accent-yellow border-4 border-black dark:border-white p-4 shadow-brutal-black dark:shadow-brutal-white plastic-surface lego-studs">
             <h3 className="text-2xl md:text-4xl font-display font-black uppercase leading-none text-black mb-2">
               {ctaHeading.toUpperCase()}
             </h3>
@@ -242,6 +242,27 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
               </button>
             )}
           </div>
+        </div>
+      </div>
+
+      {/* CTA card - mobile only: below slider so it does not cover the carousel */}
+      <div className="lg:hidden mt-8 w-full max-w-[350px] mx-auto">
+        <div className="flex flex-col items-center justify-center text-center gap-6 bg-accent-yellow border-4 border-black dark:border-white p-6 shadow-brutal-black dark:shadow-brutal-white plastic-surface lego-studs">
+          <h3 className="text-2xl md:text-4xl font-display font-black uppercase leading-none text-black mb-2">
+            {ctaHeading.toUpperCase()}
+          </h3>
+          <p className="font-mono font-bold text-sm text-black mb-4">
+            {ctaDescription.toUpperCase()}
+          </p>
+          {ctaButtonUrl && ctaButtonUrl !== '#' ? (
+            <a href={ctaButtonUrl} className="px-6 py-3 bg-black text-white font-bold uppercase border-4 border-transparent hover:bg-white hover:text-black hover:border-black transition-colors w-full flex items-center justify-center gap-2">
+              SUBMIT_TALK <ArrowRight className="w-4 h-4" />
+            </a>
+          ) : (
+            <button className="px-6 py-3 bg-black text-white font-bold uppercase border-4 border-transparent hover:bg-white hover:text-black hover:border-black transition-colors w-full flex items-center justify-center gap-2">
+              SUBMIT_TALK <ArrowRight className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
       

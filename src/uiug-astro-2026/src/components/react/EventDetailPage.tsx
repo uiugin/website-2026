@@ -76,14 +76,25 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
   const [shareMenuPosition, setShareMenuPosition] = useState<{ top: number; right: number } | null>(null);
   const [bookmarkFeedback, setBookmarkFeedback] = useState<'saved' | 'removed' | null>(null);
   const [bookmarkFeedbackPosition, setBookmarkFeedbackPosition] = useState<{ top: number; right: number } | null>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const shareMenuRef = useRef<HTMLDivElement>(null);
   const shareTriggerRef = useRef<HTMLButtonElement>(null);
   const sharePortalRef = useRef<HTMLDivElement>(null);
   const bookmarkTriggerRef = useRef<HTMLButtonElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setIsBookmarked(getBookmarkedIds().has(event.id));
   }, [event.id]);
+
+  useEffect(() => {
+    if (!headerRef.current) return;
+    const el = headerRef.current;
+    const ro = new ResizeObserver(() => setHeaderHeight(el.offsetHeight));
+    ro.observe(el);
+    setHeaderHeight(el.offsetHeight);
+    return () => ro.disconnect();
+  }, []);
 
   const updateShareMenuPosition = () => {
     const el = shareTriggerRef.current;
@@ -218,10 +229,13 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
   const hasAttendees = attendeesCount > 0;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black overflow-y-auto">
+    <div className="min-h-screen bg-white dark:bg-black">
       <div className="absolute inset-0 lego-studs opacity-50 pointer-events-none" />
 
-      <div className="sticky top-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b-4 border-black dark:border-white p-4 md:p-6 flex justify-between items-center plastic-surface relative z-10">
+      <header
+        ref={headerRef}
+        className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/95 backdrop-blur-md border-b-4 border-black dark:border-white plastic-surface p-4 md:p-6 flex justify-between items-center"
+      >
         <div className="flex items-center gap-4">
           <a
             href="/events"
@@ -365,7 +379,9 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
               document.body
             )}
         </div>
-      </div>
+      </header>
+
+      <div style={{ minHeight: headerHeight || 80 }} aria-hidden="true" />
 
       <div className="max-w-7xl mx-auto p-4 md:p-12 relative z-10">
         <div className="mb-16">

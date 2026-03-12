@@ -1,55 +1,57 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Image as ImageIcon, Play, Maximize2, X, Aperture } from 'lucide-react';
+import React from 'react';
+import { Image as ImageIcon, Play, Maximize2, Aperture } from 'lucide-react';
 import type { GalleryProps, MediaItem } from '../../lib/gallery-mapper';
 
-const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+// Lightbox (commented out): focus trap
+// const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
 
 interface Props {
   gallery?: GalleryProps;
 }
 
 const Gallery: React.FC<Props> = ({ gallery }) => {
-  const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const previousActiveRef = useRef<HTMLElement | null>(null);
+  // Lightbox (commented out for now)
+  // const [selectedItem, setSelectedItem] = useState<MediaItem | null>(null);
+  // const modalRef = useRef<HTMLDivElement>(null);
+  // const previousActiveRef = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
-    if (!selectedItem || !modalRef.current) return;
-    previousActiveRef.current = document.activeElement as HTMLElement | null;
-    const focusables = modalRef.current.querySelectorAll<HTMLElement>(focusableSelector);
-    const first = focusables[0];
-    if (first) first.focus();
+  // useEffect(() => {
+  //   if (!selectedItem || !modalRef.current) return;
+  //   previousActiveRef.current = document.activeElement as HTMLElement | null;
+  //   const focusables = modalRef.current.querySelectorAll<HTMLElement>(focusableSelector);
+  //   const first = focusables[0];
+  //   if (first) first.focus();
 
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setSelectedItem(null);
-        return;
-      }
-      if (e.key !== 'Tab') return;
-      const els = modalRef.current?.querySelectorAll<HTMLElement>(focusableSelector);
-      if (!els?.length) return;
-      const firstEl = els[0];
-      const lastEl = els[els.length - 1];
-      if (e.shiftKey) {
-        if (document.activeElement === firstEl) {
-          e.preventDefault();
-          lastEl.focus();
-        }
-      } else {
-        if (document.activeElement === lastEl) {
-          e.preventDefault();
-          firstEl.focus();
-        }
-      }
-    };
+  //   const onKeyDown = (e: KeyboardEvent) => {
+  //     if (e.key === 'Escape') {
+  //       setSelectedItem(null);
+  //       return;
+  //     }
+  //     if (e.key !== 'Tab') return;
+  //     const els = modalRef.current?.querySelectorAll<HTMLElement>(focusableSelector);
+  //     if (!els?.length) return;
+  //     const firstEl = els[0];
+  //     const lastEl = els[els.length - 1];
+  //     if (e.shiftKey) {
+  //       if (document.activeElement === firstEl) {
+  //         e.preventDefault();
+  //         lastEl.focus();
+  //       }
+  //     } else {
+  //       if (document.activeElement === lastEl) {
+  //         e.preventDefault();
+  //         firstEl.focus();
+  //       }
+  //     }
+  //   };
 
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-      previousActiveRef.current?.focus?.();
-    };
-  }, [selectedItem]);
-  
+  //   document.addEventListener('keydown', onKeyDown);
+  //   return () => {
+  //     document.removeEventListener('keydown', onKeyDown);
+  //     previousActiveRef.current?.focus?.();
+  //   };
+  // }, [selectedItem]);
+
   // Default values
   const defaultTitle = 'VISUAL_LOGS';
   const defaultItems: MediaItem[] = [];
@@ -78,8 +80,8 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
           {mediaItems.map((item) => (
             <div 
                 key={item.id}
-                onClick={() => setSelectedItem(item)}
-                className="group relative aspect-square border-4 border-black dark:border-white bg-gray-100 dark:bg-gray-900 cursor-pointer overflow-hidden shadow-brutal-black dark:shadow-brutal-white hover:shadow-brutal-red transition-all duration-300 hover:-translate-y-2"
+                // onClick={() => setSelectedItem(item)}
+                className="group relative aspect-square border-4 border-black dark:border-white bg-gray-100 dark:bg-gray-900 overflow-hidden shadow-brutal-black dark:shadow-brutal-white hover:shadow-brutal-red transition-all duration-300 hover:-translate-y-2"
             >
                 {/* Image */}
                 <img 
@@ -134,8 +136,8 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
         </div>
       )}
 
-      {/* Modal Lightbox */}
-      {selectedItem && (
+      {/* Modal Lightbox (commented out for now) */}
+      {/* {selectedItem && (
         <div
           ref={modalRef}
           role="dialog"
@@ -144,7 +146,6 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
           className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-10 bg-primary/90 backdrop-blur-sm animate-in fade-in duration-200"
         >
             <div className="relative w-full max-w-5xl bg-black border-4 border-white shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] flex flex-col">
-                {/* Modal Header */}
                 <div className="flex justify-between items-center p-4 border-b-4 border-white bg-black">
                     <div className="flex items-center gap-2">
                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -163,7 +164,6 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
                     </button>
                 </div>
 
-                {/* Modal Content */}
                 <div className="relative aspect-video bg-gray-900 group">
                     <img 
                         src={selectedItem.src} 
@@ -182,7 +182,6 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
                     )}
                 </div>
 
-                {/* Modal Footer */}
                 <div className="p-6 bg-white border-t-4 border-black">
                     <div className="flex justify-between items-start">
                         <div>
@@ -200,10 +199,9 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
                 </div>
             </div>
             
-            {/* Backdrop Close Click Area */}
             <div className="absolute inset-0 -z-10" onClick={() => setSelectedItem(null)}></div>
         </div>
-      )}
+      )} */}
     </section>
   );
 };

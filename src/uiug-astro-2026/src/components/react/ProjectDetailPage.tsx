@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Database, Cpu, ExternalLink, Code, Layout, Zap } from 'lucide-react';
 import { SiGithub } from './SocialIcons';
 import type { Project } from '../../data/projects';
@@ -8,11 +8,26 @@ interface ProjectDetailPageProps {
 }
 
 const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ project }) => {
+  const headerRef = useRef<HTMLElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  useEffect(() => {
+    if (!headerRef.current) return;
+    const el = headerRef.current;
+    const ro = new ResizeObserver(() => setHeaderHeight(el.offsetHeight));
+    ro.observe(el);
+    setHeaderHeight(el.offsetHeight);
+    return () => ro.disconnect();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-white dark:bg-black overflow-y-auto">
+    <div className="min-h-screen bg-white dark:bg-black">
       <div className="absolute inset-0 lego-studs opacity-50 pointer-events-none" />
 
-      <div className="sticky top-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-md border-b-4 border-black dark:border-white p-4 md:p-6 flex justify-between items-center plastic-surface relative z-10">
+      <header
+        ref={headerRef}
+        className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/95 backdrop-blur-md border-b-4 border-black dark:border-white plastic-surface p-4 md:p-6 flex justify-between items-center"
+      >
         <div className="flex items-center gap-4">
           <a
             href="/projects"
@@ -31,7 +46,9 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ project }) => {
             DEPLOYED_V{project.year}.0
           </div>
         </div>
-      </div>
+      </header>
+
+      <div style={{ minHeight: headerHeight || 80 }} aria-hidden="true" />
 
       <div className="max-w-7xl mx-auto p-4 md:p-12 relative z-10">
         <div className="relative mb-16 border-8 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white overflow-hidden group">
