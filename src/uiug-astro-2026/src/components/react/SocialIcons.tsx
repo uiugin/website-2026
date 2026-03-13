@@ -3,9 +3,9 @@
  * LinkedIn: inline SVG (Simple Icons removed it; avoids Lucide deprecated brand icons).
  */
 import React from 'react';
-import { SiGithub, SiX } from '@icons-pack/react-simple-icons';
+import { SiGithub, SiX, SiDiscord, SiMeetup } from '@icons-pack/react-simple-icons';
 
-export { SiGithub, SiX };
+export { SiGithub, SiX, SiDiscord, SiMeetup };
 
 /** LinkedIn logo as inline SVG (currentColor for theme) */
 export const LinkedInIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (

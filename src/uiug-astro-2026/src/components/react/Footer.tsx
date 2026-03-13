@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowUp, Terminal, Mail, Zap } from 'lucide-react';
-import { SiGithub, SiX, LinkedInIcon } from './SocialIcons';
+import { SiGithub, SiX, SiDiscord, SiMeetup, LinkedInIcon } from './SocialIcons';
 import type { FooterData, SocialLinks, LayoutLink } from '../../types/layout';
 
 interface SubscribeSubmitResponse {
@@ -13,8 +13,8 @@ const SOCIAL_ICONS: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
    github: SiGithub,
    linkedin: LinkedInIcon,
    youtube: SiX,
-   discord: Mail,
-   meetup: Mail,
+   discord: SiDiscord,
+   meetup: SiMeetup,
 };
 
 interface FooterProps {
