@@ -29,48 +29,52 @@ const Contact: React.FC<Props> = ({ contact }) => {
         (import.meta.env.DEV ? 'https://localhost:44392/api/contact/submit' : '');
 
   useEffect(() => {
-    // Check if Leaflet is loaded and map container exists
-    const L = (window as any).L;
-    if (L && mapContainerRef.current && !mapInstanceRef.current) {
+    let mounted = true;
+    // Load Leaflet only on client (SSR-safe)
+    import('leaflet/dist/leaflet.css');
+    import('leaflet').then((LModule) => {
+      const L = LModule.default;
+      if (!mounted || !mapContainerRef.current || mapInstanceRef.current) return;
       // Initialize Map - Center on India
       const map = L.map(mapContainerRef.current, {
-        center: [22.0000, 78.0000], // Center of India
-        zoom: 4, // Zoom out slightly more to show context
+        center: [22.0, 78.0], // Center of India
+        zoom: 4,
         zoomControl: false,
         attributionControl: false,
         scrollWheelZoom: false,
-        dragging: false // Keep it static-ish like a lego baseplate, or true if we want interaction
+        dragging: false,
       });
 
-      // Add Tile Layer - Using CartoDB Light which has clear borders and labels
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 20,
         subdomains: 'abcd',
       }).addTo(map);
 
-      // Custom Icon for the Pin (Lego Minifigure Head style or just a block)
       const legoIcon = L.divIcon({
         className: 'lego-pin',
         html: `
           <div class="relative w-8 h-8 flex items-center justify-center">
-             <div class="absolute w-full h-full bg-primary border-2 border-black animate-bounce"></div>
-             <div class="absolute -top-2 w-4 h-2 bg-primary border-2 border-black border-b-0 animate-bounce"></div>
+             <div class="absolute w-full h-full bg-[var(--color-primary)] border-2 border-black animate-bounce"></div>
+             <div class="absolute -top-2 w-4 h-2 bg-[var(--color-primary)] border-2 border-black border-b-0 animate-bounce"></div>
           </div>
         `,
         iconSize: [32, 32],
-        iconAnchor: [16, 32]
+        iconAnchor: [16, 32],
       });
 
-      // Marker for Bengaluru Node
-      L.marker([12.9716, 77.5946], { icon: legoIcon }).addTo(map);
+      L.marker([22.0, 78.0], { icon: legoIcon }).addTo(map); // Center of India
 
       mapInstanceRef.current = map;
-      
-      // Force map invalidation on load to ensure tiles render correctly
-      setTimeout(() => {
-        map.invalidateSize();
-      }, 100);
-    }
+      setTimeout(() => map.invalidateSize(), 100);
+    });
+
+    return () => {
+      mounted = false;
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
   }, []);
 
     const buildErrorMessage = (payload: ContactSubmitResponse | null, fallback: string): string => {
@@ -245,11 +249,9 @@ const Contact: React.FC<Props> = ({ contact }) => {
                 </div>
             </div>
 
-            {/* Location Box (Lego Map) */}
-            <div className="flex-grow bg-gray-200 dark:bg-gray-800 border-4 border-black dark:border-white relative overflow-hidden group shadow-brutal-black dark:shadow-brutal-white min-h-[300px]">
-                 
-                 {/* Map Container - Removed Grayscale for better visibility */}
-                 <div ref={mapContainerRef} className="absolute inset-0 z-0 h-full w-full"></div>
+            {/* Location Box (India Map) */}
+            <div className="flex-grow bg-gray-200 dark:bg-gray-800 border-4 border-black dark:border-white relative overflow-hidden group shadow-brutal-black dark:shadow-brutal-white min-h-[300px] h-[320px]">
+                 <div ref={mapContainerRef} className="absolute inset-0 z-0 h-full w-full min-h-[300px]" />
                  
                  {/* Lego Stud Overlay - Reduced opacity for better map visibility */}
                  <div 
