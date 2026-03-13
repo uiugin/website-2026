@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ArrowLeft, Search, Terminal, Calendar, User, Tag, ArrowUpRight, Radio, Clock, MapPin, Users } from 'lucide-react';
 import type { Event } from '../../types/content';
+import { appendImageCrop } from '../../api/umbraco';
 
 interface FullEventListPageProps {
   events?: Event[];
@@ -194,7 +195,7 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
                           {event.attendees.slice(0, 3).map((attendee) => (
                             <div key={attendee.id} className="w-6 h-6 border-2 border-black dark:border-white overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                               {attendee.photoUrl ? (
-                                <img src={attendee.photoUrl} alt={attendee.name} width={24} height={24} loading="lazy" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" />
+                                <img src={appendImageCrop(attendee.photoUrl, 24, 24)} alt={attendee.name} width={24} height={24} loading="lazy" className="w-full h-full object-cover grayscale" referrerPolicy="no-referrer" />
                               ) : (
                                 <span className="text-[10px] font-bold font-mono text-black dark:text-white">
                                   {attendee.name.charAt(0).toUpperCase()}
@@ -218,7 +219,7 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
                                 <div key={attendee.id} className="w-8 h-8 border-2 border-black dark:border-white overflow-hidden group/item relative bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                                   {attendee.photoUrl ? (
                                     <img
-                                      src={attendee.photoUrl}
+                                      src={appendImageCrop(attendee.photoUrl, 32, 32)}
                                       alt={attendee.name}
                                       width={32}
                                       height={32}

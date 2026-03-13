@@ -19,6 +19,7 @@ import {
   Link2,
 } from 'lucide-react';
 import type { Event } from '../../types/content';
+import { appendImageCrop } from '../../api/umbraco';
 
 /** Brand icon components for share menu */
 const IconLinkedIn = ({ className }: { className?: string }) => (
@@ -495,7 +496,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
                       <div className="w-10 h-10 border-2 border-black dark:border-white overflow-hidden shrink-0 bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                         {attendee.photoUrl ? (
                           <img
-                            src={attendee.photoUrl}
+                            src={appendImageCrop(attendee.photoUrl, 40, 40)}
                             alt={attendee.name}
                             width={40}
                             height={40}
@@ -549,7 +550,7 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
                       <div key={speaker.id} className="flex items-center gap-4 mb-6">
                         <div className="w-16 h-16 border-2 border-primary overflow-hidden shrink-0 bg-gray-800 dark:bg-gray-200">
                           {speaker.avatarUrl ? (
-                            <img src={speaker.avatarUrl} alt={speaker.name} width={64} height={64} loading="lazy" className="w-full h-full object-cover grayscale" />
+                            <img src={appendImageCrop(speaker.avatarUrl, 64, 64)} alt={speaker.name} width={64} height={64} loading="lazy" className="w-full h-full object-cover grayscale" />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center font-display text-2xl text-primary">
                               {speaker.name.charAt(0)}

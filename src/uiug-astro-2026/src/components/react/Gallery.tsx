@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image as ImageIcon, Play, Maximize2, Aperture } from 'lucide-react';
 import type { GalleryProps, MediaItem } from '../../lib/gallery-mapper';
+import { appendImageCrop } from '../../api/umbraco';
 
 // Lightbox (commented out): focus trap
 // const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -85,7 +86,7 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
             >
                 {/* Image */}
                 <img 
-                    src={item.src} 
+                    src={appendImageCrop(item.src, 400, 400)} 
                     alt={item.caption}
                     width={400}
                     height={400}
@@ -166,7 +167,7 @@ const Gallery: React.FC<Props> = ({ gallery }) => {
 
                 <div className="relative aspect-video bg-gray-900 group">
                     <img 
-                        src={selectedItem.src} 
+                        src={appendImageCrop(selectedItem.src, 800, 450)} 
                         alt={selectedItem.caption}
                         width={800}
                         height={450}

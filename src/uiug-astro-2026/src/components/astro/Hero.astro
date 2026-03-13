@@ -3,6 +3,7 @@ import Button from '../react/Button';
 import { Reveal, Slide } from '../react/Reveal';
 import { Zap, Calendar, Clock, ArrowRight } from 'lucide-react';
 import type { HeroProps } from '../../lib/hero-mapper';
+import { appendImageCrop } from '../../api/umbraco';
 
 interface Props {
   hero?: HeroProps;
@@ -33,7 +34,8 @@ if (!buttons || !Array.isArray(buttons) || buttons.length === 0) {
   buttons = defaultButtons;
 }
 
-const slideImage = hero?.slideImage || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop';
+const slideImageRaw = hero?.slideImage || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop';
+const slideImage = slideImageRaw.includes('/media/') ? appendImageCrop(slideImageRaw, 622, 415) : slideImageRaw;
 const slideLabel = hero?.slideLabel || 'RUNTIME: .NET_CORE';
 const slideLabelTwo = hero?.slideLabelTwo || 'CACHE: REFRESHED';
 

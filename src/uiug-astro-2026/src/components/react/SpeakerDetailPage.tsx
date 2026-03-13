@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Terminal } from 'lucide-react';
 // Connect/collaborate sections commented out: Mail, Globe, SiGithub, SiX, LinkedInIcon
 import type { Speaker } from '../../data/speakers';
+import { appendImageCrop } from '../../api/umbraco';
 
 interface SpeakerDetailPageProps {
   speaker: Speaker;
@@ -56,7 +57,7 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
               <div className="relative aspect-[4/5] overflow-hidden border-4 border-black dark:border-white bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
                 {speaker.image ? (
                   <img
-                    src={speaker.image}
+                    src={appendImageCrop(speaker.image, 400, 500)}
                     alt={speaker.name}
                     width={400}
                     height={500}

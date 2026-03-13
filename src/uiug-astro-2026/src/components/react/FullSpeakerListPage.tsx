@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ArrowLeft, Search, Terminal, Award, User } from 'lucide-react';
 // Social icons on cards commented out: import { SiGithub, SiX, LinkedInIcon } from './SocialIcons';
 import type { Speaker } from '../../data/speakers';
+import { appendImageCrop } from '../../api/umbraco';
 
 interface FullSpeakerListPageProps {
   speakers?: Speaker[];
@@ -156,7 +157,7 @@ const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = []
                 <div className="relative aspect-square border-2 border-black dark:border-white bg-gray-100 dark:bg-gray-900 mb-6 overflow-hidden flex items-center justify-center">
                   {speaker.image ? (
                     <img
-                      src={speaker.image}
+                      src={appendImageCrop(speaker.image, 400, 400)}
                       alt={speaker.name}
                       width={400}
                       height={400}

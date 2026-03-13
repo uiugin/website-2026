@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, ScanLine, Users } from 'lucide-react';
 // Socials on slider cards commented out: Globe, SiX, LinkedInIcon
 import type { SpeakersProps as MappedSpeakersProps } from '../../lib/speakers-mapper';
 import { useAppShell } from './AppShell';
+import { appendImageCrop } from '../../api/umbraco';
 
 interface SpeakersProps {
   speakers?: MappedSpeakersProps;
@@ -171,7 +172,7 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
                         <div className="relative w-full aspect-square border-2 border-black dark:border-white mb-6 overflow-hidden bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
                             {speaker.image ? (
                                 <img 
-                                    src={speaker.image} 
+                                    src={appendImageCrop(speaker.image, 400, 400)} 
                                     alt={speaker.name}
                                     width={400}
                                     height={400}

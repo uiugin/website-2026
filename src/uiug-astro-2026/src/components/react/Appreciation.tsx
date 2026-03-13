@@ -84,7 +84,7 @@ const Appreciation: React.FC = () => {
                     <div className="w-3 h-3 bg-yellow-500 rounded-full border-2 border-black"></div>
                     <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-black"></div>
                 </div>
-                <span className="font-mono text-xs font-bold uppercase text-gray-500">H5YR_MODULE.exe</span>
+                <span className="font-mono text-xs font-bold uppercase text-gray-600 dark:text-gray-400">H5YR_MODULE.exe</span>
             </div>
 
             {/* Main Interactive Area */}
@@ -107,7 +107,7 @@ const Appreciation: React.FC = () => {
                     <h3 className="text-6xl md:text-9xl font-display font-black uppercase text-center mb-4 text-black dark:text-white drop-shadow-md leading-none">
                         H5YR
                     </h3>
-                    <p className="font-mono text-xs md:text-sm font-bold text-gray-500 mb-8 uppercase bg-white dark:bg-black px-2 py-1 border-2 border-black dark:border-white">
+                    <p className="font-mono text-xs md:text-sm font-bold text-gray-600 dark:text-gray-400 mb-8 uppercase bg-white dark:bg-black px-2 py-1 border-2 border-black dark:border-white">
                         HIGH_FIVE_YOU_ROCK
                     </p>
                     
@@ -133,7 +133,7 @@ const Appreciation: React.FC = () => {
             </div>
 
             {/* Instruction Footer */}
-             <div className="mt-4 flex justify-between items-center font-mono text-[10px] md:text-xs font-bold uppercase text-gray-500">
+             <div className="mt-4 flex justify-between items-center font-mono text-[10px] md:text-xs font-bold uppercase text-gray-600 dark:text-gray-400">
                 <span>STATUS: WAITING_FOR_HIGH_FIVES</span>
                 <span>H5YRS_SENT: {count}</span>
             </div>

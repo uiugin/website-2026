@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ArrowLeft, Search, Terminal, Layers, Cpu, ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
+import { appendImageCrop } from '../../api/umbraco';
 
 interface FullShowcaseListPageProps {
   projects?: Project[];
@@ -127,7 +128,7 @@ const FullShowcaseListPage: React.FC<FullShowcaseListPageProps> = ({ projects = 
             >
               <div className="relative aspect-video border-2 border-black dark:border-white bg-gray-100 dark:bg-gray-900 mb-6 overflow-hidden">
                 <img
-                  src={project.image}
+                  src={appendImageCrop(project.image, 640, 360)}
                   alt={project.title}
                   width={640}
                   height={360}

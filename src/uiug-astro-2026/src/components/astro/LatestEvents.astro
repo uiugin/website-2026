@@ -2,6 +2,7 @@
 import { Reveal } from '../react/Reveal';
 import { Calendar, User, Tag, ArrowUpRight, Radio, Users } from 'lucide-react';
 import type { LatestEventsProps } from '../../lib/latest-events-mapper';
+import { appendImageCrop } from '../../api/umbraco';
 
 interface Props {
   latestEvents?: LatestEventsProps;
@@ -82,7 +83,7 @@ const sectionTitle = latestEvents?.title || 'EVENT_LOG';
                                     {event.attendees.slice(0, 3).map((attendee: { name: string; photoUrl?: string | null }) => (
                                         <div class="w-5 h-5 border border-black dark:border-white overflow-hidden bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                                             {attendee.photoUrl ? (
-                                                <img src={attendee.photoUrl} alt={attendee.name} width={20} height={20} loading="lazy" class="w-full h-full object-cover grayscale" referrerpolicy="no-referrer" />
+                                                <img src={appendImageCrop(attendee.photoUrl, 20, 20)} alt={attendee.name} width={20} height={20} loading="lazy" class="w-full h-full object-cover grayscale" referrerpolicy="no-referrer" />
                                             ) : (
                                                 <span class="text-[8px] font-bold font-mono text-black dark:text-white">
                                                     {attendee.name.charAt(0).toUpperCase()}
@@ -106,7 +107,7 @@ const sectionTitle = latestEvents?.title || 'EVENT_LOG';
                                                 <div class="w-8 h-8 border-2 border-black dark:border-white overflow-hidden group/item relative bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
                                                     {attendee.photoUrl ? (
                                                         <img
-                                                            src={attendee.photoUrl}
+                                                            src={appendImageCrop(attendee.photoUrl, 32, 32)}
                                                             alt={attendee.name}
                                                             width={32}
                                                             height={32}

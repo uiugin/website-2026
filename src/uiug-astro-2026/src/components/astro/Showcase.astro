@@ -2,6 +2,7 @@
 import { Reveal, Slide } from '../react/Reveal';
 import { Layers, Cpu, ArrowUpRight, Database } from 'lucide-react';
 import type { ShowcaseProps } from '../../lib/showcase-mapper';
+import { appendImageCrop } from '../../api/umbraco';
 
 interface Props {
   showcase?: ShowcaseProps;
@@ -53,7 +54,7 @@ const moreButtonUrl = showcase?.moreButtonUrl;
                 {/* Image Section */}
                 <div class={`relative overflow-hidden border-4 border-black dark:border-white bg-gray-200 mb-6 lg:mb-0 ${index === 2 ? 'w-full lg:w-1/2 lg:mr-8 lg:mb-0 aspect-video lg:aspect-auto' : 'w-full aspect-video'}`}>
                     <img 
-                        src={project.image} 
+                        src={appendImageCrop(project.image, 640, 360)} 
                         alt={project.title} 
                         width={640}
                         height={360}

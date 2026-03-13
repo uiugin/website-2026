@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Database, Cpu, ExternalLink, Code, Layout, Zap } from 'lucide-react';
 import { SiGithub } from './SocialIcons';
 import type { Project } from '../../data/projects';
+import { appendImageCrop } from '../../api/umbraco';
 
 interface ProjectDetailPageProps {
   project: Project;
@@ -55,7 +56,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ project }) => {
         <div className="relative mb-16 border-8 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white overflow-hidden group">
           <div className="aspect-video md:aspect-[21/9] overflow-hidden">
             <img
-              src={project.image}
+              src={appendImageCrop(project.image, 1280, 549)}
               alt={project.title}
               width={1280}
               height={549}
@@ -111,7 +112,7 @@ const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({ project }) => {
                       key={idx}
                       className="border-4 border-black dark:border-white p-2 bg-white dark:bg-black shadow-brutal-black dark:shadow-brutal-white hover:-translate-y-2 transition-transform"
                     >
-                      <img src={img} alt={`Gallery ${idx + 1}`} width={640} height={360} loading="lazy" className="w-full aspect-video object-cover grayscale hover:grayscale-0 transition-all" />
+                      <img src={appendImageCrop(img, 640, 360)} alt={`Gallery ${idx + 1}`} width={640} height={360} loading="lazy" className="w-full aspect-video object-cover grayscale hover:grayscale-0 transition-all" />
                     </div>
                   ))}
                 </div>
