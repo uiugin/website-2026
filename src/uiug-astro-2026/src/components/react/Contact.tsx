@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Mail, MapPin, Send, MessageSquare, ArrowRight, Terminal } from 'lucide-react';
+import { Mail, MapPin, Send, ArrowRight, Terminal } from 'lucide-react';
+import { LinkedInIcon } from './SocialIcons';
 import type { ContactProps } from '../../lib/contact-mapper';
 
 interface Props {
@@ -232,18 +233,18 @@ const Contact: React.FC<Props> = ({ contact }) => {
                     DIRECT_LINE
                 </h3>
                 <div className="space-y-4">
-                    <a href="mailto:hello@uiug.in" className="flex items-center gap-4 text-black font-bold font-mono hover:bg-white p-2 -mx-2 transition-colors border-2 border-transparent hover:border-black dark:hover:border-white">
+                    <a href="mailto:admin@uiug.in" className="flex items-center gap-4 text-black font-bold font-mono hover:bg-white p-2 -mx-2 transition-colors border-2 border-transparent hover:border-black dark:hover:border-white">
                         <div className="bg-black dark:bg-white text-white dark:text-black p-2 border-2 border-black dark:border-white">
                             <Mail className="w-5 h-5" />
                         </div>
-                        <span className="text-lg">HELLO@UIUG.IN</span>
+                        <span className="text-lg">EMAIL_US</span>
                         <ArrowRight className="w-5 h-5 ml-auto opacity-0 group-hover:opacity-100" />
                     </a>
-                    <a href="#" className="flex items-center gap-4 text-black font-bold font-mono hover:bg-white p-2 -mx-2 transition-colors border-2 border-transparent hover:border-black dark:hover:border-white">
+                    <a href="https://www.linkedin.com/in/umbraco-india-users-group/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 text-black font-bold font-mono hover:bg-white p-2 -mx-2 transition-colors border-2 border-transparent hover:border-black dark:hover:border-white">
                         <div className="bg-black dark:bg-white text-white dark:text-black p-2 border-2 border-black dark:border-white">
-                            <MessageSquare className="w-5 h-5" />
+                            <LinkedInIcon className="w-5 h-5" />
                         </div>
-                        <span className="text-lg">JOIN_DISCORD</span>
+                        <span className="text-lg">JOIN_LINKEDIN</span>
                         <ArrowRight className="w-5 h-5 ml-auto opacity-0 group-hover:opacity-100" />
                     </a>
                 </div>
