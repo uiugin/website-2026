@@ -172,7 +172,7 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
                         <div className="relative w-full aspect-square border-2 border-black dark:border-white mb-6 overflow-hidden bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
                             {speaker.image ? (
                                 <img 
-                                    src={appendImageCrop(speaker.image, 400, 400)} 
+                                    src={appendImageCrop(speaker.image, 278, 278)} 
                                     alt={speaker.name}
                                     width={400}
                                     height={400}

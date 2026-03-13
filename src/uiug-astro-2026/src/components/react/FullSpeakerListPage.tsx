@@ -157,7 +157,7 @@ const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = []
                 <div className="relative aspect-square border-2 border-black dark:border-white bg-gray-100 dark:bg-gray-900 mb-6 overflow-hidden flex items-center justify-center">
                   {speaker.image ? (
                     <img
-                      src={appendImageCrop(speaker.image, 400, 400)}
+                      src={appendImageCrop(speaker.image, 278, 278)}
                       alt={speaker.name}
                       width={400}
                       height={400}

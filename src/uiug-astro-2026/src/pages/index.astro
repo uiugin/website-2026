@@ -16,7 +16,7 @@ import FAQ from '../components/react/FAQ';
 import JoinUs from '../components/react/JoinUs';
 import Footer from '../components/react/Footer';
 import Sponsors from '../components/react/Sponsors';
-import { getSiteSettings, getHomeContent, getMainContentBlocks, getHeroBlock } from '../api/umbraco';
+import { getSiteSettings, getHomeContent, getMainContentBlocks, getHeroBlock, appendImageCrop } from '../api/umbraco';
 import { getComponentIdentifier } from '../lib/component-order';
 import { mapHeroProps } from '../lib/hero-mapper';
 import { mapFeaturesProps } from '../lib/features-mapper';
@@ -155,7 +155,7 @@ try {
 }
 ---
 
-<Layout title={layoutData.siteName ? `${layoutData.siteName} - Umbraco India User Group` : 'UIUG - Umbraco India User Group'} seo={homeSeo} preloadImageUrl={heroProps?.slideImage ?? null}>
+<Layout title={layoutData.siteName ? `${layoutData.siteName} - Umbraco India User Group` : 'UIUG - Umbraco India User Group'} seo={homeSeo} preloadImageUrl={heroProps?.slideImage ? (heroProps.slideImage.includes('/media/') ? appendImageCrop(heroProps.slideImage, 622, 415) : heroProps.slideImage) : null}>
   <AppShell 
     client:only="react"
     logo={layoutData.logo}
