@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ArrowLeft, Search, Terminal, Layers, Cpu, ArrowUpRight } from 'lucide-react';
 import type { Project } from '../../data/projects';
-import { appendImageCrop } from '../../api/umbraco';
+import { appendImageCrop } from '../../api/umbraco-utils';
 
 interface FullShowcaseListPageProps {
   projects?: Project[];
@@ -36,7 +36,8 @@ const FullShowcaseListPage: React.FC<FullShowcaseListPageProps> = ({ projects = 
   }, [categoryOptions, filter]);
 
   const filteredProjects = projects.filter((p) => {
-    const matchesFilter = filter === 'ALL' || p.category === filter;
+    const cat = String(p.category ?? '').trim().toUpperCase();
+    const matchesFilter = filter === 'ALL' || cat === String(filter).trim().toUpperCase();
     const matchesSearch =
       p.title.toLowerCase().includes(search.toLowerCase()) ||
       p.client.toLowerCase().includes(search.toLowerCase()) ||
@@ -102,6 +103,7 @@ const FullShowcaseListPage: React.FC<FullShowcaseListPageProps> = ({ projects = 
           <div className="flex flex-wrap gap-3">
           {categoryOptions.map((cat) => (
             <button
+              type="button"
               key={cat}
               onClick={() => setFilter(cat)}
               className={`px-6 py-2 border-2 border-black dark:border-white font-display uppercase text-sm md:text-lg transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-y-1 hover:shadow-none ${

@@ -65,28 +65,25 @@ const ogImage = seo?.ogImage != null && seo.ogImage !== '' ? absoluteUrl(seo.ogI
       <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans+Text&display=swap" />
     </noscript>
     <script is:inline>
-      // Apply theme and palette immediately before React hydrates to prevent flash
-      (function() {
+      // Apply theme and palette. Re-run on astro:page-load so client navigation (view transitions) keeps theme/palette.
+      function applyThemeAndPalette() {
         const root = document.documentElement;
-        
-        // Apply theme
-        const savedTheme = localStorage.getItem('theme');
-        const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+        var savedTheme = localStorage.getItem('theme');
+        var isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
         if (isDark) {
           root.classList.add('dark');
         } else {
           root.classList.remove('dark');
         }
-        
-        // Apply palette colors
-        const savedPaletteId = localStorage.getItem('paletteId') || 'default';
-        const savedCustomColors = localStorage.getItem('customColors');
-        
-        let colors;
+
+        var savedPaletteId = localStorage.getItem('paletteId') || 'default';
+        var savedCustomColors = localStorage.getItem('customColors');
+        var colors;
         if (savedPaletteId === 'custom' && savedCustomColors) {
-          colors = JSON.parse(savedCustomColors);
+          try { colors = JSON.parse(savedCustomColors); } catch (e) { colors = null; }
         } else {
-          const presets = {
+          var presets = {
             default: { primary: '#FF0000', accent: '#FFFF00' },
             cyber: { primary: '#00FF41', accent: '#FF00FF' },
             ocean: { primary: '#0044FF', accent: '#00FFFF' },
@@ -94,12 +91,13 @@ const ogImage = seo?.ogImage != null && seo.ogImage !== '' ? absoluteUrl(seo.ogI
           };
           colors = presets[savedPaletteId] || presets.default;
         }
-        
         if (colors) {
           root.style.setProperty('--color-primary', colors.primary);
           root.style.setProperty('--color-accent', colors.accent);
         }
-      })();
+      }
+      applyThemeAndPalette();
+      document.addEventListener('astro:page-load', applyThemeAndPalette);
     </script>
   </head>
   <body>

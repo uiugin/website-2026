@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Database, Cpu, ExternalLink, Code, Layout, Zap } from 'lucide-react';
 import { SiGithub } from './SocialIcons';
 import type { Project } from '../../data/projects';
-import { appendImageCrop } from '../../api/umbraco';
+import { appendImageCrop } from '../../api/umbraco-utils';
 
 interface ProjectDetailPageProps {
   project: Project;

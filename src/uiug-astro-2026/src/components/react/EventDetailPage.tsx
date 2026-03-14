@@ -19,7 +19,7 @@ import {
   Link2,
 } from 'lucide-react';
 import type { Event } from '../../types/content';
-import { appendImageCrop } from '../../api/umbraco';
+import { appendImageCrop } from '../../api/umbraco-utils';
 
 /** Brand icon components for share menu */
 const IconLinkedIn = ({ className }: { className?: string }) => (

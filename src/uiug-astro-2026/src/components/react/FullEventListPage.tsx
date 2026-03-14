@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ArrowLeft, Search, Terminal, Calendar, User, Tag, ArrowUpRight, Radio, Clock, MapPin, Users } from 'lucide-react';
 import type { Event } from '../../types/content';
-import { appendImageCrop } from '../../api/umbraco';
+import { appendImageCrop } from '../../api/umbraco-utils';
 
 interface FullEventListPageProps {
   events?: Event[];
@@ -36,7 +36,8 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
   }, [statusOptions, filter]);
 
   const filteredEvents = events.filter((e) => {
-    const matchesFilter = filter === 'ALL' || e.status === filter;
+    const status = String(e.status ?? '').trim().toUpperCase();
+    const matchesFilter = filter === 'ALL' || status === String(filter).trim().toUpperCase();
     const speakerNames = e.speakers?.map((s) => s.name).join(' ') ?? '';
     const matchesSearch =
       e.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -115,6 +116,7 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
           <div className="flex flex-wrap gap-3">
           {statusOptions.map((cat) => (
             <button
+              type="button"
               key={cat}
               onClick={() => setFilter(cat)}
               className={`px-6 py-2 border-2 border-black dark:border-white font-display uppercase text-sm md:text-lg transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] hover:translate-y-1 hover:shadow-none ${

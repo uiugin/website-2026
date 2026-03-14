@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Terminal } from 'lucide-react';
 // Connect/collaborate sections commented out: Mail, Globe, SiGithub, SiX, LinkedInIcon
 import type { Speaker } from '../../data/speakers';
-import { appendImageCrop } from '../../api/umbraco';
+import { appendImageCrop } from '../../api/umbraco-utils';
 
 interface SpeakerDetailPageProps {
   speaker: Speaker;
