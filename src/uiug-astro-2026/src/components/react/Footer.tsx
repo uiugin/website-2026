@@ -28,6 +28,8 @@ function brutalize(text: string): string {
 }
 
 const GIPHY_URL = 'https://media.giphy.com/media/oEI9uBYSzLpBK/giphy.gif';
+// Email built in JS so Cloudflare Email Protection doesn't obfuscate
+const CONTACT_EMAIL = 'admin' + '@' + 'uiug.in';
 
 const Footer: React.FC<FooterProps> = ({ footer, social }) => {
    const [subscribeEmail, setSubscribeEmail] = useState('');
@@ -240,8 +242,16 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                   <div className="grid grid-cols-2 gap-4">
                      {socialEntries.map(({ key, url, Icon }) => {
                         const label = key === 'youtube' ? 'YouTube' : key === 'meetup' ? 'Meetup' : key === 'twitter' ? 'X (Twitter)' : key === 'mail' ? 'Email' : key.charAt(0).toUpperCase() + key.slice(1);
+                        const linkClass = 'aspect-square bg-gray-900 border-2 border-gray-700 flex items-center justify-center hover:bg-primary hover:text-black hover:border-primary transition-all duration-300 group shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1';
+                        if (key === 'mail') {
+                           return (
+                              <button key={key} type="button" onClick={() => { window.location.href = 'mailto:' + CONTACT_EMAIL; }} aria-label={label} className={linkClass}>
+                                 <Icon className="w-8 h-8 group-hover:scale-110 transition-transform" />
+                              </button>
+                           );
+                        }
                         return (
-                           <a key={key} href={url} target="_blank" rel="noopener noreferrer" aria-label={label} className="aspect-square bg-gray-900 border-2 border-gray-700 flex items-center justify-center hover:bg-primary hover:text-black hover:border-primary transition-all duration-300 group shadow-[4px_4px_0px_0px_rgba(255,255,255,0.1)] hover:shadow-none hover:translate-x-1 hover:translate-y-1">
+                           <a key={key} href={url} target="_blank" rel="noopener noreferrer" aria-label={label} className={linkClass}>
                               <Icon className="w-8 h-8 group-hover:scale-110 transition-transform" />
                            </a>
                         );

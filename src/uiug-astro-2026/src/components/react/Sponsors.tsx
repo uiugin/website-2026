@@ -7,6 +7,9 @@ interface Props {
   sponsors?: SponsorsProps;
 }
 
+// Email built in JS so Cloudflare Email Protection doesn't obfuscate the link
+const SPONSOR_EMAIL = 'admin' + '@' + 'uiug.in';
+
 const Sponsors: React.FC<Props> = ({ sponsors }) => {
   // Use dynamic data from props
   const title = sponsors?.title || 'SYSTEM_ALLIANCES';
@@ -16,6 +19,10 @@ const Sponsors: React.FC<Props> = ({ sponsors }) => {
   const ctaTitle = sponsors?.ctaTitle || 'SUPPORT_THE_CORE';
   const ctaText = sponsors?.ctaText || 'Join the alliance. Power the community events and server costs.';
   const ctaButtonUrl = sponsors?.ctaButtonUrl;
+
+  const openSponsorEmail = () => {
+    window.location.href = 'mailto:' + SPONSOR_EMAIL;
+  };
 
   return (
     <section className="px-4 md:px-10 mb-20 w-full relative z-10" id="sponsors">
@@ -160,9 +167,9 @@ const Sponsors: React.FC<Props> = ({ sponsors }) => {
                         </p>
                     </div>
                   
-                      <a href="mailto:admin@uiug.in" target="_blank" rel="noopener noreferrer" className="w-full px-6 py-4 border-4 border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold uppercase hover:bg-primary hover:text-black dark:hover:bg-primary dark:hover:text-black transition-all flex items-center justify-between">
+                      <button type="button" onClick={openSponsorEmail} className="w-full px-6 py-4 border-4 border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold uppercase hover:bg-primary hover:text-black dark:hover:bg-primary dark:hover:text-black transition-all flex items-center justify-between">
                         BECOME_A_SPONSOR <ArrowRight className="w-5 h-5" />
-                      </a>
+                      </button>
                     
                 </div>
             </Reveal>
