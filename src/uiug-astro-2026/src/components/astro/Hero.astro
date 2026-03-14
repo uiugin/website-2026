@@ -93,14 +93,14 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
               </p>
               <div class="flex flex-col sm:flex-row gap-4">
                 {buttons.length > 0 && buttons[0] ? (
-                  <a href={buttons[0].url || '#'} class="inline-block">
+                  <a href={buttons[0].url || '#'} target="_blank" rel="noopener noreferrer" class="inline-block">
                     <Button icon={Zap} variant={buttons[0].variant || 'primary'} client:load>{buttons[0].text || 'Button'}</Button>
                   </a>
                 ) : (
                   <Button icon={Zap} client:load>Initiate Sequence</Button>
                 )}
                 {buttons.length > 1 && buttons[1] ? (
-                  <a href={buttons[1].url || '#'} class="inline-block">
+                  <a href={buttons[1].url || '#'} target="_blank" rel="noopener noreferrer" class="inline-block">
                     <Button variant={buttons[1].variant || 'outline'} client:load>{buttons[1].text || 'Button'}</Button>
                   </a>
                 ) : buttons.length === 0 ? (

@@ -159,15 +159,11 @@ const Sponsors: React.FC<Props> = ({ sponsors }) => {
                             {ctaText}
                         </p>
                     </div>
-                    {ctaButtonUrl && ctaButtonUrl !== '#' ? (
-                      <a href={ctaButtonUrl} className="w-full px-6 py-4 border-4 border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold uppercase hover:bg-primary hover:text-black dark:hover:bg-primary dark:hover:text-black transition-all flex items-center justify-between">
+                  
+                      <a href="mailto:admin@uiug.in" target="_blank" rel="noopener noreferrer" className="w-full px-6 py-4 border-4 border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold uppercase hover:bg-primary hover:text-black dark:hover:bg-primary dark:hover:text-black transition-all flex items-center justify-between">
                         BECOME_A_SPONSOR <ArrowRight className="w-5 h-5" />
                       </a>
-                    ) : (
-                      <button className="w-full px-6 py-4 border-4 border-black dark:border-white bg-black text-white dark:bg-white dark:text-black font-bold uppercase hover:bg-primary hover:text-black dark:hover:bg-primary dark:hover:text-black transition-all flex items-center justify-between">
-                        BECOME_A_SPONSOR <ArrowRight className="w-5 h-5" />
-                      </button>
-                    )}
+                    
                 </div>
             </Reveal>
         </div>
