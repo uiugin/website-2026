@@ -204,7 +204,7 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                   {/* Decorative Corner */}
                   <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary border-2 border-white z-20"></div>
 
-                  <div className="bg-gray-900 p-6 h-full backdrop-blur-sm relative overflow-hidden">
+                  <div className="bg-gray-900 p-6 h-full backdrop-blur-sm relative overflow-hidden pb-20 md:pb-6">
                      <div className="flex items-center gap-2 mb-6 text-primary border-b-2 border-dashed border-gray-600 pb-2">
                         <Terminal className="w-5 h-5" aria-hidden="true" />
                         <span className="font-mono font-bold text-white">DIRECTORY_LISTING</span>
