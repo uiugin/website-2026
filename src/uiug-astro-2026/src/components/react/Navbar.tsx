@@ -124,7 +124,7 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {/* Carbon badge - left of nav links, centered like nav links */}
         <div className="hidden md:flex items-center justify-center border-r-4 border-black dark:border-white px-3 shrink-0 min-w-[260px]">
-          <CarbonBadge dark={isDark} variant="header" />
+          <CarbonBadge dark={isDark} />
         </div>
           {displayNavItems.map((item, i) => (
             <a
@@ -377,7 +377,7 @@ const Navbar: React.FC<NavbarProps> = ({
             {brutalize(displayCta.title)}
           </a>
           <div className="flex items-center justify-center p-4 border-t-4 border-black dark:border-white min-h-[72px] mt-auto">
-            <CarbonBadge dark={isDark} variant="header" />
+            <CarbonBadge dark={isDark} />
           </div>
           </div>
         </div>

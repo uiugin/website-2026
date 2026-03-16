@@ -8,8 +8,6 @@ const DEFAULT_PERCENTAGE = '93';
 interface CarbonBadgeProps {
   /** Use dark theme (for dark backgrounds) */
   dark?: boolean;
-  /** 'header' = primary badge; 'footer' = second instance (e.g. for footer) */
-  variant?: 'header' | 'footer';
   /** Override CO2 (g per view); default from last websitecarbon.com test */
   co2?: string;
   /** Override percentage (cleaner than X%); default from last websitecarbon.com test */
@@ -22,7 +20,6 @@ interface CarbonBadgeProps {
  */
 const CarbonBadge: React.FC<CarbonBadgeProps> = ({
   dark = true,
-  variant = 'header',
   co2 = DEFAULT_CO2,
   percentage = DEFAULT_PERCENTAGE,
 }) => (
@@ -30,7 +27,7 @@ const CarbonBadge: React.FC<CarbonBadgeProps> = ({
     className="flex items-center justify-center origin-center scale-70"
     aria-label="Website carbon emissions badge"
   >
-    <WebsiteCarbonBadge dark={dark} url="" co2={co2} percentage={percentage} />
+    <WebsiteCarbonBadge dark={dark} url="uiug.in" co2={co2} percentage={percentage} />
   </div>
 );
 
