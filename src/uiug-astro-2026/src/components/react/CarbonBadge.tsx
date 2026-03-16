@@ -27,7 +27,7 @@ const CarbonBadge: React.FC<CarbonBadgeProps> = ({
   percentage = DEFAULT_PERCENTAGE,
 }) => (
   <div
-    className="flex items-center justify-center"
+    className="flex items-center justify-center origin-center scale-70"
     aria-label="Website carbon emissions badge"
   >
     <WebsiteCarbonBadge dark={dark} url="" co2={co2} percentage={percentage} />
