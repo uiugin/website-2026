@@ -1,68 +1,37 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
+import { WebsiteCarbonBadge } from 'react-websitecarbon-badge';
 
-const SCRIPT_URL = 'https://unpkg.com/website-carbon-badges@1.1.3/b.min.js';
+/** From websitecarbon.com result (16 Mar 2026) – A+ rating, avoids API fetch */
+const DEFAULT_CO2 = '0.04';
+const DEFAULT_PERCENTAGE = '93';
 
 interface CarbonBadgeProps {
   /** Use dark theme (for dark backgrounds) */
   dark?: boolean;
-  /** 'header' = primary badge (id wcb); 'footer' = clone of primary for second placement */
+  /** 'header' = primary badge; 'footer' = second instance (e.g. for footer) */
   variant?: 'header' | 'footer';
+  /** Override CO2 (g per view); default from last websitecarbon.com test */
+  co2?: string;
+  /** Override percentage (cleaner than X%); default from last websitecarbon.com test */
+  percentage?: string;
 }
 
 /**
- * Website Carbon badge – shows CO2 impact. Script inits #wcb only; footer variant copies content from #wcb.
+ * Website Carbon badge – shows CO2 impact (A+ for uiug.in). Uses static values from
+ * websitecarbon.com so the badge works without calling the API.
  */
-const CarbonBadge: React.FC<CarbonBadgeProps> = ({ dark = true, variant = 'header' }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isHeader = variant === 'header';
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const initScript = () => {
-      if (document.querySelector(`script[src="${SCRIPT_URL}"]`)) return;
-      const script = document.createElement('script');
-      script.src = SCRIPT_URL;
-      script.defer = true;
-      document.body.appendChild(script);
-    };
-
-    if (isHeader) {
-      initScript();
-      return;
-    }
-
-    // Footer: wait for #wcb to be filled by the badge script, then copy to our container
-    const copyFromPrimary = () => {
-      const primary = document.getElementById('wcb');
-      if (!primary?.innerHTML || !containerRef.current) return;
-      containerRef.current.innerHTML = primary.innerHTML;
-    };
-
-    initScript();
-    const t = setInterval(() => {
-      const primary = document.getElementById('wcb');
-      if (primary?.innerHTML?.trim()) {
-        copyFromPrimary();
-        clearInterval(t);
-      }
-    }, 200);
-    const done = setTimeout(() => clearInterval(t), 10000);
-    return () => {
-      clearInterval(t);
-      clearTimeout(done);
-    };
-  }, [isHeader]);
-
-  const className = `carbonbadge ${dark ? 'wcb-d' : ''}`.trim();
-  return (
-    <div
-      ref={containerRef}
-      id={isHeader ? 'wcb' : 'wcb-f'}
-      className={`flex items-center justify-center ${className}`}
-      aria-label="Website carbon emissions badge"
-    />
-  );
-};
+const CarbonBadge: React.FC<CarbonBadgeProps> = ({
+  dark = true,
+  variant = 'header',
+  co2 = DEFAULT_CO2,
+  percentage = DEFAULT_PERCENTAGE,
+}) => (
+  <div
+    className="flex items-center justify-center"
+    aria-label="Website carbon emissions badge"
+  >
+    <WebsiteCarbonBadge dark={dark} url="" co2={co2} percentage={percentage} />
+  </div>
+);
 
 export default CarbonBadge;
