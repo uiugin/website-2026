@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight, ScanLine, Users } from 'lucide-react';
 // Socials on slider cards commented out: Globe, SiX, LinkedInIcon
 import type { SpeakersProps as MappedSpeakersProps } from '../../lib/speakers-mapper';
 import { useAppShell } from './AppShell';
-import { appendImageCrop } from '../../api/umbraco';
+import { appendImageCrop } from '../../api/umbraco-utils';
 
 interface SpeakersProps {
   speakers?: MappedSpeakersProps;

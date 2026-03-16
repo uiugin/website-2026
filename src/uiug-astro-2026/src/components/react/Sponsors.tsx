@@ -52,8 +52,8 @@ const Sponsors: React.FC<Props> = ({ sponsors }) => {
               </div>
               
               <div className="bg-accent-yellow border-4 border-black dark:border-white p-8 md:p-16 shadow-brutal-black dark:shadow-brutal-white relative overflow-hidden group">
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                {/* Background pattern (CSS only – no external image to avoid cert/blocking issues) */}
+                <div className="absolute inset-0 lego-studs opacity-10 pointer-events-none" aria-hidden />
                 
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                   <div className="flex flex-col items-center md:items-start text-center md:text-left">
@@ -63,7 +63,7 @@ const Sponsors: React.FC<Props> = ({ sponsors }) => {
                     </div>
                     <h3 className="text-5xl md:text-7xl font-display font-black text-black uppercase tracking-tighter leading-none mb-2">
                       {sponsor.companyName.toUpperCase()}
-                    </h3>
+                    </h3>{' '}
                     <p className="font-mono font-bold text-black max-w-md border-l-4 border-black dark:border-white pl-4">
                       {sponsor.description}
                     </p>

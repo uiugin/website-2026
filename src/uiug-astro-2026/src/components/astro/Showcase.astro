@@ -2,7 +2,7 @@
 import { Reveal, Slide } from '../react/Reveal';
 import { Layers, Cpu, ArrowUpRight, Database } from 'lucide-react';
 import type { ShowcaseProps } from '../../lib/showcase-mapper';
-import { appendImageCrop } from '../../api/umbraco';
+import { appendImageCrop } from '../../api/umbraco-utils';
 
 interface Props {
   showcase?: ShowcaseProps;
@@ -141,7 +141,7 @@ const moreButtonUrl = showcase?.moreButtonUrl;
   {/* Submission CTA */}
   <Reveal width="100%" delay={0.2} client:visible>
     <div class="mt-12 bg-primary border-4 border-black dark:border-white p-8 md:p-12 text-center shadow-brutal-black dark:shadow-brutal-white relative overflow-hidden group cursor-pointer">
-        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-20"></div>
+        <div class="absolute inset-0 lego-studs opacity-20" aria-hidden></div>
         <div class="relative z-10 flex flex-col items-center">
             <Database className="w-12 h-12 mb-4 text-black animate-bounce" />
             <h3 class="text-xl sm:text-2xl md:text-5xl font-display font-black uppercase text-black mb-4">
