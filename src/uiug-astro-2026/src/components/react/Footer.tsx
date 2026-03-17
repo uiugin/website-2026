@@ -297,12 +297,12 @@ const Footer: React.FC<FooterProps> = ({ footer, social }) => {
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" aria-hidden="true"></div>
                   <span>ID: UIUG_NODE_01</span>
                   <span className="mx-2 text-gray-500" aria-hidden="true">|</span>
-                  <span>LOC: IN_KA_BLR</span>
+                  <span>LOC: INDIA_REGION</span>
                </div>
-               <div className="flex gap-6">
+                {/*<div className="flex gap-6">
                   <a href="#" className="text-gray-400 hover:text-white hover:underline decoration-primary decoration-2 underline-offset-4">Privacy_Policy</a>
                   <a href="#" className="text-gray-400 hover:text-white hover:underline decoration-primary decoration-2 underline-offset-4">Code_of_Conduct</a>
-               </div>
+               </div>*/}
                <div className="text-gray-400">
                   {copyright}
                </div>
