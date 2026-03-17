@@ -164,7 +164,7 @@ const Speakers: React.FC<SpeakersProps> = ({ speakers: speakersData, onOpenFullL
             {speakers.map((speaker) => (
                 <div 
                     key={speaker.id} 
-                    className="min-w-[300px] md:min-w-[350px] snap-start bg-white dark:bg-black border-4 border-black dark:border-white p-4 shadow-brutal-black dark:shadow-brutal-white hover:-translate-y-2 hover:shadow-brutal-yellow transition-all duration-300 group relative overflow-hidden plastic-surface"
+                    className="min-w-[300px] md:min-w-[350px] snap-start bg-white dark:bg-black border-4 border-black dark:border-white p-4 shadow-brutal-black dark:shadow-brutal-white group relative overflow-hidden plastic-surface"
                 >
                     {/* Inner Content - Lifted */}
                     <div className="bg-white dark:bg-black border-2 border-black dark:border-white p-4 relative z-10">
