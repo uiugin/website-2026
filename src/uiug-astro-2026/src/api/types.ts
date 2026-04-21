@@ -417,6 +417,12 @@ export interface components {
             dateAndTime?: string | null;
             status?: string | null;
             colors?: string | null;
+            /** External registration URL (SECURE_YOUR_SPOT CTA when status is INCOMING) */
+            url?: string | null;
+            /** Extra resource URL (INTEL_RESOURCES) */
+            link?: string | null;
+            youtubeLink?: string | null;
+            gitLink?: string | null;
         } & (components["schemas"]["COm_SeoPropertiesModel"] & components["schemas"]["COm_settingsPropertiesModel"] & components["schemas"]["XmlSiteMapSettingsPropertiesModel"]);
         EventsContentModel: {
             properties?: components["schemas"]["EventsPropertiesModel"];

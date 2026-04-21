@@ -593,28 +593,48 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
                 </div>
               </div>
 
-              <div className="bg-gray-100 dark:bg-gray-900 p-8 border-4 border-black dark:border-white">
-                <h4 className="font-display text-2xl uppercase mb-6">INTEL_RESOURCES</h4>
-                <div className="space-y-4">
-                  <button type="button" className="w-full flex items-center justify-between p-4 bg-white dark:bg-black border-2 border-black dark:border-white font-mono font-bold text-sm uppercase hover:bg-primary hover:text-black transition-colors">
-                    <span className="flex items-center gap-3">
-                      <PlayCircle className="w-5 h-5 shrink-0" /> WATCH_RECORDING
-                    </span>
-                    <ArrowUpRight className="w-4 h-4 shrink-0" />
-                  </button>
-                  <button type="button" className="w-full flex items-center justify-between p-4 bg-white dark:bg-black border-2 border-black dark:border-white font-mono font-bold text-sm uppercase hover:bg-primary hover:text-black transition-colors">
-                    <span className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 shrink-0" /> DOWNLOAD_SLIDES
-                    </span>
-                    <ArrowUpRight className="w-4 h-4 shrink-0" />
-                  </button>
+              {(event.youtubeLink || event.gitLink) && (
+                <div className="bg-gray-100 dark:bg-gray-900 p-8 border-4 border-black dark:border-white">
+                  <h4 className="font-display text-2xl uppercase mb-6">INTEL_RESOURCES</h4>
+                  <div className="space-y-4">
+                    {event.youtubeLink && (
+                      <a
+                        href={event.youtubeLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center justify-between gap-3 p-4 bg-white dark:bg-black border-2 border-black dark:border-white font-mono font-bold text-sm uppercase hover:bg-primary hover:text-black transition-colors min-w-0"
+                      >
+                        <span className="flex items-center gap-3 min-w-0">
+                          <PlayCircle className="w-5 h-5 shrink-0" />
+                          <span className="text-left break-words">WATCH_RECORDING</span>
+                        </span>
+                        <ArrowUpRight className="w-4 h-4 shrink-0" />
+                      </a>
+                    )}
+                    {event.gitLink && (
+                      <a
+                        href={event.gitLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full flex items-center justify-between gap-3 p-4 bg-white dark:bg-black border-2 border-black dark:border-white font-mono font-bold text-sm uppercase hover:bg-primary hover:text-black transition-colors min-w-0"
+                      >
+                        <span className="flex items-center gap-3 min-w-0">
+                          <FileText className="w-5 h-5 shrink-0" />
+                          <span className="text-left break-words">GITHUB_REPO</span>
+                        </span>
+                        <ArrowUpRight className="w-4 h-4 shrink-0" />
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              {event.status === 'INCOMING' && (
+              {event.status === 'INCOMING' && event.link && (
                 <a
-                  href={event.url ?? '#'}
-                  className="block w-full bg-primary text-black p-8 font-display text-3xl uppercase border-4 border-black shadow-brutal-black hover:translate-y-1 hover:shadow-none transition-all text-center"
+                  href={event.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full min-w-0 max-w-full bg-primary text-black px-4 py-6 md:p-8 font-display text-xl sm:text-2xl md:text-3xl uppercase border-4 border-black shadow-brutal-black hover:translate-y-1 hover:shadow-none transition-all text-center break-words leading-tight [overflow-wrap:anywhere]"
                 >
                   SECURE_YOUR_SPOT
                 </a>

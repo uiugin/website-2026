@@ -48,7 +48,12 @@ export interface Event {
   briefSummary: string;
   fullSummary: string;
   location?: string | null;
+  /** External registration URL for the INCOMING CTA (Meetup, Zoom, etc.) */
   url?: string | null;
+  /** Optional extra resource URL shown under INTEL_RESOURCES */
+  link?: string | null;
+  youtubeLink?: string | null;
+  gitLink?: string | null;
   agenda?: { time: string; task: string }[];
   seo?: PageSeo | null;
 }

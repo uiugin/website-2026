@@ -212,6 +212,12 @@ export async function mapEventFromContent(
 
   const seo = mapSeoFromProps(props as Parameters<typeof mapSeoFromProps>[0]);
 
+  const str = (v: unknown): string | null => {
+    if (v == null) return null;
+    const s = String(v).trim();
+    return s === '' ? null : s;
+  };
+
   return {
     id: eventId,
     title: eventTitle.toUpperCase(),
@@ -225,7 +231,10 @@ export async function mapEventFromContent(
     status,
     briefSummary: eventDescription,
     fullSummary: fullSummary || eventDescription,
-    url: null,
+    url: str(propsAny.url),
+    link: str(propsAny.link),
+    youtubeLink: str(propsAny.youtubeLink),
+    gitLink: str(propsAny.gitLink),
     agenda: undefined,
     seo: seo ?? undefined,
   };
