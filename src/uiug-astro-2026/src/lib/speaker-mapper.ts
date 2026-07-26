@@ -149,6 +149,18 @@ export async function mapSpeakerFromContent(
 
   const seo = mapSeoFromProps(props as Parameters<typeof mapSeoFromProps>[0]);
 
+  // Optional CMS fields — Textbox; not yet in generated types
+  const rawGithub = propsAny.githubUrl;
+  const githubUrl =
+    typeof rawGithub === 'string' && rawGithub.trim() !== ''
+      ? rawGithub.trim()
+      : undefined;
+  const rawLinkedin = propsAny.linkedinUrl;
+  const linkedinUrl =
+    typeof rawLinkedin === 'string' && rawLinkedin.trim() !== ''
+      ? rawLinkedin.trim()
+      : undefined;
+
   const mappedSpeaker: Speaker = {
     id: speakerId,
     name: speakerName.toUpperCase(),
@@ -158,6 +170,8 @@ export async function mapSpeakerFromContent(
     category: category,
     topics: topics.length > 0 ? topics : [],
     bio: bio || '',
+    ...(githubUrl ? { githubUrl } : {}),
+    ...(linkedinUrl ? { linkedinUrl } : {}),
     seo: seo ?? undefined,
   };
 

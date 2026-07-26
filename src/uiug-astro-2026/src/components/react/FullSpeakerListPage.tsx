@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ArrowLeft, Search, Terminal, Award, User } from 'lucide-react';
-// Social icons on cards commented out: import { SiGithub, SiX, LinkedInIcon } from './SocialIcons';
+import { SiGithub, LinkedInIcon } from './SocialIcons';
 import type { Speaker } from '../../data/speakers';
 import { appendImageCrop } from '../../api/umbraco-utils';
 
@@ -205,13 +205,34 @@ const FullSpeakerListPage: React.FC<FullSpeakerListPageProps> = ({ speakers = []
                   </div>
 
                   <div className="flex justify-between items-center border-t-2 border-dashed border-gray-300 dark:border-gray-700 pt-4">
-                    {/* Social icons on cards (commented out for now)
-                    <div className="flex gap-3">
-                      <SiX className="w-5 h-5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
-                      <LinkedInIcon className="w-5 h-5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
-                      <SiGithub className="w-5 h-5 text-gray-400 hover:text-primary cursor-pointer transition-colors" />
-                    </div>
-                    */}
+                    {(speaker.githubUrl || speaker.linkedinUrl) && (
+                      <div className="flex gap-3">
+                        {speaker.githubUrl && (
+                          <a
+                            href={speaker.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${speaker.name} on GitHub`}
+                            className="text-gray-400 hover:text-primary transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <SiGithub className="w-5 h-5" />
+                          </a>
+                        )}
+                        {speaker.linkedinUrl && (
+                          <a
+                            href={speaker.linkedinUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${speaker.name} on LinkedIn`}
+                            className="text-gray-400 hover:text-primary transition-colors"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <LinkedInIcon className="w-5 h-5" />
+                          </a>
+                        )}
+                      </div>
+                    )}
                     <Award className="w-5 h-5 text-accent-yellow shrink-0 ml-auto" />
                   </div>
                 </div>

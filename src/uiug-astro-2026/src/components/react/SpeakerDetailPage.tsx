@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Terminal } from 'lucide-react';
-// Connect/collaborate sections commented out: Mail, Globe, SiGithub, SiX, LinkedInIcon
+import { SiGithub, LinkedInIcon } from './SocialIcons';
 import type { Speaker } from '../../data/speakers';
+import type { GithubActivity } from '../../lib/github-activity';
 import { appendImageCrop } from '../../api/umbraco-utils';
+import GithubActivitySection from './github-activity/GithubActivitySection';
 
 interface SpeakerDetailPageProps {
   speaker: Speaker;
+  githubActivity?: GithubActivity | null;
 }
 
-const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
+const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker, githubActivity = null }) => {
   const headerRef = useRef<HTMLElement>(null);
   const [headerHeight, setHeaderHeight] = useState(0);
 
@@ -21,6 +24,12 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
     readHeight();
     return () => ro.disconnect();
   }, []);
+
+  const hasActivity =
+    githubActivity != null &&
+    (githubActivity.repos.length > 0 ||
+      githubActivity.events.length > 0 ||
+      githubActivity.user != null);
 
   return (
     <div className="min-h-screen bg-white dark:bg-black">
@@ -52,7 +61,7 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
 
       <div className="max-w-7xl mx-auto p-4 md:p-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-16">
-          <div className="lg:col-span-5">
+          <div className="lg:col-span-5 lg:sticky lg:top-28 lg:self-start">
             <div className="group relative border-8 border-black dark:border-white p-2 bg-white dark:bg-black shadow-brutal-black dark:shadow-brutal-white mb-8">
               <div className="relative aspect-[4/5] overflow-hidden border-4 border-black dark:border-white bg-gray-200 dark:bg-gray-800 flex items-center justify-center">
                 {speaker.image ? (
@@ -76,38 +85,35 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
               </div>
             </div>
 
-            {/* Contribution count and session count (commented out)
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="bg-gray-100 dark:bg-gray-900 border-4 border-black dark:border-white p-4">
-                <span className="block text-[10px] font-mono font-bold text-gray-500 uppercase mb-1">CONTRIBUTIONS</span>
-                <span className="text-2xl font-display font-black text-black dark:text-white">150+</span>
+            {(speaker.githubUrl || speaker.linkedinUrl) && (
+              <div className="flex flex-col gap-4">
+                <h4 className="font-display text-lg uppercase text-black dark:text-white border-b-2 border-black dark:border-white pb-2">
+                  CONNECT_CHANNELS
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {speaker.githubUrl && (
+                    <a
+                      href={speaker.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3 bg-white dark:bg-black border-2 border-black dark:border-white hover:bg-primary hover:text-black transition-colors font-mono font-bold text-sm uppercase"
+                    >
+                      <SiGithub className="w-5 h-5 shrink-0" /> REPO_ACCESS
+                    </a>
+                  )}
+                  {speaker.linkedinUrl && (
+                    <a
+                      href={speaker.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-3 p-3 bg-white dark:bg-black border-2 border-black dark:border-white hover:bg-primary hover:text-black transition-colors font-mono font-bold text-sm uppercase"
+                    >
+                      <LinkedInIcon className="w-5 h-5 shrink-0" /> LINKEDIN_NET
+                    </a>
+                  )}
+                </div>
               </div>
-              <div className="bg-gray-100 dark:bg-gray-900 border-4 border-black dark:border-white p-4">
-                <span className="block text-[10px] font-mono font-bold text-gray-500 uppercase mb-1">SESSIONS</span>
-                <span className="text-2xl font-display font-black text-black dark:text-white">24</span>
-              </div>
-            </div>
-            */}
-
-            {/* Connect channels section (commented out)
-            <div className="flex flex-col gap-4">
-              <h4 className="font-display text-lg uppercase text-black dark:text-white border-b-2 border-black dark:border-white pb-2">CONNECT_CHANNELS</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <a href="#" className="flex items-center gap-3 p-3 bg-white dark:bg-black border-2 border-black dark:border-white hover:bg-primary hover:text-black transition-colors font-mono font-bold text-sm uppercase">
-                  <SiX className="w-5 h-5 shrink-0" /> TWITTER_FEED
-                </a>
-                <a href="#" className="flex items-center gap-3 p-3 bg-white dark:bg-black border-2 border-black dark:border-white hover:bg-primary hover:text-black transition-colors font-mono font-bold text-sm uppercase">
-                  <LinkedInIcon className="w-5 h-5 shrink-0" /> LINKEDIN_NET
-                </a>
-                <a href="#" className="flex items-center gap-3 p-3 bg-white dark:bg-black border-2 border-black dark:border-white hover:bg-primary hover:text-black transition-colors font-mono font-bold text-sm uppercase">
-                  <SiGithub className="w-5 h-5 shrink-0" /> REPO_ACCESS
-                </a>
-                <a href="#" className="flex items-center gap-3 p-3 bg-white dark:bg-black border-2 border-black dark:border-white hover:bg-primary hover:text-black transition-colors font-mono font-bold text-sm uppercase">
-                  <Globe className="w-5 h-5 shrink-0" /> WEB_PORTAL
-                </a>
-              </div>
-            </div>
-            */}
+            )}
           </div>
 
           <div className="lg:col-span-7">
@@ -137,57 +143,15 @@ const SpeakerDetailPage: React.FC<SpeakerDetailPageProps> = ({ speaker }) => {
                   {speaker.bio}
                 </p>
               </section>
-
-              {/* CORE_EXPERTISE section (commented out)
-              <section>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="h-1 flex-grow bg-black dark:bg-white" />
-                  <h3 className="font-display text-2xl uppercase text-black dark:text-white shrink-0">CORE_EXPERTISE</h3>
-                  <div className="h-1 w-12 bg-primary" />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {(speaker.topics && speaker.topics.length > 0 ? speaker.topics : ['.NET 8', 'HEADLESS']).map((topic, idx) => (
-                    <div
-                      key={topic}
-                      className="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-900 border-2 border-black dark:border-white group hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
-                    >
-                      <div className="bg-primary text-black w-8 h-8 flex items-center justify-center font-display text-lg shrink-0">
-                        0{idx + 1}
-                      </div>
-                      <div>
-                        <h4 className="font-display text-lg uppercase mb-1">{topic}</h4>
-                        <p className="font-mono text-xs opacity-70">
-                          Advanced implementation and architectural patterns for {topic} within the Umbraco ecosystem.
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-              */}
-
-              {/* Want to collaborate section (commented out)
-              <section className="bg-primary border-4 border-black p-8 shadow-brutal-black">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div className="flex items-center gap-4">
-                    <Mail className="w-12 h-12 text-black shrink-0" />
-                    <div>
-                      <h3 className="font-display text-2xl uppercase text-black leading-none mb-1">WANT_TO_COLLABORATE?</h3>
-                      <p className="font-mono text-sm font-bold text-black/70 uppercase">SEND_ENCRYPTED_MESSAGE_TO_NODE</p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    className="bg-black text-white px-8 py-4 font-display text-xl uppercase border-2 border-transparent hover:bg-white hover:text-black hover:border-black transition-colors shadow-[4px_4px_0px_0px_rgba(255,255,255,0.5)]"
-                  >
-                    INITIATE_CONTACT
-                  </button>
-                </div>
-              </section>
-              */}
             </div>
           </div>
         </div>
+
+        {hasActivity && githubActivity && (
+          <div className="mt-16 md:mt-20 pt-4">
+            <GithubActivitySection activity={githubActivity} />
+          </div>
+        )}
       </div>
     </div>
   );

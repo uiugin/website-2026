@@ -9,6 +9,10 @@ export interface Speaker {
   category: 'MVP' | 'HQ' | 'AGENCY' | 'COMMUNITY';
   topics: string[];
   bio: string;
+  /** Optional GitHub profile URL from CMS (alias: githubUrl). */
+  githubUrl?: string;
+  /** Optional LinkedIn profile URL from CMS (alias: linkedinUrl). */
+  linkedinUrl?: string;
   seo?: PageSeo | null;
 }
 

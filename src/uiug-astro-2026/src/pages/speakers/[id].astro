@@ -2,7 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import SpeakerDetailPage from '../../components/react/SpeakerDetailPage';
 import { getAllSpeakers, getSpeakerById } from '../../lib/speaker-mapper';
+import { fetchGithubActivity } from '../../lib/github-activity';
 import type { Speaker } from '../../data/speakers';
+import type { GithubActivity } from '../../lib/github-activity';
 
 export async function getStaticPaths() {
   const speakers = await getAllSpeakers();
@@ -11,11 +13,16 @@ export async function getStaticPaths() {
 
 const { id } = Astro.params;
 const speaker: Speaker | null | undefined = id ? await getSpeakerById(id) : undefined;
+
+let githubActivity: GithubActivity | null = null;
+if (speaker?.githubUrl) {
+  githubActivity = await fetchGithubActivity(speaker.githubUrl);
+}
 ---
 
 {speaker ? (
   <Layout title={`${speaker.name} | Speakers | UIUG`} seo={speaker.seo}>
-    <SpeakerDetailPage speaker={speaker} client:visible />
+    <SpeakerDetailPage speaker={speaker} githubActivity={githubActivity} client:visible />
   </Layout>
 ) : (
   <Layout title="Not Found | UIUG">
