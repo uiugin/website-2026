@@ -17,6 +17,7 @@ import JoinUs from '../components/react/JoinUs';
 import Footer from '../components/react/Footer';
 import Sponsors from '../components/react/Sponsors';
 import Festivals from '../components/react/Festivals';
+import Achievement from '../components/react/Achievement';
 import { getSiteSettings, getHomeContent, getMainContentBlocks, getHeroBlock } from '../api/umbraco';
 import { appendImageCrop } from '../api/umbraco-utils';
 import { getComponentIdentifier } from '../lib/component-order';
@@ -34,6 +35,7 @@ import { mapSponsorsProps } from '../lib/sponsors-mapper';
 import { mapGalleryProps } from '../lib/gallery-mapper';
 import { mapSeoFromProps } from '../lib/seo-from-props';
 import { mapFestivalsProps } from '../lib/festivals-mapper';
+import { mapAchievementPropsWithContributors } from '../lib/achievement-mapper';
 import type { components } from '../api/types';
 import type { PageSeo } from '../types/seo';
 import { getAllSpeakers } from '../lib/speaker-mapper';
@@ -55,6 +57,10 @@ const faqPropsMap = new Map<number, Awaited<ReturnType<typeof mapFAQProps>>>();
 const sponsorsPropsMap = new Map<number, Awaited<ReturnType<typeof mapSponsorsProps>>>();
 const galleryPropsMap = new Map<number, Awaited<ReturnType<typeof mapGalleryProps>>>();
 const festivalsPropsMap = new Map<number, ReturnType<typeof mapFestivalsProps>>();
+const achievementPropsMap = new Map<
+  number,
+  NonNullable<Awaited<ReturnType<typeof mapAchievementPropsWithContributors>>>
+>();
 try {
   const homeContent = await getHomeContent();
   blocks = getMainContentBlocks(homeContent);
@@ -134,6 +140,14 @@ try {
         return { index, type: 'festivals', props: mapFestivalsProps(null) };
       }
     }
+    if (componentId === 'achievement') {
+      try {
+        const props = await mapAchievementPropsWithContributors(block.content);
+        return props ? { index, type: 'achievement', props } : null;
+      } catch {
+        return null;
+      }
+    }
     return null;
   });
   
@@ -154,6 +168,8 @@ try {
         galleryPropsMap.set(result.index, result.props);
       } else if (result.type === 'festivals') {
         festivalsPropsMap.set(result.index, result.props);
+      } else if (result.type === 'achievement') {
+        achievementPropsMap.set(result.index, result.props);
       }
     }
   });
@@ -249,6 +265,11 @@ try {
       if (componentId === 'festivals') {
         const festivalsProps = festivalsPropsMap.get(index) ?? mapFestivalsProps(block.content);
         return <Festivals festivals={festivalsProps} client:only="react" />;
+      }
+      if (componentId === 'achievement') {
+        const achievementProps = achievementPropsMap.get(index);
+        if (!achievementProps) return null;
+        return <Achievement achievement={achievementProps} client:visible />;
       }
       
       return null;

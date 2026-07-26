@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, X, Sun, Moon, Palette, Check } from 'lucide-react';
+import { Menu, X, Sun, Moon, Palette, Check, Trophy } from 'lucide-react';
 import type { PaletteId, PaletteColors } from '../../lib/palette';
 import { PRESET_PALETTES } from '../../lib/palette';
 import type { LayoutLink } from '../../types/layout';
 import CarbonBadge from './CarbonBadge';
+
+const ACHIEVEMENT_HREF = '/#achievement';
 
 interface NavbarProps {
   isDark: boolean;
@@ -15,6 +17,8 @@ interface NavbarProps {
   logo?: string;
   navItems?: LayoutLink[];
   ctaItem?: LayoutLink | null;
+  /** Show trophy link to the awards achievement section */
+  showAchievement?: boolean;
 }
 
 /** Format a link title to brutalist style: uppercase with underscores */
@@ -32,6 +36,7 @@ const Navbar: React.FC<NavbarProps> = ({
   logo = 'UIUG',
   navItems = [],
   ctaItem,
+  showAchievement = true,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
@@ -138,6 +143,17 @@ const Navbar: React.FC<NavbarProps> = ({
             </a>
           ))}
 
+          {showAchievement && (
+            <a
+              href={ACHIEVEMENT_HREF}
+              className="px-5 lg:px-6 border-r-4 border-black dark:border-white flex items-center justify-center bg-accent-yellow text-black hover:bg-black hover:text-accent-yellow transition-colors"
+              aria-label="Umbraco Awards achievement — Best Designed Site runner-up"
+              title="ACHIEVEMENT"
+            >
+              <Trophy className="w-6 h-6" aria-hidden />
+            </a>
+          )}
+
           {/* Palette Toggle */}
           <div className="relative" ref={paletteRef}>
             <button
@@ -231,6 +247,17 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Controls */}
         <div className="flex md:hidden">
+          {showAchievement && (
+            <a
+              href={ACHIEVEMENT_HREF}
+              className="px-5 border-l-4 border-black dark:border-white flex items-center justify-center bg-accent-yellow text-black hover:bg-black hover:text-accent-yellow transition-colors"
+              aria-label="Umbraco Awards achievement — Best Designed Site runner-up"
+              title="ACHIEVEMENT"
+            >
+              <Trophy size={24} aria-hidden />
+            </a>
+          )}
+
           <button
             type="button"
             aria-label={isPaletteOpen ? 'Close color palette' : 'Open color palette'}
@@ -355,6 +382,16 @@ const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
           <div className="flex flex-col flex-1">
+          {showAchievement && (
+            <a
+              href={ACHIEVEMENT_HREF}
+              className="flex items-center gap-3 p-6 border-b-4 border-black dark:border-white font-display text-xl uppercase bg-accent-yellow text-black hover:bg-black hover:text-accent-yellow"
+              onClick={() => setIsOpen(false)}
+            >
+              <Trophy className="w-6 h-6 shrink-0" aria-hidden />
+              ACHIEVEMENT
+            </a>
+          )}
           {displayNavItems.map((item, i) => (
             <a
               key={`mobile-${item.url}-${i}`}

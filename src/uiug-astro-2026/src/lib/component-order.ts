@@ -19,6 +19,7 @@ export type ComponentIdentifier =
   | 'contact'
   | 'festivalBanner'
   | 'festivals'
+  | 'achievement'
   | null;
 
 /**
@@ -45,6 +46,7 @@ export function getComponentIdentifier(contentType: string | null | undefined): 
     contactUs: 'contact',
     festivalBanner: 'festivalBanner',
     festivals: 'festivals',
+    achievement: 'achievement',
   };
 
   return typeMap[contentType] || null;
