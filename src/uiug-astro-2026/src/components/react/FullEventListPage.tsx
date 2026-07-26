@@ -210,15 +210,22 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
                         <span>{event.attendees.length} JOINED</span>
 
                         {/* Hover Popover */}
-                        <div className="invisible group-hover/attendees:visible opacity-0 group-hover/attendees:opacity-100 absolute bottom-full right-0 mb-4 p-4 bg-white dark:bg-black border-4 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white z-50 min-w-[280px] transition-all duration-200 translate-y-2 group-hover/attendees:translate-y-0 pointer-events-none">
-                          <div className="text-[10px] mb-3 border-b-2 border-black dark:border-white pb-1 flex justify-between items-center">
+                        <div className="invisible group-hover/attendees:visible opacity-0 group-hover/attendees:opacity-100 absolute bottom-full right-0 mb-0 p-4 bg-white dark:bg-black border-4 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white z-50 min-w-[280px] max-w-[320px] transition-all duration-200 translate-y-2 group-hover/attendees:translate-y-0 pointer-events-auto before:content-[''] before:absolute before:left-0 before:right-0 before:top-full before:h-4">
+                          <div className="text-[10px] mb-3 border-b-2 border-black dark:border-white pb-1 flex justify-between items-center sticky top-0 bg-white dark:bg-black z-10">
                             <span>ATTENDEE_MANIFEST</span>
                             <span className="text-primary">{event.attendees.length} TOTAL</span>
                           </div>
-                          <div className="max-h-[240px] overflow-y-auto custom-scrollbar pr-1">
+                          <div
+                            className="max-h-[280px] overflow-y-auto overscroll-contain touch-pan-y custom-scrollbar pr-1"
+                            data-lenis-prevent
+                          >
                             <div className="grid grid-cols-6 gap-2">
                               {event.attendees.map((attendee) => (
-                                <div key={attendee.id} className="w-8 h-8 border-2 border-black dark:border-white overflow-hidden group/item relative bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                <div
+                                  key={attendee.id}
+                                  title={attendee.name}
+                                  className="w-8 h-8 border-2 border-black dark:border-white overflow-hidden group/item relative bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center"
+                                >
                                   {attendee.photoUrl ? (
                                     <img
                                       src={appendImageCrop(attendee.photoUrl, 32, 32)}
@@ -226,7 +233,7 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
                                       width={32}
                                       height={32}
                                       loading="lazy"
-                                      className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all"
+                                      className="w-full h-full object-cover grayscale group-hover/item:grayscale-0 transition-all"
                                       referrerPolicy="no-referrer"
                                     />
                                   ) : (
@@ -234,12 +241,12 @@ const FullEventListPage: React.FC<FullEventListPageProps> = ({ events = [] }) =>
                                       {attendee.name.charAt(0).toUpperCase()}
                                     </span>
                                   )}
-                                  <div className="absolute inset-0 bg-primary/0 hover:bg-primary/20 transition-colors" />
+                                  <div className="absolute inset-0 bg-primary/0 group-hover/item:bg-primary/20 transition-colors pointer-events-none" />
                                 </div>
                               ))}
                             </div>
                           </div>
-                          <div className="absolute -bottom-2 right-8 w-4 h-4 bg-white dark:bg-black border-r-4 border-b-4 border-black dark:border-white rotate-45" />
+                          <div className="absolute -bottom-2 right-8 w-4 h-4 bg-white dark:bg-black border-r-4 border-b-4 border-black dark:border-white rotate-45 pointer-events-none" />
                         </div>
                       </div>
                     )}

@@ -96,15 +96,18 @@ const sectionTitle = latestEvents?.title || 'EVENT_LOG';
                                 <span>{event.attendeesCount} JOINED</span>
 
                                 {/* Hover Popover - ATTENDEE_MANIFEST */}
-                                <div class="invisible group-hover/attendees:visible opacity-0 group-hover/attendees:opacity-100 absolute bottom-full right-0 mb-3 p-4 bg-white dark:bg-black border-4 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white z-50 min-w-[240px] transition-all duration-200 translate-y-2 group-hover/attendees:translate-y-0 pointer-events-none">
-                                    <div class="text-[10px] mb-3 border-b-2 border-black dark:border-white pb-1 flex justify-between items-center">
+                                <div class="invisible group-hover/attendees:visible opacity-0 group-hover/attendees:opacity-100 absolute bottom-full right-0 mb-0 p-4 bg-white dark:bg-black border-4 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white z-50 min-w-[240px] max-w-[280px] transition-all duration-200 translate-y-2 group-hover/attendees:translate-y-0 pointer-events-auto before:content-[''] before:absolute before:left-0 before:right-0 before:top-full before:h-4">
+                                    <div class="text-[10px] mb-3 border-b-2 border-black dark:border-white pb-1 flex justify-between items-center sticky top-0 bg-white dark:bg-black z-10">
                                         <span>ATTENDEE_MANIFEST</span>
                                         <span class="text-primary">{event.attendeesCount} TOTAL</span>
                                     </div>
-                                    <div class="max-h-[200px] overflow-y-auto custom-scrollbar pr-1">
+                                    <div class="max-h-[240px] overflow-y-auto overscroll-contain touch-pan-y custom-scrollbar pr-1" data-lenis-prevent>
                                         <div class="grid grid-cols-5 gap-2">
                                             {event.attendees.map((attendee: { name: string; photoUrl?: string | null }) => (
-                                                <div class="w-8 h-8 border-2 border-black dark:border-white overflow-hidden group/item relative bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                                <div
+                                                    class="w-8 h-8 border-2 border-black dark:border-white overflow-hidden group/item relative bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center"
+                                                    title={attendee.name}
+                                                >
                                                     {attendee.photoUrl ? (
                                                         <img
                                                             src={appendImageCrop(attendee.photoUrl, 32, 32)}
@@ -112,7 +115,7 @@ const sectionTitle = latestEvents?.title || 'EVENT_LOG';
                                                             width={32}
                                                             height={32}
                                                             loading="lazy"
-                                                            class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all"
+                                                            class="w-full h-full object-cover grayscale group-hover/item:grayscale-0 transition-all"
                                                             referrerpolicy="no-referrer"
                                                         />
                                                     ) : (
@@ -120,12 +123,12 @@ const sectionTitle = latestEvents?.title || 'EVENT_LOG';
                                                             {attendee.name.charAt(0).toUpperCase()}
                                                         </span>
                                                     )}
-                                                    <div class="absolute inset-0 bg-primary/0 hover:bg-primary/20 transition-colors" />
+                                                    <div class="absolute inset-0 bg-primary/0 group-hover/item:bg-primary/20 transition-colors pointer-events-none" />
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
-                                    <div class="absolute -bottom-2 right-6 w-4 h-4 bg-white dark:bg-black border-r-4 border-b-4 border-black dark:border-white rotate-45" />
+                                    <div class="absolute -bottom-2 right-6 w-4 h-4 bg-white dark:bg-black border-r-4 border-b-4 border-black dark:border-white rotate-45 pointer-events-none" />
                                 </div>
                             </div>
                         ) : (event.attendeesCount ?? 0) > 0 ? (

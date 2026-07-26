@@ -486,7 +486,8 @@ const EventDetailPage: React.FC<EventDetailPageProps> = ({ event }) => {
                   <Users className="w-8 h-8 text-primary shrink-0" /> ATTENDEES_LOG
                 </h3>
                 <div
-                  className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 transition-all duration-500 ${showAllAttendees ? 'max-h-[600px] overflow-y-auto pr-2 custom-scrollbar' : ''}`}
+                  className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 transition-all duration-500 ${showAllAttendees ? 'max-h-[600px] overflow-y-auto overscroll-contain touch-pan-y pr-2 custom-scrollbar' : ''}`}
+                  {...(showAllAttendees ? { 'data-lenis-prevent': true } : {})}
                 >
                   {displayAttendees?.map((attendee) => (
                     <div

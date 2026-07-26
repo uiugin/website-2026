@@ -141,6 +141,23 @@ body {
 }
 
 @layer utilities {
+  /* Nested scroll panels (attendee manifest, etc.) */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+    border-left: 2px solid var(--scrollbar-border);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border: 2px solid var(--scrollbar-border);
+  }
+
   /* Brutalist Shadow Utilities */
   .shadow-brutal-red {
     box-shadow: 8px 8px 0px 0px var(--color-primary);
