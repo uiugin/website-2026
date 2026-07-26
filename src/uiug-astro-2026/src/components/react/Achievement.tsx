@@ -1,5 +1,6 @@
-import React from 'react';
-import { ArrowUpRight, Trophy } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { ArrowUpRight, Github, Trophy } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { Reveal } from './Reveal';
 import type { AchievementProps } from '../../lib/achievement-mapper';
 
@@ -7,7 +8,67 @@ interface Props {
   achievement?: AchievementProps | null;
 }
 
+const CONFETTI_COLORS = ['#FFE600', '#FF4500', '#000000', '#FFFFFF', '#00FFFF'];
+
+function fireAchievementConfetti() {
+  const defaults = {
+    colors: CONFETTI_COLORS,
+    disableForReducedMotion: true,
+    zIndex: 80,
+  };
+
+  confetti({
+    ...defaults,
+    particleCount: 80,
+    spread: 70,
+    startVelocity: 38,
+    origin: { x: 0.2, y: 0.65 },
+    angle: 60,
+  });
+  confetti({
+    ...defaults,
+    particleCount: 80,
+    spread: 70,
+    startVelocity: 38,
+    origin: { x: 0.8, y: 0.65 },
+    angle: 120,
+  });
+  window.setTimeout(() => {
+    confetti({
+      ...defaults,
+      particleCount: 50,
+      spread: 100,
+      startVelocity: 28,
+      origin: { x: 0.5, y: 0.55 },
+      scalar: 0.9,
+    });
+  }, 180);
+}
+
 const Achievement: React.FC<Props> = ({ achievement }) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const firedRef = useRef(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || firedRef.current) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting || firedRef.current) return;
+        firedRef.current = true;
+        fireAchievementConfetti();
+        observer.disconnect();
+      },
+      { threshold: 0.35 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   if (!achievement?.category) return null;
 
   const contributors = achievement.contributors ?? [];
@@ -18,6 +79,7 @@ const Achievement: React.FC<Props> = ({ achievement }) => {
 
   return (
     <section
+      ref={sectionRef}
       className="w-full relative z-10 mb-20 md:mb-28"
       id="achievement"
       aria-labelledby="achievement-heading"
@@ -118,16 +180,31 @@ const Achievement: React.FC<Props> = ({ achievement }) => {
                 )}
               </div>
 
-              {achievement.linkUrl && (
-                <a
-                  href={achievement.linkUrl}
-                  target={linkTarget || undefined}
-                  rel={isExternal ? 'noopener noreferrer' : undefined}
-                  className="inline-flex items-center gap-3 self-start bg-black text-white px-5 py-3 font-display text-base uppercase border-4 border-black hover:bg-white hover:text-black transition-colors"
-                >
-                  {achievement.linkLabel || 'READ MORE'}
-                  <ArrowUpRight className="w-5 h-5" />
-                </a>
+              {(achievement.linkUrl || achievement.githubUrl) && (
+                <div className="flex flex-wrap items-center gap-3">
+                  {achievement.linkUrl && (
+                    <a
+                      href={achievement.linkUrl}
+                      target={linkTarget || undefined}
+                      rel={isExternal ? 'noopener noreferrer' : undefined}
+                      className="inline-flex items-center gap-3 self-start bg-black text-white px-5 py-3 font-display text-base uppercase border-4 border-black hover:bg-white hover:text-black transition-colors"
+                    >
+                      {achievement.linkLabel || 'READ MORE'}
+                      <ArrowUpRight className="w-5 h-5" />
+                    </a>
+                  )}
+                  {achievement.githubUrl && (
+                    <a
+                      href={achievement.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-3 self-start bg-white text-black px-5 py-3 font-display text-base uppercase border-4 border-black hover:bg-black hover:text-white transition-colors"
+                    >
+                      <Github className="w-5 h-5" aria-hidden />
+                      CONTRIBUTE
+                    </a>
+                  )}
+                </div>
               )}
             </div>
           </div>
