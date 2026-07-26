@@ -39,10 +39,11 @@ const slideImage = slideImageRaw.includes('/media/') ? appendImageCrop(slideImag
 const slideLabel = hero?.slideLabel || 'RUNTIME: .NET_CORE';
 const slideLabelTwo = hero?.slideLabelTwo || 'CACHE: REFRESHED';
 
-// Upcoming session: show "Yet to be announced" when values are null or empty
+// Upcoming session: Meetup RSS (via mapper) with CMS / placeholder fallbacks
 const upcomingSessionTitle = hero?.upcomingSessionTitle?.trim() || 'Yet to be announced';
 const upcomingSessionDate = hero?.upcomingSessionDate?.trim() || 'Yet to be announced';
 const upcomingSessionTime = hero?.upcomingSessionTime?.trim() || 'Yet to be announced';
+const upcomingSessionUrl = hero?.upcomingSessionUrl?.trim() || '';
 
 // Parse title - handle HTML content from Umbraco
 // If title contains HTML, we'll render it with set:html, otherwise split by newlines
@@ -132,9 +133,15 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
         </div>
       </div>
 
-      {/* Next Session Box */}
+      {/* Next Session Box — data from Meetup RSS when available */}
       <Slide direction="right" delay={0.6} width="100%" client:visible>
-        <div class="w-full max-w-lg lg:max-w-full mt-6 bg-white dark:bg-black border-4 border-black dark:border-white p-5 shadow-brutal-black dark:shadow-brutal-white transition-colors duration-300 relative group cursor-pointer hover:-translate-y-1 hover:shadow-brutal-yellow">
+        <a
+          href={upcomingSessionUrl || 'https://www.meetup.com/umbraco-india/events/'}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="block w-full max-w-lg lg:max-w-full mt-6 bg-white dark:bg-black border-4 border-black dark:border-white p-5 shadow-brutal-black dark:shadow-brutal-white transition-colors duration-300 relative group cursor-pointer hover:-translate-y-1 hover:shadow-brutal-yellow no-underline"
+          aria-label={`${upcomingSessionTitle} — open event`}
+        >
             <div class="absolute top-0 right-0 bg-primary text-black dark:text-white px-3 py-1 font-bold text-xs border-l-4 border-b-4 border-black dark:border-white">
                 NEXT_EVENT
             </div>
@@ -148,7 +155,7 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
             </h2>
             
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-sm font-bold font-mono text-black dark:text-white border-t-2 border-black dark:border-white pt-3">
-                <div class="flex gap-4">
+                <div class="flex gap-4 flex-wrap">
                 {upcomingSessionDate && (
                 <div class="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
@@ -162,9 +169,9 @@ const titleLines = titleHasHtml ? null : (title.includes('\n') ? title.split('\n
                 </div>
                 )}
                 </div>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform shrink-0" />
             </div>
-        </div>
+        </a>
       </Slide>
     </div>
   </div>

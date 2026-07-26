@@ -4,6 +4,7 @@
  */
 import type { components } from '../api/types.js';
 import { getMediaUrl, getContentItem } from '../api/umbraco.js';
+import { fetchNextMeetupEvent } from './meetup-rss.js';
 
 type HeroElementModel = components['schemas']['HeroElementModel'];
 type ApiLinkModel = components['schemas']['ApiLinkModel'];
@@ -20,6 +21,7 @@ export interface HeroProps {
   upcomingSessionTitle?: string;
   upcomingSessionDate?: string;
   upcomingSessionTime?: string;
+  upcomingSessionUrl?: string;
 }
 
 function linkHref(link: ApiLinkModel | null | undefined): string {
@@ -218,9 +220,20 @@ export async function mapHeroProps(
     slideImage = getMediaUrl(props.slideImage[0]);
   }
   
-  // Fetch upcoming session event
-  const upcomingSession = await fetchUpcomingSession(props.upcomingSession);
-  
+  // Prefer Meetup RSS for NEXT_EVENT; fall back to CMS upcomingSession
+  const meetup = await fetchNextMeetupEvent();
+  let upcomingSessionTitle = meetup?.title;
+  let upcomingSessionDate = meetup?.date;
+  let upcomingSessionTime = meetup?.time;
+  let upcomingSessionUrl = meetup?.url;
+
+  if (!upcomingSessionTitle) {
+    const upcomingSession = await fetchUpcomingSession(props.upcomingSession);
+    upcomingSessionTitle = upcomingSession.title;
+    upcomingSessionDate = upcomingSession.date;
+    upcomingSessionTime = upcomingSession.time;
+  }
+
   return {
     status: props.heroSubtitle || undefined,
     title: props.heroTitle || undefined, // May contain HTML
@@ -229,8 +242,9 @@ export async function mapHeroProps(
     slideImage,
     slideLabel: props.slideLabel || undefined,
     slideLabelTwo: props.slideLabelTwo || undefined,
-    upcomingSessionTitle: upcomingSession.title || undefined,
-    upcomingSessionDate: upcomingSession.date || undefined,
-    upcomingSessionTime: upcomingSession.time || undefined,
+    upcomingSessionTitle: upcomingSessionTitle || undefined,
+    upcomingSessionDate: upcomingSessionDate || undefined,
+    upcomingSessionTime: upcomingSessionTime || undefined,
+    upcomingSessionUrl: upcomingSessionUrl || undefined,
   };
 }
