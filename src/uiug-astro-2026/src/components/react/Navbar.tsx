@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, X, Sun, Moon, Palette, Check, Trophy } from 'lucide-react';
+import { Menu, X, Sun, Moon, Palette, Check, Trophy, PartyPopper } from 'lucide-react';
 import type { PaletteId, PaletteColors } from '../../lib/palette';
 import { PRESET_PALETTES } from '../../lib/palette';
 import type { LayoutLink } from '../../types/layout';
 import CarbonBadge from './CarbonBadge';
 
 const ACHIEVEMENT_HREF = '/#achievement';
+const FESTIVALS_HREF = '/#festivals';
 
 interface NavbarProps {
   isDark: boolean;
@@ -19,6 +20,8 @@ interface NavbarProps {
   ctaItem?: LayoutLink | null;
   /** Show trophy link to the awards achievement section */
   showAchievement?: boolean;
+  /** Show festival link to the festivals section */
+  showFestivals?: boolean;
 }
 
 /** Format a link title to brutalist style: uppercase with underscores */
@@ -37,6 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({
   navItems = [],
   ctaItem,
   showAchievement = true,
+  showFestivals = true,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
@@ -143,6 +147,17 @@ const Navbar: React.FC<NavbarProps> = ({
             </a>
           ))}
 
+          {showFestivals && (
+            <a
+              href={FESTIVALS_HREF}
+              className="px-5 lg:px-6 border-r-4 border-black dark:border-white flex items-center justify-center bg-primary text-black hover:bg-black hover:text-primary transition-colors"
+              aria-label="Umbraco India Festival"
+              title="FESTIVALS"
+            >
+              <PartyPopper className="w-6 h-6" aria-hidden />
+            </a>
+          )}
+
           {showAchievement && (
             <a
               href={ACHIEVEMENT_HREF}
@@ -247,6 +262,17 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Controls */}
         <div className="flex md:hidden">
+          {showFestivals && (
+            <a
+              href={FESTIVALS_HREF}
+              className="px-5 border-l-4 border-black dark:border-white flex items-center justify-center bg-primary text-black hover:bg-black hover:text-primary transition-colors"
+              aria-label="Umbraco India Festival"
+              title="FESTIVALS"
+            >
+              <PartyPopper size={24} aria-hidden />
+            </a>
+          )}
+
           {showAchievement && (
             <a
               href={ACHIEVEMENT_HREF}
@@ -382,6 +408,16 @@ const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
           <div className="flex flex-col flex-1">
+          {showFestivals && (
+            <a
+              href={FESTIVALS_HREF}
+              className="flex items-center gap-3 p-6 border-b-4 border-black dark:border-white font-display text-xl uppercase bg-primary text-black hover:bg-black hover:text-primary"
+              onClick={() => setIsOpen(false)}
+            >
+              <PartyPopper className="w-6 h-6 shrink-0" aria-hidden />
+              FESTIVALS
+            </a>
+          )}
           {showAchievement && (
             <a
               href={ACHIEVEMENT_HREF}

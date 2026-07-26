@@ -31,7 +31,7 @@ const Achievement: React.FC<Props> = ({ achievement }) => {
       </Reveal>
 
       <Reveal width="100%" delay={0.08}>
-        <article className="group relative mx-4 md:mx-10 overflow-hidden bg-accent-yellow text-black border-4 border-black dark:border-white rotate-1 scale-[1.01] shadow-brutal-black dark:shadow-brutal-white hover:rotate-0 hover:scale-100 transition-transform duration-500">
+        <article className="group relative mx-4 md:mx-10 overflow-hidden bg-accent-yellow text-black border-4 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white">
           <div className="absolute inset-0 lego-studs opacity-10 pointer-events-none" aria-hidden />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 px-6 md:px-10 lg:px-12 py-10 md:py-14 items-center">

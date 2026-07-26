@@ -89,7 +89,7 @@ const Festivals: React.FC<Props> = ({ festivals: festivalsData }) => {
       </Reveal>
 
       <Reveal width="100%" delay={0.08}>
-        <article className="group relative w-full overflow-hidden bg-primary text-black border-y-4 border-black dark:border-white -rotate-1 scale-[1.02] shadow-brutal-black dark:shadow-brutal-white hover:rotate-0 hover:scale-100 transition-transform duration-500">
+        <article className="group relative w-full overflow-hidden bg-primary text-black border-y-4 border-black dark:border-white shadow-brutal-black dark:shadow-brutal-white">
           <div className="absolute inset-0 lego-studs opacity-10 pointer-events-none" aria-hidden />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 items-center gap-8 lg:gap-6 px-6 md:px-10 lg:px-12 xl:px-16 py-10 md:py-14">
