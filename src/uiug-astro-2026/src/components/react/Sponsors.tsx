@@ -69,13 +69,26 @@ const Sponsors: React.FC<Props> = ({ sponsors }) => {
                     </p>
                   </div>
 
-                  {/* Decorative element resembling a server rack or chip */}
-                  <div className="w-48 h-48 border-4 border-black dark:border-white bg-white dark:bg-black relative flex items-center justify-center rotate-3 group-hover:rotate-0 transition-transform duration-500">
-                    <Globe className="w-24 h-24 text-black dark:text-white animate-spin-slow" />
-                    <div className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full border border-black dark:border-white animate-ping"></div>
-                    <div className="absolute bottom-2 left-2 font-mono text-[10px] font-bold text-black dark:text-white">
-                      CONNECTED
-                    </div>
+                  <div className="w-48 h-48 border-4 border-black dark:border-white bg-white dark:bg-black relative flex items-center justify-center p-4 rotate-3 group-hover:rotate-0 transition-transform duration-500">
+                    {sponsor.logoUrl ? (
+                      <img
+                        src={sponsor.logoUrl}
+                        alt={`${sponsor.companyName} logo`}
+                        className="max-w-full max-h-full w-auto h-auto object-contain"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <>
+                        <Globe className="w-24 h-24 text-black dark:text-white animate-spin-slow" />
+                        <div className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full border border-black dark:border-white animate-ping"></div>
+                        <div className="absolute bottom-2 left-2 font-mono text-[10px] font-bold text-black dark:text-white">
+                          CONNECTED
+                        </div>
+                      </>
+                    )}
+                    {sponsor.logoUrl && (
+                      <div className="absolute top-2 right-2 w-3 h-3 bg-red-500 rounded-full border border-black dark:border-white animate-ping"></div>
+                    )}
                   </div>
                 </div>
 
@@ -87,33 +100,73 @@ const Sponsors: React.FC<Props> = ({ sponsors }) => {
           </Reveal>
         ))}
 
-        {/* Gold Tier - Rendered conditionally */}
+        {/* Gold Tier */}
         {goldSponsors.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {goldSponsors.map((sponsor, idx) => (
-                    <Reveal key={idx} delay={idx * 0.1} width="100%">
-                        <div className="bg-white dark:bg-black border-4 border-black dark:border-white p-8 relative shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] hover:shadow-brutal-red transition-all duration-300 group">
-                            <div className="absolute top-0 right-0 bg-gray-200 dark:bg-gray-800 px-2 py-1 font-mono text-[10px] font-bold uppercase text-gray-500">
-                                TIER_02: GOLD
-                            </div>
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="p-3 bg-black text-white dark:bg-white dark:text-black">
-                                    <Gem className="w-6 h-6" />
-                                </div>
-                                <h4 className="text-2xl font-display font-black uppercase text-black dark:text-white">
-                                    {sponsor.companyName.toUpperCase()}
-                                </h4>
-                            </div>
-                            <div className="h-1 w-full bg-gray-200 dark:bg-gray-800 mb-4 overflow-hidden">
-                                <div className="h-full bg-primary w-full origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
-                            </div>
-                            <p className="font-mono text-xs font-bold text-gray-500">
-                                {sponsor.description}
-                            </p>
+          <div
+            className={
+              goldSponsors.length === 1
+                ? 'grid grid-cols-1 gap-8'
+                : 'grid grid-cols-1 md:grid-cols-2 gap-8'
+            }
+          >
+            {goldSponsors.map((sponsor, idx) => (
+              <Reveal key={idx} delay={idx * 0.1} width="100%">
+                <div className="w-full relative">
+                  <div className="absolute -top-3 left-4 bg-[#F0B429] text-black px-3 py-1 font-mono font-bold text-xs uppercase z-20 border-2 border-black dark:border-white">
+                    TIER_02: GOLD
+                  </div>
+
+                  <div className="relative overflow-hidden border-4 border-black dark:border-white bg-black text-white shadow-[8px_8px_0_0_#F0B429] group hover:shadow-[4px_4px_0_0_#F0B429] hover:translate-x-1 hover:translate-y-1 transition-all duration-300">
+                    {/* Gold signal stripe */}
+                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-[#F0B429]" aria-hidden />
+                    <div className="absolute inset-0 lego-studs opacity-[0.07] pointer-events-none" aria-hidden />
+
+                    <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6 p-8 md:p-10 pl-8 md:pl-12">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="p-2.5 bg-[#F0B429] text-black border-2 border-black dark:border-white shrink-0">
+                            <Gem className="w-5 h-5" aria-hidden />
+                          </div>
+                          <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#F0B429]">
+                            ALLIED_NODE
+                          </span>
                         </div>
-                    </Reveal>
-                ))}
-            </div>
+                        <h4 className="text-3xl md:text-5xl font-display font-black uppercase tracking-tighter leading-none text-white mb-3">
+                          {sponsor.companyName.toUpperCase()}
+                        </h4>
+                        {sponsor.description && (
+                          <p className="font-mono text-sm font-bold text-white/70 border-l-4 border-[#F0B429] pl-4 max-w-md">
+                            {sponsor.description}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="shrink-0 w-40 h-24 md:w-52 md:h-28 border-4 border-[#F0B429] bg-white text-black flex flex-col items-center justify-center p-3 -rotate-2 group-hover:rotate-0 transition-transform duration-500">
+                        {sponsor.logoUrl ? (
+                          <img
+                            src={sponsor.logoUrl}
+                            alt={`${sponsor.companyName} logo`}
+                            className="max-w-full max-h-full w-auto h-auto object-contain"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <>
+                            <Gem className="w-10 h-10 md:w-12 md:h-12" aria-hidden />
+                            <span className="font-mono text-[9px] font-bold uppercase tracking-widest mt-1">
+                              GOLD
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="absolute top-0 right-0 w-8 h-8 border-l-4 border-b-4 border-[#F0B429] bg-[#F0B429]" aria-hidden />
+                    <div className="absolute bottom-0 left-0 w-8 h-8 border-t-4 border-r-4 border-[#F0B429] bg-[#F0B429]" aria-hidden />
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         )}
 
         {/* Silver Tier - Rendered conditionally */}

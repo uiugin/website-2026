@@ -4,7 +4,15 @@
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 
-let lenisInstance: InstanceType<typeof Lenis> | null = null;
+export type UiugLenis = InstanceType<typeof Lenis>;
+
+declare global {
+  interface Window {
+    __uiugLenis?: UiugLenis | null;
+  }
+}
+
+let lenisInstance: UiugLenis | null = null;
 
 function initLenis(): void {
   if (typeof document === 'undefined') return;
@@ -18,6 +26,7 @@ function initLenis(): void {
     duration: 1.2,
     easing: (t: number) => Math.min(1, 1.001 - 2 ** (-10 * t)),
   });
+  window.__uiugLenis = lenisInstance;
 }
 
 initLenis();
