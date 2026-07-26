@@ -3,8 +3,10 @@ import type { PaletteId, PaletteColors } from '../../lib/palette';
 import { PRESET_PALETTES } from '../../lib/palette';
 import type { LayoutLink } from '../../types/layout';
 import type { Speaker } from '../../data/speakers';
+import type { FestivalBannerProps } from '../../lib/festival-mapper';
 import Navbar from './Navbar';
 import Loader from './Loader';
+import FestivalBanner from './FestivalBanner';
 
 interface AppShellContextType {
   onOpenFullSpeakerList: () => void;
@@ -26,11 +28,19 @@ interface AppShellProps {
   navItems?: LayoutLink[];
   ctaItem?: LayoutLink | null;
   fullListSpeakers?: Speaker[];
+  festival?: FestivalBannerProps | null;
 }
 
 const LOADER_DONE_KEY = 'uiug-loader-done';
 
-const AppShell: React.FC<AppShellProps> = ({ children, logo, navItems, ctaItem, fullListSpeakers: _fullListSpeakers }) => {
+const AppShell: React.FC<AppShellProps> = ({
+  children,
+  logo,
+  navItems,
+  ctaItem,
+  fullListSpeakers: _fullListSpeakers,
+  festival,
+}) => {
   const [isLoading, setIsLoading] = useState(() => {
     if (typeof window === 'undefined') return true;
     return sessionStorage.getItem(LOADER_DONE_KEY) !== '1';
@@ -134,18 +144,27 @@ const AppShell: React.FC<AppShellProps> = ({ children, logo, navItems, ctaItem, 
     )}
 
       <div className={`min-h-screen font-mono text-black dark:text-white selection:bg-accent-yellow selection:text-black overflow-x-hidden w-full transition-opacity duration-1000 ${isLoading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} style={isLoading ? { visibility: 'hidden' } : { visibility: 'visible' }}>
-        <Navbar
-          isDark={isDark}
-          toggleTheme={toggleTheme}
-          currentPaletteId={currentPaletteId}
-          changePalette={changePalette}
-          customColors={customColors}
-          updateCustomColors={updateCustomColors}
-          logo={logo}
-          navItems={navItems}
-          ctaItem={ctaItem}
-        />
-        <div className="relative pt-20 md:pt-32">
+        <div className="fixed top-0 left-0 w-full z-50">
+          <Navbar
+            isDark={isDark}
+            toggleTheme={toggleTheme}
+            currentPaletteId={currentPaletteId}
+            changePalette={changePalette}
+            customColors={customColors}
+            updateCustomColors={updateCustomColors}
+            logo={logo}
+            navItems={navItems}
+            ctaItem={ctaItem}
+          />
+          {festival?.marqueeItems?.length ? <FestivalBanner festival={festival} /> : null}
+        </div>
+        <div
+          className={
+            festival?.marqueeItems?.length
+              ? 'relative pt-[calc(5rem+var(--festival-banner-h))] md:pt-[calc(8rem+var(--festival-banner-h))]'
+              : 'relative pt-20 md:pt-32'
+          }
+        >
           {children}
         </div>
       </div>

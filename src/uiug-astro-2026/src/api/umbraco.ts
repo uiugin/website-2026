@@ -4,6 +4,7 @@
  */
 import type { components, paths } from './types.js';
 import type { LayoutData, LayoutLink } from '../types/layout.js';
+import { mapFestivalBannerFromSiteSettings } from '../lib/festival-mapper.js';
 import { UmbracoClient } from '@grace-studio/umbraco-client';
 
 // Configure Node.js to accept self-signed certificates in development
@@ -68,11 +69,15 @@ export async function getSiteSettings(): Promise<LayoutData> {
       marquee: null,
     },
     social: {},
+    headerMarquee: null,
   };
 
   try {
     const item = await getContentItem('site-settings');
-    const props = (item?.properties ?? {}) as Partial<SiteSettingsProps>;
+    const props = (item?.properties ?? {}) as Partial<SiteSettingsProps> & {
+      headerMarquee?: Array<string | null> | null;
+      headerMarqueeLink?: components['schemas']['ApiLinkModel'][] | null;
+    };
 
     const navMenu = props.navMenu ?? [];
     const navLinks = navMenu.map(toLayoutLink);
@@ -105,6 +110,10 @@ export async function getSiteSettings(): Promise<LayoutData> {
         marquee: props.footerMarquee ? stripHtml(props.footerMarquee) : defaults.footer.marquee,
       },
       social,
+      headerMarquee: mapFestivalBannerFromSiteSettings({
+        headerMarquee: props.headerMarquee,
+        headerMarqueeLink: props.headerMarqueeLink,
+      }),
     };
   } catch {
     return defaults;

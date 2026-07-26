@@ -17,6 +17,9 @@ export type ComponentIdentifier =
   | 'appreciation'
   | 'faq'
   | 'contact'
+  | 'festivalBanner'
+  | 'festivals'
+  | 'achievement'
   | null;
 
 /**
@@ -41,6 +44,9 @@ export function getComponentIdentifier(contentType: string | null | undefined): 
     appreciationBlock: 'appreciation',
     faq: 'faq',
     contactUs: 'contact',
+    festivalBanner: 'festivalBanner',
+    festivals: 'festivals',
+    achievement: 'achievement',
   };
 
   return typeMap[contentType] || null;

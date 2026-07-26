@@ -1,9 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Menu, X, Sun, Moon, Palette, Check } from 'lucide-react';
+import { Menu, X, Sun, Moon, Palette, Check, Trophy, PartyPopper } from 'lucide-react';
 import type { PaletteId, PaletteColors } from '../../lib/palette';
 import { PRESET_PALETTES } from '../../lib/palette';
 import type { LayoutLink } from '../../types/layout';
 import CarbonBadge from './CarbonBadge';
+import { scrollToId } from '../../lib/scroll-to';
+
+const ACHIEVEMENT_HREF = '/#achievement';
+const FESTIVALS_HREF = '/#festivals';
 
 interface NavbarProps {
   isDark: boolean;
@@ -15,6 +19,10 @@ interface NavbarProps {
   logo?: string;
   navItems?: LayoutLink[];
   ctaItem?: LayoutLink | null;
+  /** Show trophy link to the awards achievement section */
+  showAchievement?: boolean;
+  /** Show festival link to the festivals section */
+  showFestivals?: boolean;
 }
 
 /** Format a link title to brutalist style: uppercase with underscores */
@@ -32,6 +40,8 @@ const Navbar: React.FC<NavbarProps> = ({
   logo = 'UIUG',
   navItems = [],
   ctaItem,
+  showAchievement = true,
+  showFestivals = true,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
@@ -110,8 +120,25 @@ const Navbar: React.FC<NavbarProps> = ({
 
   const displayCta = ctaItem ?? { title: 'Join The Void', url: '#join', target: null };
 
+  const handleSectionNav = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    sectionId: string
+  ) => {
+    e.preventDefault();
+    setIsOpen(false);
+    setIsPaletteOpen(false);
+
+    const onHome =
+      window.location.pathname === '/' ||
+      window.location.pathname === '' ||
+      window.location.pathname === '/index.html';
+
+    if (onHome && scrollToId(sectionId)) return;
+    window.location.href = `/#${sectionId}`;
+  };
+
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-white dark:bg-black border-b-4 border-black dark:border-white transition-colors duration-300">
+    <nav className="relative w-full bg-white dark:bg-black border-b-4 border-black dark:border-white transition-colors duration-300">
       <div className="flex justify-between items-stretch h-16 md:h-auto">
         {/* Logo Section */}
         <div className="px-6 py-4 border-r-4 border-black dark:border-white flex items-center bg-primary text-black hover:bg-black hover:text-primary dark:hover:bg-white dark:hover:text-black transition-colors cursor-pointer">
@@ -137,6 +164,30 @@ const Navbar: React.FC<NavbarProps> = ({
               {brutalize(item.title)}
             </a>
           ))}
+
+          {showFestivals && (
+            <a
+              href={FESTIVALS_HREF}
+              onClick={(e) => handleSectionNav(e, 'festivals')}
+              className="px-5 lg:px-6 border-r-4 border-black dark:border-white flex items-center justify-center bg-primary text-black hover:bg-black hover:text-primary transition-colors"
+              aria-label="Umbraco India Festival"
+              title="FESTIVALS"
+            >
+              <PartyPopper className="w-6 h-6" aria-hidden />
+            </a>
+          )}
+
+          {showAchievement && (
+            <a
+              href={ACHIEVEMENT_HREF}
+              onClick={(e) => handleSectionNav(e, 'achievement')}
+              className="px-5 lg:px-6 border-r-4 border-black dark:border-white flex items-center justify-center bg-accent-yellow text-black hover:bg-black hover:text-accent-yellow transition-colors"
+              aria-label="Umbraco Awards achievement — Best Designed Site runner-up"
+              title="ACHIEVEMENT"
+            >
+              <Trophy className="w-6 h-6" aria-hidden />
+            </a>
+          )}
 
           {/* Palette Toggle */}
           <div className="relative" ref={paletteRef}>
@@ -231,6 +282,30 @@ const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Controls */}
         <div className="flex md:hidden">
+          {showFestivals && (
+            <a
+              href={FESTIVALS_HREF}
+              onClick={(e) => handleSectionNav(e, 'festivals')}
+              className="px-5 border-l-4 border-black dark:border-white flex items-center justify-center bg-primary text-black hover:bg-black hover:text-primary transition-colors"
+              aria-label="Umbraco India Festival"
+              title="FESTIVALS"
+            >
+              <PartyPopper size={24} aria-hidden />
+            </a>
+          )}
+
+          {showAchievement && (
+            <a
+              href={ACHIEVEMENT_HREF}
+              onClick={(e) => handleSectionNav(e, 'achievement')}
+              className="px-5 border-l-4 border-black dark:border-white flex items-center justify-center bg-accent-yellow text-black hover:bg-black hover:text-accent-yellow transition-colors"
+              aria-label="Umbraco Awards achievement — Best Designed Site runner-up"
+              title="ACHIEVEMENT"
+            >
+              <Trophy size={24} aria-hidden />
+            </a>
+          )}
+
           <button
             type="button"
             aria-label={isPaletteOpen ? 'Close color palette' : 'Open color palette'}
@@ -355,6 +430,26 @@ const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
           <div className="flex flex-col flex-1">
+          {showFestivals && (
+            <a
+              href={FESTIVALS_HREF}
+              className="flex items-center gap-3 p-6 border-b-4 border-black dark:border-white font-display text-xl uppercase bg-primary text-black hover:bg-black hover:text-primary"
+              onClick={(e) => handleSectionNav(e, 'festivals')}
+            >
+              <PartyPopper className="w-6 h-6 shrink-0" aria-hidden />
+              FESTIVALS
+            </a>
+          )}
+          {showAchievement && (
+            <a
+              href={ACHIEVEMENT_HREF}
+              className="flex items-center gap-3 p-6 border-b-4 border-black dark:border-white font-display text-xl uppercase bg-accent-yellow text-black hover:bg-black hover:text-accent-yellow"
+              onClick={(e) => handleSectionNav(e, 'achievement')}
+            >
+              <Trophy className="w-6 h-6 shrink-0" aria-hidden />
+              ACHIEVEMENT
+            </a>
+          )}
           {displayNavItems.map((item, i) => (
             <a
               key={`mobile-${item.url}-${i}`}
