@@ -268,8 +268,9 @@ try {
       }
       if (componentId === 'achievement') {
         const achievementProps = achievementPropsMap.get(index);
-        if (!achievementProps) return null;
-        return <Achievement achievement={achievementProps} client:visible />;
+        return achievementProps ? (
+          <Achievement achievement={achievementProps} client:visible />
+        ) : null;
       }
       
       return null;
