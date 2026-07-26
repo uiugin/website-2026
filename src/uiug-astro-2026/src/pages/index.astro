@@ -16,6 +16,7 @@ import FAQ from '../components/react/FAQ';
 import JoinUs from '../components/react/JoinUs';
 import Footer from '../components/react/Footer';
 import Sponsors from '../components/react/Sponsors';
+import Festivals from '../components/react/Festivals';
 import { getSiteSettings, getHomeContent, getMainContentBlocks, getHeroBlock } from '../api/umbraco';
 import { appendImageCrop } from '../api/umbraco-utils';
 import { getComponentIdentifier } from '../lib/component-order';
@@ -32,6 +33,7 @@ import { mapContactProps } from '../lib/contact-mapper';
 import { mapSponsorsProps } from '../lib/sponsors-mapper';
 import { mapGalleryProps } from '../lib/gallery-mapper';
 import { mapSeoFromProps } from '../lib/seo-from-props';
+import { mapFestivalsProps } from '../lib/festivals-mapper';
 import type { components } from '../api/types';
 import type { PageSeo } from '../types/seo';
 import { getAllSpeakers } from '../lib/speaker-mapper';
@@ -40,6 +42,8 @@ import type { Speaker } from '../data/speakers';
 // Fetch site settings from CMS server-side
 const layoutData = await getSiteSettings();
 
+// Under-nav festival marquee from Site Settings
+const festivalBannerProps = layoutData.headerMarquee ?? null;
 // Fetch all blocks from Umbraco and Hero props
 let blocks: ReturnType<typeof getMainContentBlocks> = [];
 let heroProps: Awaited<ReturnType<typeof mapHeroProps>> | null = null;
@@ -50,6 +54,7 @@ const speakersPropsMap = new Map<number, Awaited<ReturnType<typeof mapSpeakersPr
 const faqPropsMap = new Map<number, Awaited<ReturnType<typeof mapFAQProps>>>();
 const sponsorsPropsMap = new Map<number, Awaited<ReturnType<typeof mapSponsorsProps>>>();
 const galleryPropsMap = new Map<number, Awaited<ReturnType<typeof mapGalleryProps>>>();
+const festivalsPropsMap = new Map<number, ReturnType<typeof mapFestivalsProps>>();
 try {
   const homeContent = await getHomeContent();
   blocks = getMainContentBlocks(homeContent);
@@ -122,6 +127,13 @@ try {
         return { index, type: 'gallery', props: {} };
       }
     }
+    if (componentId === 'festivals') {
+      try {
+        return { index, type: 'festivals', props: mapFestivalsProps(block.content) };
+      } catch {
+        return { index, type: 'festivals', props: mapFestivalsProps(null) };
+      }
+    }
     return null;
   });
   
@@ -140,6 +152,8 @@ try {
         sponsorsPropsMap.set(result.index, result.props);
       } else if (result.type === 'gallery') {
         galleryPropsMap.set(result.index, result.props);
+      } else if (result.type === 'festivals') {
+        festivalsPropsMap.set(result.index, result.props);
       }
     }
   });
@@ -163,6 +177,7 @@ try {
     navItems={layoutData.navItems}
     ctaItem={layoutData.ctaItem}
     fullListSpeakers={fullListSpeakers}
+    festival={festivalBannerProps}
   >
     {/* Dynamically render components based on Umbraco block list order */}
     {blocks.map((block, index) => {
@@ -230,6 +245,10 @@ try {
         const contactBlock = block.content as components['schemas']['ContactUsElementModel'];
         const contactProps = mapContactProps(contactBlock);
         return <Contact contact={contactProps} client:visible />;
+      }
+      if (componentId === 'festivals') {
+        const festivalsProps = festivalsPropsMap.get(index) ?? mapFestivalsProps(block.content);
+        return <Festivals festivals={festivalsProps} client:only="react" />;
       }
       
       return null;

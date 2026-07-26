@@ -111,7 +111,7 @@ const Navbar: React.FC<NavbarProps> = ({
   const displayCta = ctaItem ?? { title: 'Join The Void', url: '#join', target: null };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-white dark:bg-black border-b-4 border-black dark:border-white transition-colors duration-300">
+    <nav className="relative w-full bg-white dark:bg-black border-b-4 border-black dark:border-white transition-colors duration-300">
       <div className="flex justify-between items-stretch h-16 md:h-auto">
         {/* Logo Section */}
         <div className="px-6 py-4 border-r-4 border-black dark:border-white flex items-center bg-primary text-black hover:bg-black hover:text-primary dark:hover:bg-white dark:hover:text-black transition-colors cursor-pointer">

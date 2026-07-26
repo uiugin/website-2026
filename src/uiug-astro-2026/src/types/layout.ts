@@ -1,3 +1,5 @@
+import type { FestivalBannerProps } from '../lib/festival-mapper';
+
 export interface LayoutLink {
     title: string;
     url: string;
@@ -27,4 +29,6 @@ export interface LayoutData {
     ctaItem: LayoutLink | null;
     footer: FooterData;
     social: SocialLinks;
+    /** Under-nav festival marquee from Site Settings (`headerMarquee` / `headerMarqueeLink`). */
+    headerMarquee?: FestivalBannerProps | null;
 }

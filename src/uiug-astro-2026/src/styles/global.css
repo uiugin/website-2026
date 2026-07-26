@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./festival-banner.css";
 
 @theme {
   /* Primary/accent: ensure text and UI on these backgrounds meet WCAG AA (4.5:1 for normal text) */
@@ -43,6 +44,8 @@
   --color-accent: #FFFF00; /* Default UIUG Yellow */
   /* Sync with @theme for Tailwind */
   --color-accent-yellow: var(--color-accent);
+  /* Site-wide Umbraco India Festival promo band */
+  --festival-banner-h: 2rem;
 }
 
 .dark {
@@ -205,6 +208,18 @@ body {
   .animate-marquee-footer {
     animation: marquee-footer 30s linear infinite;
   }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
   
   .animate-spin-slow {
     animation: spin 3s linear infinite;
@@ -220,7 +235,8 @@ body {
   .animate-marquee,
   .animate-marquee-reverse,
   .animate-marquee-footer,
-  .animate-float-up {
+  .animate-float-up,
+  .festival-banner__track {
     animation: none !important;
   }
   .animate-spin-slow {

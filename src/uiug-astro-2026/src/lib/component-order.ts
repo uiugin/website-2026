@@ -17,6 +17,8 @@ export type ComponentIdentifier =
   | 'appreciation'
   | 'faq'
   | 'contact'
+  | 'festivalBanner'
+  | 'festivals'
   | null;
 
 /**
@@ -41,6 +43,8 @@ export function getComponentIdentifier(contentType: string | null | undefined): 
     appreciationBlock: 'appreciation',
     faq: 'faq',
     contactUs: 'contact',
+    festivalBanner: 'festivalBanner',
+    festivals: 'festivals',
   };
 
   return typeMap[contentType] || null;
