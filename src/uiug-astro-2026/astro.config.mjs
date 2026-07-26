@@ -31,7 +31,6 @@ export default defineConfig({
   },
 
   vite: {
-    // @ts-expect-error - @tailwindcss/vite is typed against root Vite; Astro uses its bundled Vite (different Plugin types)
     plugins: [tailwindcss()],
     resolve: {
       dedupe: ['react', 'react-dom', 'react/jsx-runtime'],
